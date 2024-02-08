@@ -173,14 +173,20 @@ struct CellGroup : View
 	var items: [MenuItem]
 	
 	var body: some View {
-		VStack(alignment: .leading, spacing: 0) {
-			self.header
-			Divider().overlay(cellDividerColor)
-			ForEach(items) { item in
-				CellListItem(text: item.text)
-				Divider().overlay(cellDividerColor)
-			}
+		self.header
+		
+		Divider().overlay(cellDividerColor)
+		
+		List(self.items) { item in
+			CellListItem(text: item.text)
+				.listRowBackground(backgroundColor)
+				.listRowSeparatorTint(cellDividerColor)
+				.alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
+				.listRowInsets(EdgeInsets())
 		}
+		.listStyle(.plain)
+		.environment(\.defaultMinListRowHeight, 0)
+		.frame(minHeight: CGFloat(32 * self.items.count))
 	}
 	
 	var header: some View {
