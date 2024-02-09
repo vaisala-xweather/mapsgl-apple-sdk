@@ -8,10 +8,22 @@ fileprivate let backgroundColor = Color(.init(
 	blue: 0x1A / 255,
 	alpha: 1
 ))
+fileprivate let backgroundHighlightedColor = Color(.init(
+	red: 0xFF / 255,
+	green: 0xFF / 255,
+	blue: 0xFF / 255,
+	alpha: 1
+))
 fileprivate let textColor = Color(.init(
 	red: 0xFF / 255,
 	green: 0xFF / 255,
 	blue: 0xFF / 255,
+	alpha: 1
+))
+fileprivate let textHighlightedColor = Color(.init(
+	red: 0x33 / 255,
+	green: 0x33 / 255,
+	blue: 0x33 / 255,
 	alpha: 1
 ))
 fileprivate let closeButtonColor = Color(.init(
@@ -172,17 +184,22 @@ struct CellGroup : View
 	var headerText: String
 	var items: [MenuItem]
 	
+	@State private var _multiSelection = Set<MenuItem.ID>()
+	
 	var body: some View {
 		self.header
 		
 		Divider().overlay(cellDividerColor)
 		
 		List(self.items) { item in
-			CellListItem(text: item.text)
-				.listRowBackground(backgroundColor)
-				.listRowSeparatorTint(cellDividerColor)
-				.alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
-				.listRowInsets(EdgeInsets())
+			CellListItem(text: item.text, selected: _multiSelection.contains(item.id))
+				.onTapGesture {
+					if !_multiSelection.contains(item.id) {
+						_multiSelection.update(with: item.id)
+					} else {
+						_multiSelection.remove(item.id)
+					}
+				}
 		}
 		.listStyle(.plain)
 		.environment(\.defaultMinListRowHeight, 0)
@@ -211,12 +228,14 @@ struct CellGroup : View
 struct CellListItem : View
 {
 	var text: String
+	var selected: Bool = false
+	
 	var body: some View {
 		HStack {
 			Text(text)
 				.font(cellFont)
 				.lineSpacing(20)
-				.foregroundColor(textColor)
+				.foregroundColor(self.selected ? textHighlightedColor : textColor)
 				.font(.body)
 			Spacer()
 			Image(systemName: "slider.horizontal.3")
@@ -226,9 +245,13 @@ struct CellListItem : View
 		.padding(.horizontal, 20)
 		.padding(.vertical, 6)
 		.frame(height: 32)
-		.onTapGesture {
-			print("Tapped on \(text)")
-		}
+		.contentShape(Rectangle())
+		.listRowBackground(
+			self.selected ? backgroundHighlightedColor : backgroundColor
+		)
+		.listRowSeparatorTint(cellDividerColor)
+		.alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
+		.listRowInsets(EdgeInsets())
 	}
 }
 
