@@ -60,12 +60,13 @@ struct ContentView : View
 			Circle()
 				.fill(backgroundColor)
 				.frame(width: 44, height: 44)
-				.padding(.all, 12.0)
 				.shadow(color: shadowColor, radius: 8, y: +2)
 			Image(systemName: "square.3.layers.3d.top.filled")
 				.resizable().scaledToFit().frame(width: 24, height: 24)
 				.foregroundColor(textColor)
 		}
+		.padding(.all, 12)
+		.padding(.top, 24)
 		.onTapGesture {
 			self.isSidebarVisible.toggle()
 		}
