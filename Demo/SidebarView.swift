@@ -12,7 +12,9 @@ struct SidebarView : View
 	
 	var body: some View {
 		ZStack {
-			self.tapOutsideToClose
+			if UIDevice.current.userInterfaceIdiom == .phone {
+				self.tapOutsideToClose
+			}
 			self.content
 		}
 	}

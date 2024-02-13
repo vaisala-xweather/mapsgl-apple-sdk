@@ -14,7 +14,7 @@ import MapsGLMaps
 struct ContentView : View
 {
 	@ObservedObject var dataModel: WeatherLayersModel
-	@State private var isSidebarVisible = false
+	@State private var isSidebarVisible = (UIDevice.current.userInterfaceIdiom == .phone) ? false : true
 	
 	
 	var body: some View {
