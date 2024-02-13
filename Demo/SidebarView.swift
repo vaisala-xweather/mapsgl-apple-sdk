@@ -190,9 +190,6 @@ struct CellListItem : View
 				.foregroundColor(self.selected ? textHighlightedColor : textColor)
 				.font(.body)
 			Spacer()
-			Image(systemName: "slider.horizontal.3")
-				.resizable().scaledToFit().frame(width: 16, height: 16, alignment: .centerFirstTextBaseline)
-				.foregroundColor(backgroundColor)
 		}
 		.padding(.horizontal, 20)
 		.padding(.vertical, 6)
