@@ -29,21 +29,23 @@ struct SidebarView : View
 	}
 	
 	var content: some View {
-		HStack(alignment: .top) {
-			ZStack(alignment: .top) {
-				Color.backgroundColor
-					.edgesIgnoringSafeArea(.all)
-				
-				VStack(alignment: .leading) {
-					self.title
-					self.list
+		GeometryReader { geometry in
+			HStack(alignment: .top) {
+				ZStack(alignment: .top) {
+					Color.backgroundColor
+						.edgesIgnoringSafeArea(.all)
+					
+					VStack(alignment: .leading) {
+						self.title
+						self.list
+					}
 				}
+				.frame(width: self.sideBarWidth)
+				.offset(x: self.isSidebarVisible ? 0 : -(self.sideBarWidth + geometry.safeAreaInsets.leading))
+				.animation(.default, value: self.isSidebarVisible)
+				
+				Spacer()
 			}
-			.frame(width: self.sideBarWidth)
-			.offset(x: self.isSidebarVisible ? 0 : -self.sideBarWidth)
-			.animation(.default, value: self.isSidebarVisible)
-			
-			Spacer()
 		}
 	}
 	
