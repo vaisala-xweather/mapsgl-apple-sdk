@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapboxMaps
 import MapsGLMaps
 
 
@@ -39,11 +40,14 @@ struct ContentView : View
 	
 	var body: some View {
 		ZStack(alignment: .topLeading) {
-			ScrollView([.horizontal, .vertical], showsIndicators: false) {
-				Image("PlaceholderMap")
-			}
-			.ignoresSafeArea(.all)
-			.defaultScrollAnchor(.center)
+			RepresentedMapboxMapView(	
+				mapInitOptions: .init(
+					cameraOptions: .init(center: .geographicCenterOfContiguousUSA, zoom: 2),
+					styleURI: .light
+				),
+				dataModel: self.dataModel
+			)
+			.ignoresSafeArea()
 			
 			self.layersButton
 			
