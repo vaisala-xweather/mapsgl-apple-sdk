@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		A6C78DD02B7474040007F513 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6C78DCF2B7474000007F513 /* Inter.ttf */; };
 		A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
 		A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6E538072B7AA887007EE086 /* AccessKeys.plist */; };
+		A6EBAD3C2B7B233A00848952 /* MapsGLMaps in Frameworks */ = {isa = PBXBuildFile; productRef = A6EBAD3B2B7B233A00848952 /* MapsGLMaps */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6EBAD3C2B7B233A00848952 /* MapsGLMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,6 +102,9 @@
 			dependencies = (
 			);
 			name = Demo;
+			packageProductDependencies = (
+				A6EBAD3B2B7B233A00848952 /* MapsGLMaps */,
+			);
 			productName = Demo;
 			productReference = A625092C2B74553700E2D3AB /* Demo.app */;
 			productType = "com.apple.product-type.application";
@@ -128,6 +133,9 @@
 				Base,
 			);
 			mainGroup = A62509232B74553700E2D3AB;
+			packageReferences = (
+				A6EBAD3A2B7B233A00848952 /* XCLocalSwiftPackageReference "../MapsGL" */,
+			);
 			productRefGroup = A625092D2B74553700E2D3AB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -403,6 +411,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A6EBAD3A2B7B233A00848952 /* XCLocalSwiftPackageReference "../MapsGL" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../MapsGL;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A6EBAD3B2B7B233A00848952 /* MapsGLMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapsGLMaps;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A62509242B74553700E2D3AB /* Project object */;
 }
