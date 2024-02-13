@@ -54,7 +54,21 @@ struct SidebarView : View
 	var sideBarWidth: CGFloat = 250
 	
 	var body: some View {
-		self.content
+		ZStack {
+			self.tapOutsideToClose
+			self.content
+		}
+	}
+	
+	var tapOutsideToClose: some View {
+		return GeometryReader { _ in
+			EmptyView()
+		}
+		.contentShape(Rectangle())
+		.opacity(self.isSidebarVisible ? 1 : 0)
+		.onTapGesture {
+			self.isSidebarVisible = false
+		}
 	}
 	
 	var content: some View {
