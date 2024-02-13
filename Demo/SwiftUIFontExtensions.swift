@@ -11,7 +11,7 @@ import SwiftUI
 
 extension SwiftUI.Font
 {
-	static var titleFont: Font { .custom("Inter", size: 28) }
-	static var headerFont: Font { .custom("Inter", size: 20).weight(.medium) }
-	static var cellFont: Font { .custom("Inter", size: 12).weight(.medium) }
+	static var titleFont: Font { .system(size: 28) }
+	static var headerFont: Font { .system(size: 20, weight: .medium) }
+	static var cellFont: Font { .system(size: 12, weight: .medium) }
 }

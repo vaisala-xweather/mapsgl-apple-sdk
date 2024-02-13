@@ -15,7 +15,6 @@
 		A6A4A8BF2B7B512B00024DE0 /* SwiftUIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */; };
 		A6A9F41A2B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */; };
 		A6C78DCC2B745E8C0007F513 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C78DCB2B745E8C0007F513 /* SidebarView.swift */; };
-		A6C78DD02B7474040007F513 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6C78DCF2B7474000007F513 /* Inter.ttf */; };
 		A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
 		A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6E538072B7AA887007EE086 /* AccessKeys.plist */; };
 		A6EBAD3C2B7B233A00848952 /* MapsGLMaps in Frameworks */ = {isa = PBXBuildFile; productRef = A6EBAD3B2B7B233A00848952 /* MapsGLMaps */; };
@@ -34,8 +33,6 @@
 		A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFontExtensions.swift; sourceTree = "<group>"; };
 		A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
 		A6C78DCB2B745E8C0007F513 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
-		A6C78DCF2B7474000007F513 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
-		A6C78DD12B7474250007F513 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A6E538052B7AA874007EE086 /* AccessKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessKeys.swift; sourceTree = "<group>"; };
 		A6E538072B7AA887007EE086 /* AccessKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AccessKeys.plist; sourceTree = "<group>"; };
 		A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherLayersModel.swift; sourceTree = "<group>"; };
@@ -75,7 +72,6 @@
 			children = (
 				A62509352B74553D00E2D3AB /* Demo.entitlements */,
 				A6E538072B7AA887007EE086 /* AccessKeys.plist */,
-				A6C78DD12B7474250007F513 /* Info.plist */,
 				A6E538052B7AA874007EE086 /* AccessKeys.swift */,
 				A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */,
 				A62509312B74553700E2D3AB /* ContentView.swift */,
@@ -85,7 +81,6 @@
 				A6A4A8BC2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift */,
 				A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */,
 				A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */,
-				A6C78DCF2B7474000007F513 /* Inter.ttf */,
 				A62509332B74553D00E2D3AB /* Assets.xcassets */,
 				A62509362B74553D00E2D3AB /* Preview Content */,
 			);
@@ -167,7 +162,6 @@
 			files = (
 				A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */,
 				A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */,
-				A6C78DD02B7474040007F513 /* Inter.ttf in Resources */,
 				A62509342B74553D00E2D3AB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,7 +338,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -383,7 +376,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
