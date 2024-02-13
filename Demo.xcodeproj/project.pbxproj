@@ -12,6 +12,7 @@
 		A62509342B74553D00E2D3AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509332B74553D00E2D3AB /* Assets.xcassets */; };
 		A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509372B74553D00E2D3AB /* Preview Assets.xcassets */; };
 		A6A4A8BD2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BC2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift */; };
+		A6A4A8BF2B7B512B00024DE0 /* SwiftUIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */; };
 		A6A9F41A2B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */; };
 		A6C78DCC2B745E8C0007F513 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C78DCB2B745E8C0007F513 /* SidebarView.swift */; };
 		A6C78DD02B7474040007F513 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A6C78DCF2B7474000007F513 /* Inter.ttf */; };
@@ -30,6 +31,7 @@
 		A62509352B74553D00E2D3AB /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		A62509372B74553D00E2D3AB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A6A4A8BC2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIColorExtensions.swift; sourceTree = "<group>"; };
+		A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIFontExtensions.swift; sourceTree = "<group>"; };
 		A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
 		A6C78DCB2B745E8C0007F513 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
 		A6C78DCF2B7474000007F513 /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 				A6EBAD3F2B7B24A000848952 /* RepresentedMapboxMapView.swift */,
 				A6C78DCB2B745E8C0007F513 /* SidebarView.swift */,
 				A6A4A8BC2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift */,
+				A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */,
 				A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */,
 				A6C78DCF2B7474000007F513 /* Inter.ttf */,
 				A62509332B74553D00E2D3AB /* Assets.xcassets */,
@@ -199,6 +202,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6A4A8BF2B7B512B00024DE0 /* SwiftUIFontExtensions.swift in Sources */,
 				A6C78DCC2B745E8C0007F513 /* SidebarView.swift in Sources */,
 				A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */,
 				A62509322B74553700E2D3AB /* ContentView.swift in Sources */,

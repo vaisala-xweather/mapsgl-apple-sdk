@@ -3,12 +3,6 @@ import MapsGLMaps
 
 
 
-fileprivate let titleFont = Font.custom("Inter", size: 28)
-fileprivate let headerFont = Font.custom("Inter", size: 20).weight(.medium)
-fileprivate let cellFont = Font.custom("Inter", size: 12).weight(.medium)
-
-
-
 struct SidebarView : View
 {
 	@ObservedObject var dataModel: WeatherLayersModel
@@ -57,7 +51,7 @@ struct SidebarView : View
 		VStack(alignment: .leading) {
 			HStack {
 				Text("Layers")
-					.font(titleFont)
+					.font(.titleFont)
 					.lineSpacing(20)
 					.foregroundColor(.textColor)
 				Spacer()
@@ -124,7 +118,7 @@ struct CellGroup : View
 	var header: some View {
 		HStack {
 			Text(self.headerText)
-				.font(headerFont)
+				.font(.headerFont)
 				.lineSpacing(20)
 				.foregroundColor(.textColor)
 				.frame(height: 28)
@@ -148,7 +142,7 @@ struct CellListItem : View
 	var body: some View {
 		HStack {
 			Text(text)
-				.font(cellFont)
+				.font(.cellFont)
 				.lineSpacing(20)
 				.foregroundColor(self.selected ? .textHighlightedColor : .textColor)
 				.font(.body)
