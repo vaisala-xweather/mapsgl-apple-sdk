@@ -3,43 +3,6 @@ import MapsGLMaps
 
 
 
-fileprivate let backgroundColor = Color(.init(
-	red: 0x14 / 255,
-	green: 0x18 / 255,
-	blue: 0x1A / 255,
-	alpha: 1
-))
-fileprivate let backgroundHighlightedColor = Color(.init(
-	red: 0xFF / 255,
-	green: 0xFF / 255,
-	blue: 0xFF / 255,
-	alpha: 1
-))
-fileprivate let textColor = Color(.init(
-	red: 0xFF / 255,
-	green: 0xFF / 255,
-	blue: 0xFF / 255,
-	alpha: 1
-))
-fileprivate let textHighlightedColor = Color(.init(
-	red: 0x33 / 255,
-	green: 0x33 / 255,
-	blue: 0x33 / 255,
-	alpha: 1
-))
-fileprivate let closeButtonColor = Color(.init(
-	red: 0x5D / 255,
-	green: 0x5D / 255,
-	blue: 0x5D / 255,
-	alpha: 1
-))
-fileprivate let cellDividerColor = Color(.init(
-	red: 120 / 255,
-	green: 133 / 255,
-	blue: 140 / 255,
-	alpha: 1
-))
-
 fileprivate let titleFont = Font.custom("Inter", size: 28)
 fileprivate let headerFont = Font.custom("Inter", size: 20).weight(.medium)
 fileprivate let cellFont = Font.custom("Inter", size: 12).weight(.medium)
@@ -74,7 +37,7 @@ struct SidebarView : View
 	var content: some View {
 		HStack(alignment: .top) {
 			ZStack(alignment: .top) {
-				backgroundColor
+				Color.backgroundColor
 					.edgesIgnoringSafeArea(.all)
 				
 				VStack(alignment: .leading) {
@@ -96,7 +59,7 @@ struct SidebarView : View
 				Text("Layers")
 					.font(titleFont)
 					.lineSpacing(20)
-					.foregroundColor(textColor)
+					.foregroundColor(.textColor)
 				Spacer()
 				self.menuCloseButton
 			}
@@ -108,7 +71,7 @@ struct SidebarView : View
 	var menuCloseButton: some View {
 		Image(systemName: "xmark")
 			.resizable().scaledToFit().frame(width: 16, height: 16)
-			.foregroundColor(closeButtonColor)
+			.foregroundColor(.closeButtonColor)
 			.padding(.all, 0)
 			.animation(.default, value: self.isSidebarVisible)
 			.onTapGesture {
@@ -141,7 +104,7 @@ struct CellGroup : View
 	var body: some View {
 		self.header
 		
-		Divider().overlay(cellDividerColor)
+		Divider().overlay(Color.cellDividerColor)
 		
 		List(self.items) { item in
 			CellListItem(text: item.title, selected: self.selectedLayerCodes.contains(item.id))
@@ -163,12 +126,12 @@ struct CellGroup : View
 			Text(self.headerText)
 				.font(headerFont)
 				.lineSpacing(20)
-				.foregroundColor(textColor)
+				.foregroundColor(.textColor)
 				.frame(height: 28)
 			Spacer()
 			Image(systemName: "thermometer.medium")
 				.resizable().scaledToFit().frame(width: 28, height: 28, alignment: .centerFirstTextBaseline)
-				.foregroundColor(textColor)
+				.foregroundColor(.textColor)
 		}
 		.padding(.top, 28)
 		.padding(.horizontal, 20)
@@ -187,7 +150,7 @@ struct CellListItem : View
 			Text(text)
 				.font(cellFont)
 				.lineSpacing(20)
-				.foregroundColor(self.selected ? textHighlightedColor : textColor)
+				.foregroundColor(self.selected ? .textHighlightedColor : .textColor)
 				.font(.body)
 			Spacer()
 		}
@@ -196,9 +159,9 @@ struct CellListItem : View
 		.frame(height: 32)
 		.contentShape(Rectangle())
 		.listRowBackground(
-			self.selected ? backgroundHighlightedColor : backgroundColor
+			self.selected ? Color.backgroundHighlightedColor : Color.backgroundColor
 		)
-		.listRowSeparatorTint(cellDividerColor)
+		.listRowSeparatorTint(.cellDividerColor)
 		.alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
 		.listRowInsets(EdgeInsets())
 	}
