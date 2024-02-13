@@ -16,6 +16,7 @@
 		A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
 		A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6E538072B7AA887007EE086 /* AccessKeys.plist */; };
 		A6EBAD3C2B7B233A00848952 /* MapsGLMaps in Frameworks */ = {isa = PBXBuildFile; productRef = A6EBAD3B2B7B233A00848952 /* MapsGLMaps */; };
+		A6EBAD3E2B7B23DE00848952 /* WeatherLayersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		A6C78DD12B7474250007F513 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		A6E538052B7AA874007EE086 /* AccessKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessKeys.swift; sourceTree = "<group>"; };
 		A6E538072B7AA887007EE086 /* AccessKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AccessKeys.plist; sourceTree = "<group>"; };
+		A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherLayersModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				A62509312B74553700E2D3AB /* ContentView.swift */,
 				A625092F2B74553700E2D3AB /* DemoApp.swift */,
 				A6C78DCB2B745E8C0007F513 /* SidebarView.swift */,
+				A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */,
 				A6C78DCF2B7474000007F513 /* Inter.ttf */,
 				A62509332B74553D00E2D3AB /* Assets.xcassets */,
 				A62509362B74553D00E2D3AB /* Preview Content */,
@@ -190,6 +193,7 @@
 				A6C78DCC2B745E8C0007F513 /* SidebarView.swift in Sources */,
 				A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */,
 				A62509322B74553700E2D3AB /* ContentView.swift in Sources */,
+				A6EBAD3E2B7B23DE00848952 /* WeatherLayersModel.swift in Sources */,
 				A62509302B74553700E2D3AB /* DemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

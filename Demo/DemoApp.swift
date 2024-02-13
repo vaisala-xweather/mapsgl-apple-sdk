@@ -12,9 +12,11 @@ import SwiftUI
 @main
 struct DemoApp : App
 {
+	private var _dataModel = WeatherLayersModel()
+	
 	var body: some Scene {
 		WindowGroup {
-			ContentView()
+			ContentView(dataModel: _dataModel)
 		}
 	}
 }

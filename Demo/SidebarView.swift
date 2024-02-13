@@ -1,4 +1,5 @@
 import SwiftUI
+import MapsGLMaps
 
 
 
@@ -45,35 +46,17 @@ fileprivate let cellFont = Font.custom("Inter", size: 12).weight(.medium)
 
 
 
-
-struct MenuItem : Identifiable {
-	var id: Int
-	var text: String
-}
-
-
-
 struct SidebarView : View
 {
+	@ObservedObject var dataModel: WeatherLayersModel
 	@Binding var isSidebarVisible: Bool
 	
 	var sideBarWidth: CGFloat = 250
 	
 	var body: some View {
-		ZStack {
-			GeometryReader { _ in
-				EmptyView()
-			}
-			.opacity(isSidebarVisible ? 1 : 0)
-			.animation(.easeInOut.delay(0.2), value: isSidebarVisible)
-			.onTapGesture {
-				isSidebarVisible.toggle()
-			}
-			
-			self.content
-		}
+		self.content
 	}
-
+	
 	var content: some View {
 		HStack(alignment: .top) {
 			ZStack(alignment: .top) {
@@ -123,9 +106,13 @@ struct SidebarView : View
 	var list: some View {
 		ScrollView {
 			VStack(spacing: 0) {
-				CellGroup(headerText: "Conditions", items: self.conditionsItems)
-				CellGroup(headerText: "Severe", items: self.severeItems)
-				CellGroup(headerText: "Other", items: self.otherItems)
+				ForEach(Array(WeatherLayersModel.Category.allCases)) { category in
+					CellGroup(
+						headerText: category.title,
+						items: WeatherLayersModel.allLayersByCategory[category]!,
+						selectedLayerCodes: $dataModel.selectedLayerCodes
+					)
+				}
 			}
 		}
 	}
@@ -146,45 +133,14 @@ struct SidebarView : View
 			.foregroundColor(textColor)
 			.padding(.all, 0)
 	}
-	
-	var conditionsItems: [MenuItem] = [
-		MenuItem(id: 4001, text: "Temperatures"),
-		MenuItem(id: 4002, text: "Wind Speeds"),
-		MenuItem(id: 4003, text: "Radar"),
-		MenuItem(id: 4004, text: "Satellite"),
-		MenuItem(id: 4005, text: "Air Quality"),
-		MenuItem(id: 4006, text: "Heat Index"),
-		MenuItem(id: 4007, text: "Dew Points"),
-	]
-	
-	var severeItems: [MenuItem] = [
-		MenuItem(id: 5001, text: "Temperatures"),
-		MenuItem(id: 5002, text: "Wind Speeds"),
-		MenuItem(id: 5003, text: "Radar"),
-		MenuItem(id: 5004, text: "Satellite"),
-		MenuItem(id: 5005, text: "Air Quality"),
-		MenuItem(id: 5006, text: "Heat Index"),
-		MenuItem(id: 5007, text: "Dew Points"),
-	]
-	
-	var otherItems: [MenuItem] = [
-		MenuItem(id: 6001, text: "Temperatures"),
-		MenuItem(id: 6002, text: "Wind Speeds"),
-		MenuItem(id: 6003, text: "Radar"),
-		MenuItem(id: 6004, text: "Satellite"),
-		MenuItem(id: 6005, text: "Air Quality"),
-		MenuItem(id: 6006, text: "Heat Index"),
-		MenuItem(id: 6007, text: "Dew Points"),
-	]
 }
 
 
 struct CellGroup : View
 {
 	var headerText: String
-	var items: [MenuItem]
-	
-	@State private var _multiSelection = Set<MenuItem.ID>()
+	var items: [WeatherLayersModel.Layer]
+	@Binding var selectedLayerCodes: Set<WeatherLayersModel.Layer.ID>
 	
 	var body: some View {
 		self.header
@@ -192,12 +148,12 @@ struct CellGroup : View
 		Divider().overlay(cellDividerColor)
 		
 		List(self.items) { item in
-			CellListItem(text: item.text, selected: _multiSelection.contains(item.id))
+			CellListItem(text: item.title, selected: self.selectedLayerCodes.contains(item.id))
 				.onTapGesture {
-					if !_multiSelection.contains(item.id) {
-						_multiSelection.update(with: item.id)
+					if !self.selectedLayerCodes.contains(item.id) {
+						self.selectedLayerCodes.update(with: item.id)
 					} else {
-						_multiSelection.remove(item.id)
+						self.selectedLayerCodes.remove(item.id)
 					}
 				}
 		}
@@ -258,5 +214,8 @@ struct CellListItem : View
 
 
 #Preview {
-	SidebarView(isSidebarVisible: .constant(true))
+	SidebarView(
+		dataModel: WeatherLayersModel(),
+		isSidebarVisible: .constant(true)
+	)
 }

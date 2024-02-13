@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapsGLMaps
 
 
 
@@ -32,7 +33,9 @@ fileprivate let shadowColor = Color(.init(
 
 struct ContentView : View
 {
+	@ObservedObject var dataModel: WeatherLayersModel
 	@State private var isSidebarVisible = false
+	
 	
 	var body: some View {
 		ZStack(alignment: .topLeading) {
@@ -44,7 +47,7 @@ struct ContentView : View
 			
 			self.layersButton
 			
-			SidebarView(isSidebarVisible: $isSidebarVisible)
+			SidebarView(dataModel: self.dataModel, isSidebarVisible: $isSidebarVisible)
 		}
 	}
 	
@@ -68,5 +71,7 @@ struct ContentView : View
 
 
 #Preview {
-	ContentView()
+	ContentView(
+		dataModel: WeatherLayersModel()
+	)
 }
