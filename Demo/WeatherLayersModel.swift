@@ -116,6 +116,12 @@ extension WeatherLayersModel
 			makeConfiguration: { WeatherService.PrecipitationRate(service: $0) }
 		),
 		.init(
+			code: .radar,
+			title: "Radar", 
+			category: .conditions,
+			makeConfiguration: { WeatherService.Radar(service: $0) }
+		),
+		.init(
 			code: .airQualityIndex,
 			title: "AQI", 
 			category: .airQuality,
