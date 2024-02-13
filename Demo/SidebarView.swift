@@ -123,9 +123,6 @@ struct CellGroup : View
 				.foregroundColor(.textColor)
 				.frame(height: 28)
 			Spacer()
-			Image(systemName: "thermometer.medium")
-				.resizable().scaledToFit().frame(width: 28, height: 28, alignment: .centerFirstTextBaseline)
-				.foregroundColor(.textColor)
 		}
 		.padding(.top, 28)
 		.padding(.horizontal, 20)
