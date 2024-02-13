@@ -80,7 +80,6 @@ struct SidebarView : View
 				VStack(alignment: .leading) {
 					self.title
 					self.list
-					self.footer
 				}
 			}
 			.frame(width: self.sideBarWidth)
@@ -129,23 +128,6 @@ struct SidebarView : View
 				}
 			}
 		}
-	}
-	
-	var footer: some View {
-		VStack(alignment: .leading) {
-			HStack {
-				self.settingsButton
-			}
-			.frame(height: 44)
-		}
-		.padding(.all, 20)
-	}
-
-	var settingsButton: some View {
-		Image(systemName: "gearshape.fill")
-			.resizable().scaledToFit().frame(width: 24, height: 24)
-			.foregroundColor(textColor)
-			.padding(.all, 0)
 	}
 }
 
