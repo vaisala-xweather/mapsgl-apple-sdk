@@ -40,7 +40,7 @@ struct ContentView : View
 				.fill(Color.backgroundColor)
 				.frame(width: 44, height: 44)
 				.shadow(color: .shadowColor, radius: 8, y: +2)
-			Image(systemName: "square.3.layers.3d.top.filled")
+			Image("MapsGL.Stack")
 				.resizable().scaledToFit().frame(width: 24, height: 24)
 				.foregroundColor(.textColor)
 		}
