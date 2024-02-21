@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,13 +11,13 @@
 		A62509322B74553700E2D3AB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62509312B74553700E2D3AB /* ContentView.swift */; };
 		A62509342B74553D00E2D3AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509332B74553D00E2D3AB /* Assets.xcassets */; };
 		A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509372B74553D00E2D3AB /* Preview Assets.xcassets */; };
+		A6484C442B8699E3008DF0B6 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = A6484C432B8699E3008DF0B6 /* MapsGL */; };
 		A6A4A8BD2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BC2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift */; };
 		A6A4A8BF2B7B512B00024DE0 /* SwiftUIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */; };
 		A6A9F41A2B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */; };
 		A6C78DCC2B745E8C0007F513 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C78DCB2B745E8C0007F513 /* SidebarView.swift */; };
 		A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
 		A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6E538072B7AA887007EE086 /* AccessKeys.plist */; };
-		A6EBAD3C2B7B233A00848952 /* MapsGLMaps in Frameworks */ = {isa = PBXBuildFile; productRef = A6EBAD3B2B7B233A00848952 /* MapsGLMaps */; };
 		A6EBAD3E2B7B23DE00848952 /* WeatherLayersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EBAD3D2B7B23DD00848952 /* WeatherLayersModel.swift */; };
 		A6EBAD402B7B24A000848952 /* RepresentedMapboxMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EBAD3F2B7B24A000848952 /* RepresentedMapboxMapView.swift */; };
 /* End PBXBuildFile section */
@@ -44,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6EBAD3C2B7B233A00848952 /* MapsGLMaps in Frameworks */,
+				A6484C442B8699E3008DF0B6 /* MapsGL in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,7 +113,7 @@
 			);
 			name = Demo;
 			packageProductDependencies = (
-				A6EBAD3B2B7B233A00848952 /* MapsGLMaps */,
+				A6484C432B8699E3008DF0B6 /* MapsGL */,
 			);
 			productName = Demo;
 			productReference = A625092C2B74553700E2D3AB /* Demo.app */;
@@ -144,7 +144,7 @@
 			);
 			mainGroup = A62509232B74553700E2D3AB;
 			packageReferences = (
-				A6EBAD3A2B7B233A00848952 /* XCLocalSwiftPackageReference "../MapsGL" */,
+				A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */,
 			);
 			productRefGroup = A625092D2B74553700E2D3AB /* Products */;
 			projectDirPath = "";
@@ -426,17 +426,22 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		A6EBAD3A2B7B233A00848952 /* XCLocalSwiftPackageReference "../MapsGL" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../MapsGL;
+/* Begin XCRemoteSwiftPackageReference section */
+		A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
 		};
-/* End XCLocalSwiftPackageReference section */
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A6EBAD3B2B7B233A00848952 /* MapsGLMaps */ = {
+		A6484C432B8699E3008DF0B6 /* MapsGL */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = MapsGLMaps;
+			package = A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */;
+			productName = MapsGL;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
