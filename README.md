@@ -1,5 +1,7 @@
 # MapsGL SDK for Apple platforms
 
+<img src="images/MapsGL-iPad-PM10-layer.png" alt="MapsGL Screenshot"/>
+
 ## Overview
 
 MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It enables the integration of MapsGL's rich mapping features into iOS applications, providing a seamless and interactive user experience.
