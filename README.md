@@ -1,4 +1,4 @@
-# MapsGL SDK for Apple platforms
+# MapsGL SDK for Apple Platforms
 
 <img src="images/MapsGL-iPad-PM10-layer.png" alt="MapsGL Screenshot"/>
 
