@@ -27,7 +27,7 @@ The MapsGL Apple SDK includes a demo application that showcases the capabilities
 - Xcode 15 or later
 - An Apple Developer account
 - An iOS 16+ device (or Xcode's iOS Simulator)
-- An Xweather account
+- An Xweather account— We offer a [free developer account](https://www.aerisweather.com/signup/developer/) for you to give our weather API a test drive.
 - A Mapbox account
 
 ### Steps to Run
