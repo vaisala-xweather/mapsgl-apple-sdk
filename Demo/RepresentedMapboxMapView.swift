@@ -79,10 +79,12 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 				let layerCodesToAdd = selectedLayerCodes.subtracting(context.coordinator.activeLayerCodes)
 				if !layerCodesToAdd.isEmpty {
 					_logger.debug("Adding layers: \(layerCodesToAdd)")
+					
+					let roadLayerId = mapController.map.mapboxMap.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
 					for code in layerCodesToAdd {
 						do {
 							let layer = WeatherLayersModel.allLayersByCode[code]!
-							try mapController.addWeatherLayer(config: layer.makeConfiguration(mapController.service))
+							try mapController.addWeatherLayer(config: layer.makeConfiguration(mapController.service), beforeId: roadLayerId)
 						} catch {
 							_logger.error("Failed to add weather layer: \(error)")
 						}
