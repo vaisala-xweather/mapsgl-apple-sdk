@@ -5,17 +5,17 @@ import PackageDescription
 
 
 
-let version: Version = "1.0.0-beta.1"
+let version: Version = "1.0.0-beta.2"
 let xcframeworkChecksums = (
-	core: "0c21313c6e713355e0cd3248600f8b5cdf242a30db94e4769de2ccc8a56c6de0",
-	maps: "b3e0338c1e79c1470958fd450778685b4d1e5658b6be15b7d727727320454108",
-	mapbox: "6d4bb10f6d03d49e75b4fe76daeae13b483eb4b9665ab17075d40ab274b998db"
+	core: "25d7fa5f2abe758dd26af59ec2dbaf2829aad61e847a56e572ff26becf2b63a5",
+	maps: "4feddab24cfa9eca1f30f3d71765eb2e2ab364d8ebdf7563144bafc9da49168e",
+	mapbox: "4b852776bf90022ff2083088afe19ceb6ee33d8e57f4c1475838152baadeb151"
 )
 
 
 let package = Package(
 	name: "MapsGL",
-	platforms: [ .iOS(.v16), .macCatalyst(.v16), ],
+	platforms: [ .iOS(.v16), .macCatalyst(.v16), .visionOS(.v1) ],
 	products: [
 		.library(name: "MapsGL", targets: [
 			"MapsGLMapsWrapper",
