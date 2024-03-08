@@ -50,8 +50,10 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 		)
 		try! mapView.mapboxMap.setProjection(.init(name: .mercator)) // Set 2D map projection
 		
-		let maximumFPS = Float(UIScreen.main.maximumFramesPerSecond)
-		mapView.preferredFrameRateRange = .init(minimum: maximumFPS * 2 / 3, maximum: maximumFPS, preferred: maximumFPS)
+		#if os(iOS) || targetEnvironment(macCatalyst) || os(tvOS)
+			let maximumFPS = Float(UIScreen.main.maximumFramesPerSecond)
+			mapView.preferredFrameRateRange = .init(minimum: maximumFPS * 2 / 3, maximum: maximumFPS, preferred: maximumFPS)
+		#endif // iOS, macCatalyst, tvOS
 		
 		// Set up the MapsGL ``MapboxMapController``, which will handling adding/removing MapsGL weather layers to the ``MapboxMaps.MapView``.
 		let mapController = MapboxMapController(
