@@ -10,6 +10,7 @@ import MapsGLMaps
 
 
 
+/// View-model for weather layers, bridging MapsGL's ``WeatherService`` model to Demo app's ``RepresentedMapboxMapView`` view, and ownership of view seleected layer state.
 class WeatherLayersModel : ObservableObject
 {
 	@Published var selectedLayerCodes: Set<WeatherService.LayerCode>
@@ -175,6 +176,78 @@ extension WeatherLayersModel
 			category: .airQuality,
 			makeConfiguration: { WeatherService.SulfurDioxide(service: $0) }
 		),
+		.init(
+			code: .seaSurfaceTemperatures,
+			title: "Sea Surface Temps", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.SeaSurfaceTemperatures(service: $0) }
+		),
+		.init(
+			code: .oceanCurrents,
+			title: "Currents", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.OceanCurrents(service: $0) }
+		),
+		.init(
+			code: .waveHeights,
+			title: "Wave Heights", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.WaveHeights(service: $0) }
+		),
+		.init(
+			code: .wavePeriods,
+			title: "Wave Periods", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.WavePeriods(service: $0) }
+		),
+		.init(
+			code: .swellHeights,
+			title: "Swell Heights", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.SwellHeights(service: $0) }
+		),
+		.init(
+			code: .swellPeriods,
+			title: "Swell Periods", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.SwellPeriods(service: $0) }
+		),
+		.init(
+			code: .swell2Heights,
+			title: "Swell 2 Heights", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.Swell2Heights(service: $0) }
+		),
+		.init(
+			code: .swell2Periods,
+			title: "Swell 2 Periods", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.Swell2Periods(service: $0) }
+		),
+		.init(
+			code: .swell3Heights,
+			title: "Swell 3 Heights", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.Swell3Heights(service: $0) }
+		),
+		.init(
+			code: .swell3Periods,
+			title: "Swell 3 Periods", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.Swell3Periods(service: $0) }
+		),
+		.init(
+			code: .stormSurge,
+			title: "Storm Surge", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.StormSurge(service: $0) }
+		),
+		.init(
+			code: .tideHeights,
+			title: "Tide Heights", 
+			category: .maritime,
+			makeConfiguration: { WeatherService.TideHeights(service: $0) }
+		),
 	]
 	
 	static let allLayersByCode: [WeatherService.LayerCode : Layer] = Dictionary(uniqueKeysWithValues: allLayers.map { layer in
@@ -189,6 +262,7 @@ extension WeatherLayersModel
 	{
 		case conditions
 		case airQuality
+		case maritime
 		
 		var id: Self { self }
 		
@@ -196,6 +270,7 @@ extension WeatherLayersModel
 			switch self {
 				case .conditions: "Conditions"
 				case .airQuality: "Air Quality"
+				case .maritime: "Maritime"
 			}
 		}
 	}
