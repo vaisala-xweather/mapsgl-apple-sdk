@@ -5,11 +5,12 @@ import PackageDescription
 
 
 
-let version: Version = "1.0.0-beta.3"
+let version: Version = "1.0.0-beta.4"
 let xcframeworkChecksums = (
-	core: "f4813b6330a7caaa403f10be8591ac8e64b2ef146544d7f1da153a515b13dd11",
-	maps: "bb2f9537f0d2c7539028107913bb1eef735c0ac4a9f41d49691a4684be296dae",
-	mapbox: "9a438875595caf656243c3d030af2e593c083e88f12aea52bc103c5063f00242"
+	core: "06801f365044d580636631a1be9facc9b6f9aae6cab13dd7068edc4578ac50b3",
+	renderer: "c8a7106a90628641563100ffd8c844d394f0e9df0f81d4c5f3b1ecbdbe972f20",
+	maps: "179173cae8b754a5cdbedc3695106946da0e13ddc6dc63043b190a71df7a7bff",
+	mapbox: "e9408a68d49261f7f9c3f602011943911f83dc9ee1dc1b5f329a7643c387d526"
 )
 
 
@@ -18,6 +19,7 @@ let package = Package(
 	platforms: [ .iOS(.v16), .macCatalyst(.v16), .visionOS(.v1) ],
 	products: [
 		.library(name: "MapsGL", targets: [
+			"MapsGLRendererWrapper",
 			"MapsGLMapsWrapper",
 			"MapsGLMapboxWrapper",
 		]),
@@ -31,9 +33,21 @@ let package = Package(
 			checksum: xcframeworkChecksums.core
 		),
 		
+		.target(name: "MapsGLRendererWrapper",
+			dependencies: [
+				"MapsGLCore",
+				"MapsGLRenderer",
+			]
+		),
+		.binaryTarget(name: "MapsGLRenderer",
+			url: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/v\(version)/MapsGLRenderer.xcframework.zip",
+			checksum: xcframeworkChecksums.renderer
+		),
+		
 		.target(name: "MapsGLMapsWrapper",
 			dependencies: [
 				"MapsGLCore",
+				"MapsGLRenderer",
 				"MapsGLMaps",
 			]
 		),
