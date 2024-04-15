@@ -109,7 +109,7 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 	RepresentedMapboxMapView(
 		mapInitOptions: .init(
 			cameraOptions: .init(center: .geographicCenterOfContiguousUSA, zoom: 2),
-			styleURI: .light
+			styleURI: .dark
 		),
 		dataModel: WeatherLayersModel(selectedLayerCodes: [ .temperatures ])
 	)

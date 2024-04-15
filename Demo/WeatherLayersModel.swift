@@ -51,6 +51,19 @@ extension WeatherLayersModel
 			makeConfiguration: { WeatherService.WindSpeeds(service: $0) }
 		),
 		.init(
+			code: .windParticles,
+			title: "Winds: Particles", 
+			category: .conditions,
+			makeConfiguration: {
+				var configuration = WeatherService.WindParticles(service: $0)
+				configuration.layer.paint.particle = .init(
+					density: .high,
+					trails: false
+				)
+				return configuration
+			}
+		),
+		.init(
 			code: .feelsLike,
 			title: "Feels Like", 
 			category: .conditions,
@@ -187,6 +200,19 @@ extension WeatherLayersModel
 			title: "Currents", 
 			category: .maritime,
 			makeConfiguration: { WeatherService.OceanCurrents(service: $0) }
+		),
+		.init(
+			code: .oceanCurrentsParticles,
+			title: "Currents: Particles", 
+			category: .maritime,
+			makeConfiguration: {
+				var configuration = WeatherService.OceanCurrentsParticles(service: $0)
+				configuration.layer.paint.particle = .init(
+					density: .high,
+					trails: false
+				)
+				return configuration
+			}
 		),
 		.init(
 			code: .waveHeights,

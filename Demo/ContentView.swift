@@ -22,7 +22,7 @@ struct ContentView : View
 			RepresentedMapboxMapView(	
 				mapInitOptions: .init(
 					cameraOptions: .init(center: .geographicCenterOfContiguousUSA, zoom: 2),
-					styleURI: .light
+					styleURI: .dark
 				),
 				dataModel: self.dataModel
 			)
