@@ -57,7 +57,7 @@ extension WeatherLayersModel
 			makeConfiguration: {
 				var configuration = WeatherService.WindParticles(service: $0)
 				configuration.layer.paint.particle = .init(
-					density: .high,
+					density: .extreme,
 					trails: false
 				)
 				return configuration
@@ -208,7 +208,7 @@ extension WeatherLayersModel
 			makeConfiguration: {
 				var configuration = WeatherService.OceanCurrentsParticles(service: $0)
 				configuration.layer.paint.particle = .init(
-					density: .high,
+					density: .extreme,
 					trails: false
 				)
 				return configuration
