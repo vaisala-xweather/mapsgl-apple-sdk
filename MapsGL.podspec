@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "MapsGL"
-  spec.version      = "1.0.0-beta.4"
+  spec.version      = "1.0.0-beta.5"
   spec.summary      = "MapsGL is an easy-to-use, highly customizable Swift SDK for visualizing both weather and custom data, powered by Metal."
   spec.description  = <<-DESC
 MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It enables the integration of MapsGL's rich mapping features into iOS applications, providing a seamless and interactive user experience.
@@ -14,25 +14,32 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   spec.platforms    = { :ios => '16.0' }
   spec.source       = {
     http: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/#{spec.version.to_s}/MapsGL.zip",
-    sha256: "fdef018083e70c59df80e37e64f4c57aab299bea29048795a8e1f70c013a5aef",
+    sha256: "2ab5510b4b6e6cafc6a69b03dd612adc4bab96db12484a91130f79e843d9153c",
     flatten: true
   }
-  spec.default_subspecs = 'Core', 'Maps', 'Mapbox'
+  spec.default_subspecs = 'Core', 'Renderer', 'Maps', 'Mapbox'
   
   spec.subspec 'Core' do |subspec|
     subspec.vendored_frameworks = 'MapsGLCore.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Metal', 'MetalKit', 'SwiftUI', 'UIKit', 'simd', 'Darwin', 'Spatial', 'Dispatch', 'Logger', 'Swift', 'CoreLocation'
+    subspec.frameworks = 'Foundation', 'CoreLocation', 'Darwin', 'Dispatch', 'OSLog', 'Swift', 'UIKit'
+  end
+  
+  spec.subspec 'Renderer' do |subspec|
+    subspec.vendored_frameworks = 'MapsGLRenderer.xcframework'
+    subspec.frameworks = 'Foundation', 'CoreGraphics', 'Metal', 'MetalKit', 'OSLog', 'Spatial', 'Swift', 'SwiftUI', 'simd'
+    subspec.dependency 'MapsGL/Core'
   end
   
   spec.subspec 'Maps' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMaps.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Combine', 'ImageIO', 'Metal', 'UIKit', 'simd', 'Spatial', 'Logger', 'Swift', 'CoreLocation', 'UniformTypeIdentifiers'
+    subspec.frameworks = 'Foundation', 'Combine', 'CoreGraphics', 'CoreLocation', 'ImageIO', 'Metal', 'OSLog', 'Spatial', 'Swift', 'UIKit', 'UniformTypeIdentifiers', 'simd'
     subspec.dependency 'MapsGL/Core'
+    subspec.dependency 'MapsGL/Renderer'
   end
   
   spec.subspec 'Mapbox' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMapbox.xcframework'
-    subspec.frameworks = 'Foundation', 'Combine', 'Metal', 'Spatial', 'Logger', 'Swift'
+    subspec.frameworks = 'Foundation', 'Combine', 'CoreLocation', 'Metal', 'OSLog', 'Spatial', 'Swift'
     subspec.dependency 'MapsGL/Maps'
     subspec.dependency 'MapboxMaps', '~> 11.0'
   end
