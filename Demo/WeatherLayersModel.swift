@@ -10,7 +10,7 @@ import MapsGLMaps
 
 
 
-/// View-model for weather layers, bridging MapsGL's ``WeatherService`` model to Demo app's ``RepresentedMapboxMapView`` view, and ownership of view seleected layer state.
+/// View-model for weather layers, bridging MapsGL's ``WeatherService`` model to Demo app's ``RepresentedMapboxMapView`` view, and ownership of view selected layer state.
 class WeatherLayersModel : ObservableObject
 {
 	@Published var selectedLayerCodes: Set<WeatherService.LayerCode>
@@ -56,10 +56,8 @@ extension WeatherLayersModel
 			category: .conditions,
 			makeConfiguration: {
 				var configuration = WeatherService.WindParticles(service: $0)
-				configuration.layer.paint.particle = .init(
-					density: .extreme,
-					trails: false
-				)
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.trails = false
 				return configuration
 			}
 		),
@@ -207,10 +205,8 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.OceanCurrentsParticles(service: $0)
-				configuration.layer.paint.particle = .init(
-					density: .extreme,
-					trails: false
-				)
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.trails = false
 				return configuration
 			}
 		),
@@ -227,6 +223,17 @@ extension WeatherLayersModel
 			makeConfiguration: { WeatherService.WavePeriods(service: $0) }
 		),
 		.init(
+			code: .waveParticles,
+			title: "Wave Dir: Particles", 
+			category: .maritime,
+			makeConfiguration: {
+				var configuration = WeatherService.WaveParticles(service: $0)
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.trails = false
+				return configuration
+			}
+		),
+		.init(
 			code: .swellHeights,
 			title: "Swell Heights", 
 			category: .maritime,
@@ -237,6 +244,17 @@ extension WeatherLayersModel
 			title: "Swell Periods", 
 			category: .maritime,
 			makeConfiguration: { WeatherService.SwellPeriods(service: $0) }
+		),
+		.init(
+			code: .swellParticles,
+			title: "Swell Dir: Particles", 
+			category: .maritime,
+			makeConfiguration: {
+				var configuration = WeatherService.SwellParticles(service: $0)
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.trails = false
+				return configuration
+			}
 		),
 		.init(
 			code: .swell2Heights,
@@ -251,6 +269,17 @@ extension WeatherLayersModel
 			makeConfiguration: { WeatherService.Swell2Periods(service: $0) }
 		),
 		.init(
+			code: .swell2Particles,
+			title: "Swell 2 Dir: Particles", 
+			category: .maritime,
+			makeConfiguration: {
+				var configuration = WeatherService.Swell2Particles(service: $0)
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.trails = false
+				return configuration
+			}
+		),
+		.init(
 			code: .swell3Heights,
 			title: "Swell 3 Heights", 
 			category: .maritime,
@@ -261,6 +290,17 @@ extension WeatherLayersModel
 			title: "Swell 3 Periods", 
 			category: .maritime,
 			makeConfiguration: { WeatherService.Swell3Periods(service: $0) }
+		),
+		.init(
+			code: .swell3Particles,
+			title: "Swell 3 Dir: Particles", 
+			category: .maritime,
+			makeConfiguration: {
+				var configuration = WeatherService.Swell3Particles(service: $0)
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.trails = false
+				return configuration
+			}
 		),
 		.init(
 			code: .stormSurge,
