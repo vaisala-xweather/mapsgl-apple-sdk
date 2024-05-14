@@ -21,7 +21,7 @@ struct ContentView : View
 		ZStack(alignment: .topLeading) {
 			RepresentedMapboxMapView(	
 				mapInitOptions: .init(
-					cameraOptions: .init(center: .geographicCenterOfContiguousUSA, zoom: 2),
+					cameraOptions: .init(center: .geographicCenterOfContiguousUSA, zoom: 2.75),
 					styleURI: .dark
 				),
 				dataModel: self.dataModel
