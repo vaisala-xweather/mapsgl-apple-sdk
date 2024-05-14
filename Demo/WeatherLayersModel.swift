@@ -56,8 +56,7 @@ extension WeatherLayersModel
 			category: .conditions,
 			makeConfiguration: {
 				var configuration = WeatherService.WindParticles(service: $0)
-				configuration.layer.paint.particle.density = .extreme
-				configuration.layer.paint.particle.trails = false
+				configuration.layer.paint.particle.density = .high
 				return configuration
 			}
 		),
@@ -205,8 +204,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.OceanCurrentsParticles(service: $0)
-				configuration.layer.paint.particle.density = .extreme
-				configuration.layer.paint.particle.trails = false
+				configuration.layer.paint.particle.density = .high
 				return configuration
 			}
 		),
@@ -228,8 +226,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.WaveParticles(service: $0)
-				configuration.layer.paint.particle.density = .extreme
-				configuration.layer.paint.particle.trails = false
+				configuration.layer.paint.particle.density = .high
 				return configuration
 			}
 		),
@@ -251,8 +248,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.SwellParticles(service: $0)
-				configuration.layer.paint.particle.density = .extreme
-				configuration.layer.paint.particle.trails = false
+				configuration.layer.paint.particle.density = .high
 				return configuration
 			}
 		),
@@ -274,8 +270,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.Swell2Particles(service: $0)
-				configuration.layer.paint.particle.density = .extreme
-				configuration.layer.paint.particle.trails = false
+				configuration.layer.paint.particle.density = .high
 				return configuration
 			}
 		),
@@ -297,8 +292,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.Swell3Particles(service: $0)
-				configuration.layer.paint.particle.density = .extreme
-				configuration.layer.paint.particle.trails = false
+				configuration.layer.paint.particle.density = .high
 				return configuration
 			}
 		),
