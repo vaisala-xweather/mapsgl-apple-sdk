@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		A62509302B74553700E2D3AB /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625092F2B74553700E2D3AB /* DemoApp.swift */; };
 		A62509322B74553700E2D3AB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62509312B74553700E2D3AB /* ContentView.swift */; };
-		A62509342B74553D00E2D3AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509332B74553D00E2D3AB /* Assets.xcassets */; };
 		A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509372B74553D00E2D3AB /* Preview Assets.xcassets */; };
 		A6484C442B8699E3008DF0B6 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = A6484C432B8699E3008DF0B6 /* MapsGL */; };
+		A65864342BF40C1E00706D11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509332B74553D00E2D3AB /* Assets.xcassets */; };
 		A6A4A8BD2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BC2B7B4E9E00024DE0 /* SwiftUIColorExtensions.swift */; };
 		A6A4A8BF2B7B512B00024DE0 /* SwiftUIFontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BE2B7B512B00024DE0 /* SwiftUIFontExtensions.swift */; };
 		A6A9F41A2B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */; };
@@ -167,8 +167,8 @@
 			files = (
 				A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */,
 				A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */,
+				A65864342BF40C1E00706D11 /* Assets.xcassets in Resources */,
 				A6E654F32BCDEBBA00AEBE94 /* PrivacyInfo.xcprivacy in Resources */,
-				A62509342B74553D00E2D3AB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
