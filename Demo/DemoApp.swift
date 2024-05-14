@@ -12,7 +12,9 @@ import SwiftUI
 @main
 struct DemoApp : App
 {
-	private var _dataModel = WeatherLayersModel()
+	private var _dataModel = WeatherLayersModel(
+		selectedLayerCodes: [ .windParticles ]
+	)
 	
 	var body: some Scene {
 		WindowGroup {
