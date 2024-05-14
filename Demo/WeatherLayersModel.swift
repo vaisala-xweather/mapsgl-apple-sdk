@@ -56,7 +56,10 @@ extension WeatherLayersModel
 			category: .conditions,
 			makeConfiguration: {
 				var configuration = WeatherService.WindParticles(service: $0)
-				configuration.layer.paint.particle.density = .high
+				configuration.layer.paint.sample.interpolation = .bicubic
+				configuration.layer.paint.sample.smoothing = 1.0
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.dropRate = 0.015
 				return configuration
 			}
 		),
@@ -204,7 +207,10 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.OceanCurrentsParticles(service: $0)
-				configuration.layer.paint.particle.density = .high
+				configuration.layer.paint.sample.interpolation = .bicubic
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.speed = 5
+				configuration.layer.paint.particle.dropRate = 0.015
 				return configuration
 			}
 		),
@@ -226,7 +232,12 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.WaveParticles(service: $0)
+				configuration.layer.paint.sample.interpolation = .bicubic
 				configuration.layer.paint.particle.density = .high
+				configuration.layer.paint.particle.speed = 0.75
+				configuration.layer.paint.particle.dropRate = 0.003
+				configuration.layer.paint.particle.dropRateBump = 0.003
+				configuration.layer.paint.particle.trailsFade = 0.95
 				return configuration
 			}
 		),
@@ -248,7 +259,12 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.SwellParticles(service: $0)
+				configuration.layer.paint.sample.interpolation = .bicubic
 				configuration.layer.paint.particle.density = .high
+				configuration.layer.paint.particle.speed = 0.75
+				configuration.layer.paint.particle.dropRate = 0.003
+				configuration.layer.paint.particle.dropRateBump = 0.003
+				configuration.layer.paint.particle.trailsFade = 0.95
 				return configuration
 			}
 		),
@@ -270,7 +286,9 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.Swell2Particles(service: $0)
-				configuration.layer.paint.particle.density = .high
+				configuration.layer.paint.sample.interpolation = .bicubic
+				configuration.layer.paint.particle.density = .extreme
+				configuration.layer.paint.particle.dropRate = 0.015
 				return configuration
 			}
 		),
@@ -292,7 +310,12 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.Swell3Particles(service: $0)
+				configuration.layer.paint.sample.interpolation = .bicubic
 				configuration.layer.paint.particle.density = .high
+				configuration.layer.paint.particle.speed = 0.75
+				configuration.layer.paint.particle.dropRate = 0.003
+				configuration.layer.paint.particle.dropRateBump = 0.003
+				configuration.layer.paint.particle.trailsFade = 0.95
 				return configuration
 			}
 		),
