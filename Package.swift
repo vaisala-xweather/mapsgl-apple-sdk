@@ -5,12 +5,12 @@ import PackageDescription
 
 
 
-let version: Version = "1.0.0-beta.6"
+let version: Version = "1.0.0"
 let xcframeworkChecksums = (
-	core: "a318715859e79f495baf12cd0e0e44547d385c2db95dae6b7c07ff4c56829961",
-	renderer: "ae40896ae43c8a39fa842e37e72ddcc9cf39f39139bc7223fa32bd447ecc7d72",
-	maps: "c9e3e2022a526e7617b042f03898140020fa640d42d1e1e85ee7093d3ffd39ba",
-	mapbox: "1e1d5787a9ff8c3aa048c6f2c4a2ae71e109dfbed578c3cccbadb60dd262c6a4"
+	core: "7b51f89e2521cde5426818c8f1368eee67ee90a2337b7b80853c2b57d51d911b",
+	renderer: "d1483630e0a190e81f2a8d7aafdac71a4463b5ddd2af7cc570300ed2b8f96890",
+	maps: "d43e6325cc880e5b604bc674ff87fd29eb4705f54eee126bf59cdd8065f6679b",
+	mapbox: "53b5a9adb9fe42b1e5382963c6ce61d1acb18635b93b8a3b9ef002b6ffde25fb"
 )
 
 
