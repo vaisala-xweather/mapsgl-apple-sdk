@@ -6,5 +6,7 @@
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location is not directly used in any way for any purpose by MapsGL, however MapsGL and Mapbox use CLLocation and related APIs for mapping and thus link to variety of location APIs.</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
