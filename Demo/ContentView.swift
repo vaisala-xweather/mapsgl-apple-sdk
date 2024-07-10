@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import Combine
+import OSLog
 import MapboxMaps
 import MapsGLMaps
+import MapsGLMapbox
 
 
 
@@ -18,10 +21,10 @@ fileprivate let currentLocationZoom: Double = 4.0
 
 struct ContentView : View
 {
+	private let _logger = Logger(type: Self.self)
+	
 	@ObservedObject var dataModel: WeatherLayersModel
 	@State private var isSidebarVisible = (UIDevice.current.userInterfaceIdiom == .phone) ? false : true
-	
-	private var mapView: RepresentedMapboxMapView!
 	
 	private static let locationFinder = LocationFinder()
 	@State private var locationFinderAlertIsPresented: Bool = false
@@ -33,27 +36,86 @@ struct ContentView : View
 		}
 	}
 	
-	init(dataModel: WeatherLayersModel) {
-		self.dataModel = dataModel
-		self.mapView = RepresentedMapboxMapView(
-			mapInitOptions: .init(
-				cameraOptions: .init(center: .geographicCenterOfContiguousUSA, zoom: initialZoom),
-				styleURI: .dark
-			),
-			dataModel: self.dataModel
-		)
+	
+	class Coordinator
+	{
+		/// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the `MapboxMaps.MapView`.
+		var mapController: MapboxMapController!
+		
+		/// Stores the active layer codes that we've already handled by adding/removing layers to/from the ``mapController``.
+		/// Used for change-checking in comparison to the ``RepresentedMapboxMapView/dataModel``.``WeatherLayersModel/selectedLayerCodes`` to determine if there are new layers that need to be added, or old layers that need to be removed.
+		var activeLayerCodes: Set<WeatherService.LayerCode> = []
+		
+		/// Holds Combine subscriptions to MapsGL events and other Combine subscriptions.
+		var eventSubscriptions: Set<AnyCancellable> = []
+		
+		/// Mapbox's camera manager, used to trigger `fly(to:…)` animations.
+		var camera: MapboxMaps.CameraAnimationsManager?
 	}
+	private let coordinator = Coordinator()
 	
 	
 	var body: some View {
 		ZStack {
-			self.mapView
-				.ignoresSafeArea()
-				.alert(isPresented: $locationFinderAlertIsPresented, error: self.locationFinderError) {
-					Button("OK") {
-						self.locationFinderError = nil
+			MapReader { proxy in
+				Map(initialViewport: .camera(center: .geographicCenterOfContiguousUSA, zoom: initialZoom))
+					.mapStyle(.dark)
+					.ignoresSafeArea()
+					.alert(isPresented: $locationFinderAlertIsPresented, error: self.locationFinderError) {
+						Button("OK") {
+							self.locationFinderError = nil
+						}
 					}
-				}
+					.onAppear {
+						guard let map = proxy.map else { return }
+												
+						coordinator.camera = proxy.camera
+						
+						try! map.setProjection(.init(name: .mercator)) // Set 2D map projection
+						
+						// Set up the MapsGL ``MapboxMapController``, which will handling adding/removing MapsGL weather layers to the ``MapboxMaps.MapView``.
+						let mapController = MapboxMapController(
+							map: map,
+							account: XweatherAccount(id: AccessKeys.shared.xweatherClientID, secret: AccessKeys.shared.xweatherClientSecret)
+						)
+						coordinator.mapController = mapController
+						
+						// Once the map has completed initial load…
+						mapController.subscribe(to: MapEvents.Load.self) { _ in
+							// Start listening to Combine-provided change events of the `dataModel`'s selected layers.
+							self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
+								// Remove any layers that are no longer selected.
+								let layerCodesToRemove = coordinator.activeLayerCodes.subtracting(selectedLayerCodes)
+								if !layerCodesToRemove.isEmpty {
+									_logger.debug("Removing layers: \(layerCodesToRemove)")
+									for code in layerCodesToRemove {
+										mapController.removeWeatherLayer(forCode: code)
+									}
+								}
+								
+								// Construct the configuration for and add any layers that are newly selected.
+								let layerCodesToAdd = selectedLayerCodes.subtracting(coordinator.activeLayerCodes)
+								if !layerCodesToAdd.isEmpty {
+									_logger.debug("Adding layers: \(layerCodesToAdd)")
+									
+									let roadLayerId = mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
+									for code in layerCodesToAdd {
+										do {
+											let layer = WeatherLayersModel.allLayersByCode[code]!
+											try mapController.addWeatherLayer(config: layer.makeConfiguration(mapController.service), beforeId: roadLayerId)
+										} catch {
+											_logger.error("Failed to add weather layer: \(error)")
+										}
+									}
+								}
+								
+								coordinator.activeLayerCodes = selectedLayerCodes
+							}
+							.store(in: &coordinator.eventSubscriptions)
+						}
+						.store(in: &coordinator.eventSubscriptions)
+					}
+			}
 			
 			Group { self.layersButton }
 				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -78,7 +140,7 @@ struct ContentView : View
 		circleIconButton(imageName: "MapsGL.Location")
 			.onTapGesture {
 				Self.locationFinder.findCurrentLocation { location in
-					self.mapView.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
+					coordinator.camera?.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
 				} failure: { error in
 					self.locationFinderError = error
 				}
