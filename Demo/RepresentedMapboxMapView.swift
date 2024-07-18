@@ -14,7 +14,7 @@ import MapsGLMapbox
 
 
 
-/// Manages the ``MapboxMaps.MapView`` instance and presents it in SwiftUI, and uses a MapsGL ``MapboxMapController`` to add & remove the weather layers to the ``MapView`` in response to SwiftUI/Combine change updates of the Demo's ``WeatherLayersModel``.
+/// Manages the `MapboxMaps.MapView` instance and presents it in SwiftUI, and uses a MapsGL `MapboxMapController` to add & remove the weather layers to the `MapboxMaps.MapView` in response to SwiftUI/Combine change updates of the Demo's ``WeatherLayersModel``.
 struct RepresentedMapboxMapView : UIViewRepresentable
 {
 	private let _logger = Logger(type: Self.self)
@@ -26,11 +26,11 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 	
 	class Coordinator
 	{
-		/// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the ``MapboxMaps.MapView``.
+		/// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the `MapboxMaps.MapView`.
 		var mapController: MapboxMapController!
 		
 		/// Stores the active layer codes that we've already handled by adding/removing layers to/from the ``mapController``.
-		/// Used for change-checking in comparison to the ``dataModel.selectedLayerCodes`` to determine if there are new layers that need to be added, or old layers that need to be removed.
+		/// Used for change-checking in comparison to the ``RepresentedMapboxMapView/dataModel``.``WeatherLayersModel/selectedLayerCodes`` to determine if there are new layers that need to be added, or old layers that need to be removed.
 		var activeLayerCodes: Set<WeatherService.LayerCode> = []
 		
 		/// Holds Combine subscriptions to MapsGL events and other Combine subscriptions.

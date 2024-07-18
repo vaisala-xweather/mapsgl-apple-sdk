@@ -10,7 +10,7 @@ import MapsGLMaps
 
 
 
-/// View-model for weather layers, bridging MapsGL's ``WeatherService`` model to Demo app's ``RepresentedMapboxMapView`` view, and ownership of view selected layer state.
+/// View-model for weather layers, bridging MapsGL's `WeatherService` model to Demo app's ``RepresentedMapboxMapView`` view, and ownership of view selected layer state.
 class WeatherLayersModel : ObservableObject
 {
 	@Published var selectedLayerCodes: Set<WeatherService.LayerCode>
