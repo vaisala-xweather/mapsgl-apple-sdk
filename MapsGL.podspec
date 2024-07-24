@@ -21,18 +21,18 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   
   spec.subspec 'Core' do |subspec|
     subspec.vendored_frameworks = 'MapsGLCore.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Metal', 'MetalKit', 'SwiftUI', 'UIKit', 'simd', 'Darwin', 'Spatial', 'Dispatch', 'Logger', 'Swift', 'CoreLocation'
+    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Metal', 'MetalKit', 'SwiftUI', 'UIKit', 'CoreLocation'
   end
   
   spec.subspec 'Maps' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMaps.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Combine', 'ImageIO', 'Metal', 'UIKit', 'simd', 'Spatial', 'Logger', 'Swift', 'CoreLocation', 'UniformTypeIdentifiers'
+    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Combine', 'ImageIO', 'Metal', 'UIKit', 'CoreLocation', 'UniformTypeIdentifiers'
     subspec.dependency 'MapsGL/Core'
   end
   
   spec.subspec 'Mapbox' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMapbox.xcframework'
-    subspec.frameworks = 'Foundation', 'Combine', 'Metal', 'Spatial', 'Logger', 'Swift'
+    subspec.frameworks = 'Foundation', 'Combine', 'Metal'
     subspec.dependency 'MapsGL/Maps'
     subspec.dependency 'MapboxMaps', '~> 11.0'
   end
