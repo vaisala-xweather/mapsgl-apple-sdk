@@ -17,17 +17,24 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
     sha256: "fdef018083e70c59df80e37e64f4c57aab299bea29048795a8e1f70c013a5aef",
     flatten: true
   }
-  spec.default_subspecs = 'Core', 'Maps', 'Mapbox'
+  spec.default_subspecs = 'Core', 'Renderer', 'Maps', 'Mapbox'
   
   spec.subspec 'Core' do |subspec|
     subspec.vendored_frameworks = 'MapsGLCore.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Metal', 'MetalKit', 'SwiftUI', 'UIKit', 'CoreLocation'
+    subspec.frameworks = 'Foundation', 'CoreFoundation', 'UIKit', 'CoreLocation'
+  end
+  
+  spec.subspec 'Renderer' do |subspec|
+    subspec.vendored_frameworks = 'MapsGLRenderer.xcframework'
+    subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Metal', 'MetalKit', 'SwiftUI'
+    subspec.dependency 'MapsGL/Core'
   end
   
   spec.subspec 'Maps' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMaps.xcframework'
     subspec.frameworks = 'Foundation', 'CoreFoundation', 'CoreGraphics', 'Combine', 'ImageIO', 'Metal', 'UIKit', 'CoreLocation', 'UniformTypeIdentifiers'
     subspec.dependency 'MapsGL/Core'
+    subspec.dependency 'MapsGL/Renderer'
   end
   
   spec.subspec 'Mapbox' do |subspec|
