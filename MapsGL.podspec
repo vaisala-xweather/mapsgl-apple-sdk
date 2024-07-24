@@ -21,25 +21,25 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   
   spec.subspec 'Core' do |subspec|
     subspec.vendored_frameworks = 'MapsGLCore.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreLocation', 'Darwin', 'Dispatch', 'OSLog', 'Swift', 'UIKit'
+    subspec.frameworks = 'Foundation', 'CoreLocation', 'OSLog', 'UIKit'
   end
   
   spec.subspec 'Renderer' do |subspec|
     subspec.vendored_frameworks = 'MapsGLRenderer.xcframework'
-    subspec.frameworks = 'Foundation', 'CoreGraphics', 'Metal', 'MetalKit', 'OSLog', 'Spatial', 'Swift', 'SwiftUI', 'simd'
+    subspec.frameworks = 'Foundation', 'CoreGraphics', 'Metal', 'MetalKit', 'OSLog', 'SwiftUI'
     subspec.dependency 'MapsGL/Core'
   end
   
   spec.subspec 'Maps' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMaps.xcframework'
-    subspec.frameworks = 'Foundation', 'Combine', 'CoreGraphics', 'CoreLocation', 'ImageIO', 'Metal', 'OSLog', 'Spatial', 'Swift', 'UIKit', 'UniformTypeIdentifiers', 'simd'
+    subspec.frameworks = 'Foundation', 'Combine', 'CoreGraphics', 'CoreLocation', 'ImageIO', 'Metal', 'OSLog', 'UIKit', 'UniformTypeIdentifiers'
     subspec.dependency 'MapsGL/Core'
     subspec.dependency 'MapsGL/Renderer'
   end
   
   spec.subspec 'Mapbox' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMapbox.xcframework'
-    subspec.frameworks = 'Foundation', 'Combine', 'CoreLocation', 'Metal', 'OSLog', 'Spatial', 'Swift'
+    subspec.frameworks = 'Foundation', 'Combine', 'CoreLocation', 'Metal', 'OSLog'
     subspec.dependency 'MapsGL/Maps'
     subspec.dependency 'MapboxMaps', '~> 11.0'
   end
