@@ -8,7 +8,7 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   spec.readme = "https://raw.githubusercontent.com/vaisala-xweather/mapsgl-apple-sdk/v#{spec.version.to_s}/README.md"
   spec.homepage     = "https://github.com/vaisala-xweather/mapsgl-apple-sdk"
   spec.screenshots  = "https://raw.githubusercontent.com/vaisala-xweather/mapsgl-apple-sdk/v#{spec.version.to_s}/images/MapsGL-iPad-PM10-layer.png"
-  #spec.license      = { :type => 'BSD', :file => 'LICENSE.md' }
+  spec.license      = { :type => 'MIT', :file => 'LICENSE' }
   spec.author             = { "Vaisala Xweather" => "https://www.xweather.com/" }
   spec.social_media_url   = "https://twitter.com/vaisalaxweather"
   spec.platforms    = { :ios => '16.0' }
