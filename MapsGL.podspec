@@ -5,15 +5,15 @@ Pod::Spec.new do |spec|
   spec.description  = <<-DESC
 MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It enables the integration of MapsGL's rich mapping features into iOS applications, providing a seamless and interactive user experience.
   DESC
-  spec.readme = "https://raw.githubusercontent.com/vaisala-xweather/mapsgl-apple-sdk/#{spec.version.to_s}/README.md"
+  spec.readme = "https://raw.githubusercontent.com/vaisala-xweather/mapsgl-apple-sdk/v#{spec.version.to_s}/README.md"
   spec.homepage     = "https://github.com/vaisala-xweather/mapsgl-apple-sdk"
-  spec.screenshots  = "https://raw.githubusercontent.com/vaisala-xweather/mapsgl-apple-sdk/#{spec.version.to_s}/images/MapsGL-iPad-PM10-layer.png"
+  spec.screenshots  = "https://raw.githubusercontent.com/vaisala-xweather/mapsgl-apple-sdk/v#{spec.version.to_s}/images/MapsGL-iPad-PM10-layer.png"
   #spec.license      = { :type => 'BSD', :file => 'LICENSE.md' }
   spec.author             = { "Vaisala Xweather" => "https://www.xweather.com/" }
   spec.social_media_url   = "https://twitter.com/vaisalaxweather"
   spec.platforms    = { :ios => '16.0' }
   spec.source       = {
-    http: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/#{spec.version.to_s}/MapsGL.zip",
+    http: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/v#{spec.version.to_s}/MapsGL.zip",
     sha256: "d5041c277788c1cb6fe57e30a0d83d0f733b52a81b2247d67487ce6bc491978f",
     flatten: true
   }
