@@ -16,6 +16,9 @@ import MapsGLMapbox
 
 fileprivate let initialZoom: Double = 2.75
 fileprivate let currentLocationZoom: Double = 4.0
+#if os(iOS) || targetEnvironment(macCatalyst) || os(tvOS)
+	fileprivate var maximumFPS: Float { Float(UIScreen.main.maximumFramesPerSecond) }
+#endif // iOS, macCatalyst, tvOS
 
 
 
@@ -60,6 +63,9 @@ struct ContentView : View
 			MapReader { proxy in
 				Map(initialViewport: .camera(center: .geographicCenterOfContiguousUSA, zoom: initialZoom))
 					.mapStyle(.dark)
+					#if os(iOS) || targetEnvironment(macCatalyst) || os(tvOS)
+					.frameRate(range: (maximumFPS * 2 / 3)...maximumFPS, preferred: maximumFPS)
+					#endif // iOS, macCatalyst, tvOS
 					.ignoresSafeArea()
 					.alert(isPresented: $locationFinderAlertIsPresented, error: self.locationFinderError) {
 						Button("OK") {
@@ -76,6 +82,7 @@ struct ContentView : View
 						// Set up the MapsGL ``MapboxMapController``, which will handling adding/removing MapsGL weather layers to the ``MapboxMaps.MapView``.
 						let mapController = MapboxMapController(
 							map: map,
+							window: UIWindow?.none,
 							account: XweatherAccount(id: AccessKeys.shared.xweatherClientID, secret: AccessKeys.shared.xweatherClientSecret)
 						)
 						coordinator.mapController = mapController
