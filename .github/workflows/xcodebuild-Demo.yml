@@ -40,14 +40,7 @@ jobs:
         defaults write "$(realpath ./AccessKeys.plist)" 'XweatherClientSecret' -string "${{ secrets.XWEATHER_CLIENT_SECRET }}"
         popd
       
-    - name: Build for iOS
-      run: |
-        xcodebuild build \
-          -project ./Demo.xcodeproj \
-          -scheme 'Demo' \
-          -destination 'generic/platform=iOS'
-      
-    - name: Build for iOS Simulator
+    - name: Build
       run: |
         xcodebuild build \
           -project ./Demo.xcodeproj \
