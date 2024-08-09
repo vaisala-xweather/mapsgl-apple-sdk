@@ -2,7 +2,11 @@
 
 <img src="images/MapsGL-iPad-PM10-layer.png" alt="MapsGL Screenshot"/>
 
-![Swift workflow badge](https://github.com/vaisala-xweather/mapsgl-apple-sdk/actions/workflows/xcodebuild-Demo.yml/badge.svg)
+[![Release version](https://img.shields.io/github/v/release/vaisala-xweather/mapsgl-apple-sdk.svg?label=Release&labelColor=2D323A&color=4ed9c2&include_prereleases)](https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases)
+[![Swift workflow badge](https://github.com/vaisala-xweather/mapsgl-apple-sdk/actions/workflows/xcodebuild-Demo.yml/badge.svg)](https://github.com/vaisala-xweather/mapsgl-apple-sdk/actions)
+[![Swift Package Manager supported](https://img.shields.io/badge/Swift_Package_Manager-supported-blue.svg?labelColor=2D323A)](https://swiftpackageindex.com/vaisala-xweather/mapsgl-apple-sdk)
+[![CocoaPods supported](https://img.shields.io/badge/CocoaPods-supported-blue.svg?labelColor=2D323A)](https://cocoapods.org/pods/MapsGL)
+[![Carthage supported](https://img.shields.io/badge/Carthage-supported-blue.svg?labelColor=2D323A)](https://github.com/Carthage/Carthage)
 
 ## Overview
 
