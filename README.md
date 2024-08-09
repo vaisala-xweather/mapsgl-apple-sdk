@@ -2,6 +2,8 @@
 
 <img src="images/MapsGL-iPad-PM10-layer.png" alt="MapsGL Screenshot"/>
 
+![Swift workflow badge](https://github.com/vaisala-xweather/mapsgl-apple-sdk/actions/workflows/xcodebuild-Demo.yml/badge.svg)
+
 ## Overview
 
 MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It enables the integration of MapsGL's rich mapping features into iOS applications, providing a seamless and interactive user experience.
