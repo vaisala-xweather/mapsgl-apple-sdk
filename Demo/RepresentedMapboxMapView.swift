@@ -80,7 +80,7 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 				if !layerCodesToAdd.isEmpty {
 					_logger.debug("Adding layers: \(layerCodesToAdd)")
 					
-					let roadLayerId = mapController.map.mapboxMap.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
+					let roadLayerId = mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
 					for code in layerCodesToAdd {
 						do {
 							let layer = WeatherLayersModel.allLayersByCode[code]!
