@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A6137F132CC6FF3600C2A280 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = A6137F122CC6FF3600C2A280 /* MapboxMaps */; };
 		A62509302B74553700E2D3AB /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625092F2B74553700E2D3AB /* DemoApp.swift */; };
 		A62509322B74553700E2D3AB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62509312B74553700E2D3AB /* ContentView.swift */; };
 		A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509372B74553D00E2D3AB /* Preview Assets.xcassets */; };
@@ -47,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6137F132CC6FF3600C2A280 /* MapboxMaps in Frameworks */,
 				A6484C442B8699E3008DF0B6 /* MapsGL in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +121,7 @@
 			name = Demo;
 			packageProductDependencies = (
 				A6484C432B8699E3008DF0B6 /* MapsGL */,
+				A6137F122CC6FF3600C2A280 /* MapboxMaps */,
 			);
 			productName = Demo;
 			productReference = A625092C2B74553700E2D3AB /* Demo.app */;
@@ -150,6 +153,7 @@
 			mainGroup = A62509232B74553700E2D3AB;
 			packageReferences = (
 				A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */,
+				A6137F112CC6FF3600C2A280 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
 			);
 			productRefGroup = A625092D2B74553700E2D3AB /* Products */;
 			projectDirPath = "";
@@ -449,17 +453,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A6137F112CC6FF3600C2A280 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios";
+			requirement = {
+				kind = exactVersion;
+				version = 11.4.0;
+			};
+		};
 		A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
 			requirement = {
-				kind = exactVersion;
-				version = 1.0.2;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A6137F122CC6FF3600C2A280 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A6137F112CC6FF3600C2A280 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
+			productName = MapboxMaps;
+		};
 		A6484C432B8699E3008DF0B6 /* MapsGL */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */;
