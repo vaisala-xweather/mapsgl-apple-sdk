@@ -333,11 +333,11 @@ extension WeatherLayersModel
 		),
 	]
 	
-	static let allLayersByCode: [WeatherService.LayerCode : Layer] = Dictionary(uniqueKeysWithValues: allLayers.map { layer in
+	static let allLayersByCode: [WeatherService.LayerCode : Layer] = .init(uniqueKeysWithValues: allLayers.map { layer in
 		( key: layer.code, value: layer )
 	})
 	
-	static let allLayersByCategory: [Category : [Layer]] = Dictionary(uniqueKeysWithValues: Category.allCases.map { category in
+	static let allLayersByCategory: [Category : [Layer]] = .init(uniqueKeysWithValues: Category.allCases.map { category in
 		( key: category, value: allLayers.filter { $0.category == category } )
 	})
 	
