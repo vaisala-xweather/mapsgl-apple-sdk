@@ -41,6 +41,7 @@ struct ContentView : View
 				.frame(width: 44, height: 44)
 				.shadow(color: .shadowColor, radius: 8, y: +2)
 			Image("MapsGL.Stack")
+				.renderingMode(.template)
 				.resizable().scaledToFit().frame(width: 24, height: 24)
 				.foregroundColor(.textColor)
 		}

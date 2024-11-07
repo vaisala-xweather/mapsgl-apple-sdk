@@ -5,12 +5,12 @@ import PackageDescription
 
 
 
-let version: Version = "1.0.2"
+let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
+let version: Version = "1.0.3"
 let xcframeworkChecksums = (
-	core: "971f2cd7ebec1eed1f683821c9942e89997c11b1d5fe62ee328ca4dead35b76b",
-	renderer: "1c14b223e809b58b7c08c88e134cd2482cce67c0ff3f745706cb02c7dd8ea536",
-	maps: "544d19a152c10e6d500929080d590091382f7f2191b3e2fd835033b69f5fd96d",
-	mapbox: "9e3f7c32f5c77f1628d6b2964ef3b1384e6fcac9d91aea0531082dad1e7463ac"
+	core: "e130358a551f9cb494b54de1a2d33ff42e745fcc560d88149d13802b2695449e",
+	renderer: "1ab33555a304f85eeb7b0cfd94b9ca4e4052f2c70006cefcefe7f1e7faa7b037",
+	maps: "6e472e099723521a67eba7c180bd1029fc3673254422343ffa8a4c7c79c22b65"
 )
 
 
@@ -21,15 +21,15 @@ let package = Package(
 		.library(name: "MapsGL", targets: [
 			"MapsGLRendererWrapper",
 			"MapsGLMapsWrapper",
-			"MapsGLMapboxWrapper",
+			"MapsGLMapbox",
 		]),
 	],
 	dependencies: [
-		.package(url: "https://github.com/mapbox/mapbox-maps-ios.git", "11.0.0"..<"11.5.0"),
+		.package(url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "11.0.0"),
 	],
 	targets: [
 		.binaryTarget(name: "MapsGLCore",
-			url: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/v\(version)/MapsGLCore.xcframework.zip",
+			url: "https://github.com/\(repositoryPath)/releases/download/v\(version)/MapsGLCore.xcframework.zip",
 			checksum: xcframeworkChecksums.core
 		),
 		
@@ -40,7 +40,7 @@ let package = Package(
 			]
 		),
 		.binaryTarget(name: "MapsGLRenderer",
-			url: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/v\(version)/MapsGLRenderer.xcframework.zip",
+			url: "https://github.com/\(repositoryPath)/releases/download/v\(version)/MapsGLRenderer.xcframework.zip",
 			checksum: xcframeworkChecksums.renderer
 		),
 		
@@ -52,20 +52,15 @@ let package = Package(
 			]
 		),
 		.binaryTarget(name: "MapsGLMaps",
-			url: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/v\(version)/MapsGLMaps.xcframework.zip",
+			url: "https://github.com/\(repositoryPath)/releases/download/v\(version)/MapsGLMaps.xcframework.zip",
 			checksum: xcframeworkChecksums.maps
 		),
 		
-		.target(name: "MapsGLMapboxWrapper",
+		.target(name: "MapsGLMapbox",
 			dependencies: [
 				"MapsGLMaps",
-				"MapsGLMapbox",
 				.product(name: "MapboxMaps", package: "mapbox-maps-ios"),
 			]
-		),
-		.binaryTarget(name: "MapsGLMapbox",
-			url: "https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases/download/v\(version)/MapsGLMapbox.xcframework.zip",
-			checksum: xcframeworkChecksums.mapbox
 		),
 	]
 )
