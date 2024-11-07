@@ -457,8 +457,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios";
 			requirement = {
-				kind = exactVersion;
-				version = 11.4.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
 			};
 		};
 		A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {

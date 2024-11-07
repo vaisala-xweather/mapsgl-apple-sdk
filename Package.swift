@@ -6,11 +6,11 @@ import PackageDescription
 
 
 let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
-let version: Version = "1.0.2"
+let version: Version = "1.0.3"
 let xcframeworkChecksums = (
-	core: "cee22caae7f36de31aed86a64e469351c61bb5dab809e5c43473a646509200c6",
-	renderer: "dc050130d8e228fbb3a77ec796cde4b4ece5115cf498a7969ea3e5531636f995",
-	maps: "87e80609e2e9d5cbbf8a07142e77977cbeb12474ea1b3282342746e1a13f1448"
+	core: "e130358a551f9cb494b54de1a2d33ff42e745fcc560d88149d13802b2695449e",
+	renderer: "1ab33555a304f85eeb7b0cfd94b9ca4e4052f2c70006cefcefe7f1e7faa7b037",
+	maps: "6e472e099723521a67eba7c180bd1029fc3673254422343ffa8a4c7c79c22b65"
 )
 
 
@@ -25,7 +25,7 @@ let package = Package(
 		]),
 	],
 	dependencies: [
-		.package(url: "https://github.com/mapbox/mapbox-maps-ios.git", "11.0.0"..<"11.5.0"),
+		.package(url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "11.0.0"),
 	],
 	targets: [
 		.binaryTarget(name: "MapsGLCore",
