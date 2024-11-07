@@ -24,6 +24,13 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 	@ObservedObject var dataModel: WeatherLayersModel
 	
 	
+	class Actions : ObservableObject
+	{
+		@Published var flyToCameraOptions: MapboxMaps.CameraOptions? = nil
+	}
+	@ObservedObject var actions: Actions = .init()
+	
+	
 	class Coordinator
 	{
 		/// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the `MapboxMaps.MapView`.
@@ -100,7 +107,20 @@ struct RepresentedMapboxMapView : UIViewRepresentable
 		return mapView
 	}
 	
-	func updateUIView(_ uiView: MapboxMaps.MapView, context: Context) {}
+	func fly(to cameraOptions: MapboxMaps.CameraOptions) {
+		self.actions.flyToCameraOptions = cameraOptions
+	}
+	
+	func updateUIView(_ mapView: MapboxMaps.MapView, context: Context)
+	{
+		if let cameraOptions = self.actions.flyToCameraOptions {
+			mapView.camera.fly(to: cameraOptions)
+			
+			DispatchQueue.main.async {
+				self.actions.flyToCameraOptions = nil
+			}
+		}
+	}
 }
 
 
