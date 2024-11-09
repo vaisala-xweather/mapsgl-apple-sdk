@@ -48,65 +48,60 @@ struct ContentView : View
 	var body: some View {
 		ZStack {
 			self.mapView
-			.ignoresSafeArea()
-			.alert(isPresented: $locationFinderAlertIsPresented, error: self.locationFinderError) {
-				Button("OK") {
-					self.locationFinderError = nil
+				.ignoresSafeArea()
+				.alert(isPresented: $locationFinderAlertIsPresented, error: self.locationFinderError) {
+					Button("OK") {
+						self.locationFinderError = nil
+					}
 				}
-			}
 			
-			Group {
-				self.layersButton
-			}
-			.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-			.padding([ .top ], 30)
+			Group { self.layersButton }
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+				.padding([ .top ], 30)
 			
-			Group {
-				self.currentLocationButton
-			}
-			.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-			.padding([ .bottom ], 40)
-			
+			Group { self.currentLocationButton }
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+				.padding([ .bottom ], 40)
+				
 			SidebarView(dataModel: self.dataModel, isSidebarVisible: $isSidebarVisible)
 		}
 	}
 	
 	var layersButton: some View {
-		ZStack {
-			Circle()
-				.fill(Color.backgroundColor)
-				.frame(width: 44, height: 44)
-				.shadow(color: .shadowColor, radius: 8, y: +2)
-			Image("MapsGL.Stack")
-				.renderingMode(.template)
-				.resizable().scaledToFit().frame(width: 24, height: 24)
-				.foregroundColor(.textColor)
-		}
-		.padding(.all, 6)
-		.onTapGesture {
-			self.isSidebarVisible.toggle()
-		}
+		circleIconButton(imageName: "MapsGL.Stack")
+			.onTapGesture {
+				self.isSidebarVisible.toggle()
+			}
 	}
 	
 	var currentLocationButton: some View {
-		ZStack {
-			Circle()
-				.fill(Color.backgroundColor)
-				.frame(width: 44, height: 44)
-				.shadow(color: .shadowColor, radius: 8, y: +2)
-			Image("MapsGL.Location")
-				.renderingMode(.template)
-				.resizable().scaledToFit().frame(width: 24, height: 24)
-				.foregroundColor(.textColor)
-		}
-		.padding(.all, 6)
-		.onTapGesture {
-			ContentView.locationFinder.findCurrentLocation { location in
-				self.mapView.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
-			} failure: { error in
-				self.locationFinderError = error
+		circleIconButton(imageName: "MapsGL.Location")
+			.onTapGesture {
+				Self.locationFinder.findCurrentLocation { location in
+					self.mapView.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
+				} failure: { error in
+					self.locationFinderError = error
+				}
 			}
-		}
+	}
+}
+
+
+
+extension View
+{
+	func circleIconButton(imageName: String) -> some View {
+		Circle()
+			.fill(Color.backgroundColor)
+			.frame(width: 44, height: 44)
+			.shadow(color: .shadowColor, radius: 8, y: +2)
+			.overlay {
+				Image(imageName)
+					.renderingMode(.template)
+					.resizable().scaledToFit().frame(width: 24, height: 24)
+					.foregroundColor(.textColor)
+			}
+			.padding(.all, 6)
 	}
 }
 
