@@ -17,18 +17,18 @@ struct SidebarView : View
 			}
 			self.content
 		}
-		.preferredColorScheme(.dark)
+			.preferredColorScheme(.dark)
 	}
 	
 	var tapOutsideToClose: some View {
 		return GeometryReader { _ in
 			EmptyView()
 		}
-		.contentShape(Rectangle())
-		.opacity(self.isSidebarVisible ? 1 : 0)
-		.onTapGesture {
-			self.isSidebarVisible = false
-		}
+			.contentShape(Rectangle())
+			.opacity(self.isSidebarVisible ? 1 : 0)
+			.onTapGesture {
+				self.isSidebarVisible = false
+			}
 	}
 	
 	var content: some View {
@@ -43,9 +43,9 @@ struct SidebarView : View
 						self.list
 					}
 				}
-				.frame(width: self.sideBarWidth)
-				.offset(x: self.isSidebarVisible ? 0 : -(self.sideBarWidth + geometry.safeAreaInsets.leading))
-				.animation(.default, value: self.isSidebarVisible)
+					.frame(width: self.sideBarWidth)
+					.offset(x: self.isSidebarVisible ? 0 : -(self.sideBarWidth + geometry.safeAreaInsets.leading))
+					.animation(.default, value: self.isSidebarVisible)
 				
 				Spacer()
 			}
@@ -62,8 +62,8 @@ struct SidebarView : View
 				Spacer()
 				self.menuCloseButton
 			}
-			.padding([.top, .horizontal], 20)
-			.padding(.bottom, 12)
+				.padding([.top, .horizontal], 20)
+				.padding(.bottom, 12)
 		}
 	}
 
@@ -103,7 +103,8 @@ struct CellGroup : View
 	var body: some View {
 		self.header
 		
-		Divider().overlay(Color.cellDividerColor)
+		Divider()
+			.overlay(Color.cellDividerColor)
 		
 		List(self.items) { item in
 			CellListItem(text: item.title, selected: self.selectedLayerCodes.contains(item.id))
@@ -115,9 +116,9 @@ struct CellGroup : View
 					}
 				}
 		}
-		.listStyle(.plain)
-		.environment(\.defaultMinListRowHeight, 0)
-		.frame(minHeight: CGFloat(32 * self.items.count))
+			.listStyle(.plain)
+			.environment(\.defaultMinListRowHeight, 0)
+			.frame(minHeight: CGFloat(32 * self.items.count))
 	}
 	
 	var header: some View {
@@ -129,9 +130,9 @@ struct CellGroup : View
 				.frame(height: 28)
 			Spacer()
 		}
-		.padding(.top, 28)
-		.padding(.horizontal, 20)
-		.padding(.bottom, 12)
+			.padding(.top, 28)
+			.padding(.horizontal, 20)
+			.padding(.bottom, 12)
 	}
 }
 
@@ -150,16 +151,16 @@ struct CellListItem : View
 				.font(.body)
 			Spacer()
 		}
-		.padding(.horizontal, 20)
-		.padding(.vertical, 6)
-		.frame(height: 32)
-		.contentShape(Rectangle())
-		.listRowBackground(
-			self.selected ? Color.backgroundHighlightedColor : Color.backgroundColor
-		)
-		.listRowSeparatorTint(.cellDividerColor)
-		.alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
-		.listRowInsets(EdgeInsets())
+			.padding(.horizontal, 20)
+			.padding(.vertical, 6)
+			.frame(height: 32)
+			.contentShape(Rectangle())
+			.listRowBackground(
+				self.selected ? Color.backgroundHighlightedColor : Color.backgroundColor
+			)
+			.listRowSeparatorTint(.cellDividerColor)
+			.alignmentGuide(.listRowSeparatorLeading) { $0[.leading] }
+			.listRowInsets(EdgeInsets())
 	}
 }
 
