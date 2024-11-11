@@ -4,9 +4,11 @@
 <dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Your location is not directly used in any way for any purpose by MapsGL, however MapsGL and Mapbox use CLLocation and related APIs for mapping and thus link to variety of location APIs.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSLocationDefaultAccuracyReduced</key>
+	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location is used to move the map to your rough location in the world when tapping the Current Location button.</string>
 </dict>
 </plist>
