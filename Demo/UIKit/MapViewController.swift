@@ -15,6 +15,7 @@ import MapsGLMapbox
 
 
 fileprivate let initialZoom: Double = 2.75
+fileprivate let currentLocationZoom: Double = 4.0
 
 
 
@@ -178,6 +179,21 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate
 	{
 		if let sidebarViewController = segue.destination as? SidebarViewController {
 			sidebarViewController.delegate = self
+		}
+	}
+	
+	
+	// MARK: Current Location
+	
+	private static let locationFinder = LocationFinder()
+	
+	@IBAction public func flyToCurrentLocation() {
+		Self.locationFinder.findCurrentLocation { location in
+			self.mapView.camera.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
+		} failure: { error in
+			let alert = UIAlertController(title: error.errorDescription, message: nil, preferredStyle: .alert)
+			alert.addAction(.init(title: "OK", style: .default))
+			self.present(alert, animated: true)
 		}
 	}
 	

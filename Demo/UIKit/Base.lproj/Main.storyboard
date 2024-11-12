@@ -38,6 +38,23 @@
                                     <action selector="toggleIsSidebarVisible" destination="BYZ-38-t0r" eventType="touchUpInside" id="X6K-uH-z0L"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hrv-0m-rGz" userLabel="Current Location Button" customClass="CircleIconButtonView" customModule="Demo___UIKit" customModuleProvider="target">
+                                <rect key="frame" x="12" y="722" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="7CA-NP-AvR"/>
+                                    <constraint firstAttribute="height" constant="44" id="T7n-iK-m74"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="MapsGL.Location"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="circleBackgroundColor">
+                                        <color key="value" red="0.078431372550000003" green="0.094117647060000004" blue="0.1019607843" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="flyToCurrentLocation" destination="BYZ-38-t0r" eventType="touchUpInside" id="xnI-Wl-ei2"/>
+                                </connections>
+                            </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sbB-iC-mtk" userLabel="Sidebar View">
                                 <rect key="frame" x="0.0" y="0.0" width="250" height="852"/>
                                 <subviews>
@@ -84,10 +101,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Hrv-0m-rGz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="0hv-aq-7Pj"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="683-yr-U42"/>
                             <constraint firstItem="0Nz-gH-55W" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="NX1-hF-5vb"/>
                             <constraint firstItem="0Nz-gH-55W" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="42" id="Si0-fO-W42"/>
                             <constraint firstItem="uc3-pe-lCV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="SuV-T0-O7k"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Hrv-0m-rGz" secondAttribute="bottom" constant="52" id="dfZ-o5-K6r"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="gFf-Ue-jTy"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="kad-nK-feW"/>
                             <constraint firstItem="sbB-iC-mtk" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="lmU-bZ-IxX"/>
@@ -222,6 +241,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="MapsGL.Location" width="24" height="24"/>
         <image name="MapsGL.Stack" width="24" height="24"/>
         <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
