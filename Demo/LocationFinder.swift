@@ -46,7 +46,7 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 			_completions = []
 		}
 		// `.notDetermined` is ignored, since `locationManagerDidChangeAuthorization(…)` will fire immediately when `requestLocation()` is called, then again once the auth pop-up has been tapped on
-		else {
+		else if [.authorizedWhenInUse, .authorizedAlways].contains(_locationManager.authorizationStatus) {
 			_locationManager.requestLocation()
 			// continues to `locationManager(_,didUpdateLocations:)` or `locationManager(_:,didFailWithError:)`
 		}
