@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -21,11 +21,30 @@
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Nz-gH-55W" userLabel="Layers Button" customClass="CircleIconButtonView" customModule="Demo___UIKit" customModuleProvider="target">
+                                <rect key="frame" x="12" y="101" width="44" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="53j-5L-mEj"/>
+                                    <constraint firstAttribute="height" constant="44" id="zQa-E9-CPS"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="MapsGL.Stack"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="circleBackgroundColor">
+                                        <color key="value" red="0.078431372549019607" green="0.094117647058823528" blue="0.10196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="toggleIsSidebarVisible" destination="BYZ-38-t0r" eventType="touchUpInside" id="X6K-uH-z0L"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="683-yr-U42"/>
+                            <constraint firstItem="0Nz-gH-55W" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="NX1-hF-5vb"/>
+                            <constraint firstItem="0Nz-gH-55W" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="42" id="Si0-fO-W42"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="gFf-Ue-jTy"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="kad-nK-feW"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sAM-gS-V0v"/>
@@ -41,6 +60,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="MapsGL.Stack" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

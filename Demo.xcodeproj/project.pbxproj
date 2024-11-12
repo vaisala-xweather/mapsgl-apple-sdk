@@ -33,6 +33,7 @@
 		A6D569E32CE3E5D90005790C /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B59DA62CE3C8B000AB2542 /* LocationFinder.swift */; };
 		A6D569E42CE3E5D90005790C /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B59DA62CE3C8B000AB2542 /* LocationFinder.swift */; };
 		A6D569E52CE3F7870005790C /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = A6484C432B8699E3008DF0B6 /* MapsGL */; };
+		A6D632772C3F5655007D1BD9 /* CircleIconButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D632762C3F5655007D1BD9 /* CircleIconButtonView.swift */; };
 		A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
 		A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6E538072B7AA887007EE086 /* AccessKeys.plist */; };
 		A6E654F32BCDEBBA00AEBE94 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A6E654F22BCDEBBA00AEBE94 /* PrivacyInfo.xcprivacy */; };
@@ -59,6 +60,7 @@
 		A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
 		A6B59DA62CE3C8B000AB2542 /* LocationFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFinder.swift; sourceTree = "<group>"; };
 		A6C78DCB2B745E8C0007F513 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		A6D632762C3F5655007D1BD9 /* CircleIconButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleIconButtonView.swift; sourceTree = "<group>"; };
 		A6E538052B7AA874007EE086 /* AccessKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessKeys.swift; sourceTree = "<group>"; };
 		A6E538072B7AA887007EE086 /* AccessKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AccessKeys.plist; sourceTree = "<group>"; };
 		A6E654F22BCDEBBA00AEBE94 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				A69E7F3B2C3F2E8100A06B81 /* AppDelegate.swift */,
+				A6D632762C3F5655007D1BD9 /* CircleIconButtonView.swift */,
 				A69E7F492C3F2E8200A06B81 /* Info.plist */,
 				A69E7F462C3F2E8200A06B81 /* LaunchScreen.storyboard */,
 				A69E7F412C3F2E8100A06B81 /* Main.storyboard */,
@@ -342,6 +345,7 @@
 				A69E7F6F2C3F3E5100A06B81 /* SceneDelegate.swift in Sources */,
 				A69E7F5C2C3F3D5D00A06B81 /* WeatherLayersModel.swift in Sources */,
 				A6D569E42CE3E5D90005790C /* LocationFinder.swift in Sources */,
+				A6D632772C3F5655007D1BD9 /* CircleIconButtonView.swift in Sources */,
 				A69E7F5D2C3F3D5D00A06B81 /* ColorExtensions.swift in Sources */,
 				A69E7F5E2C3F3D5D00A06B81 /* CLLocationCoordinate2DExtensions.swift in Sources */,
 			);

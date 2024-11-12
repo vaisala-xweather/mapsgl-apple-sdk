@@ -52,4 +52,14 @@ class ViewController : UIViewController
 		)
 		_mapController = mapController
 	}
+	
+	
+	public var isSidebarVisible = (UIDevice.current.userInterfaceIdiom == .phone) ? false : true {
+		didSet {
+		}
+	}
+	
+	@IBAction public func toggleIsSidebarVisible() {
+		self.isSidebarVisible = !(self.isSidebarVisible)
+	}
 }
