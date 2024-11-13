@@ -1,1 +1,2 @@
 Demo/** -linguist-documentation
+*.podspec linguist-vendored
