@@ -40,9 +40,16 @@ jobs:
         defaults write "$(realpath ./AccessKeys.plist)" 'XweatherClientSecret' -string "${{ secrets.XWEATHER_CLIENT_SECRET }}"
         popd
       
-    - name: Build
+    - name: Build SwiftUI
       run: |
         xcodebuild build \
           -project ./Demo.xcodeproj \
-          -scheme 'Demo' \
+          -scheme 'Demo - SwiftUI' \
+          -destination 'generic/platform=iOS Simulator'
+      
+    - name: Build UIKit
+      run: |
+        xcodebuild build \
+          -project ./Demo.xcodeproj \
+          -scheme 'Demo - UIKit' \
           -destination 'generic/platform=iOS Simulator'
