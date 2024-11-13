@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapboxMaps
 
 
 
@@ -15,6 +16,10 @@ struct DemoApp : App
 	private var _dataModel = WeatherLayersModel(
 		selectedLayerCodes: [ .windParticles ]
 	)
+	
+	init() {
+		MapboxOptions.accessToken = AccessKeys.shared.mapboxAccessToken
+	}
 	
 	var body: some Scene {
 		WindowGroup {
