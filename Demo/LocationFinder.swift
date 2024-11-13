@@ -9,6 +9,14 @@ import CoreLocation
 
 
 
+#if os(visionOS)
+	fileprivate let authorizedStatuses: [CLAuthorizationStatus] = [.authorizedWhenInUse]
+#else
+	fileprivate let authorizedStatuses: [CLAuthorizationStatus] = [.authorizedWhenInUse, .authorizedAlways]
+#endif
+
+
+
 /// Finds the current low-accuracy location of the user on-demand, with location updating only active until the callback is called.
 final class LocationFinder : NSObject, CLLocationManagerDelegate
 {
@@ -45,7 +53,7 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 			_completions = []
 		}
 		// `.notDetermined` is ignored, since `locationManagerDidChangeAuthorization(…)` will fire immediately when `requestLocation()` is called, then again once the auth pop-up has been tapped on
-		else if [.authorizedWhenInUse, .authorizedAlways].contains(_locationManager.authorizationStatus) {
+		else if authorizedStatuses.contains(_locationManager.authorizationStatus) {
 			_locationManager.requestLocation()
 			// continues to `locationManager(_,didUpdateLocations:)` or `locationManager(_:,didFailWithError:)`
 		}
