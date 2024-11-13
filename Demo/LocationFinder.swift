@@ -24,7 +24,6 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 	
 	func findCurrentLocation(_ completion: @escaping (Result<CLLocation, Error>) -> Void)
 	{
-		print("findCurrentLocation: _locationManager.authorizationStatus: \(_locationManager.authorizationStatus)")
 		_completions.append(completion)
 		if case .notDetermined = _locationManager.authorizationStatus {
 			_locationManager.requestWhenInUseAuthorization()
@@ -39,8 +38,8 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 	
 	// MARK: CLLocationManagerDelegate callbacks
 	
-	func locationManagerDidChangeAuthorization(_ _: CLLocationManager) {
-		print("locationManagerDidChangeAuthorization: _locationManager.authorizationStatus: \(_locationManager.authorizationStatus)")
+	func locationManagerDidChangeAuthorization(_ _: CLLocationManager)
+	{
 		if [.restricted, .denied].contains(_locationManager.authorizationStatus) {
 			_completions.forEach { $0(.failure(.notAuthorized)) }
 			_completions = []
