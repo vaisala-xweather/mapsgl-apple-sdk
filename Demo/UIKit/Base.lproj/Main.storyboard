@@ -39,7 +39,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hrv-0m-rGz" userLabel="Current Location Button" customClass="CircleIconButtonView" customModule="Demo___UIKit" customModuleProvider="target">
-                                <rect key="frame" x="12" y="722" width="44" height="44"/>
+                                <rect key="frame" x="337" y="101" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="7CA-NP-AvR"/>
                                     <constraint firstAttribute="height" constant="44" id="T7n-iK-m74"/>
@@ -101,15 +101,15 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Hrv-0m-rGz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="0hv-aq-7Pj"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="683-yr-U42"/>
+                            <constraint firstItem="Hrv-0m-rGz" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="42" id="LN5-Es-Gcg"/>
                             <constraint firstItem="0Nz-gH-55W" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="NX1-hF-5vb"/>
                             <constraint firstItem="0Nz-gH-55W" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="42" id="Si0-fO-W42"/>
                             <constraint firstItem="uc3-pe-lCV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="SuV-T0-O7k"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Hrv-0m-rGz" secondAttribute="bottom" constant="52" id="dfZ-o5-K6r"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="gFf-Ue-jTy"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="kad-nK-feW"/>
                             <constraint firstItem="sbB-iC-mtk" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="lmU-bZ-IxX"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Hrv-0m-rGz" secondAttribute="trailing" constant="12" id="ran-cT-UKS"/>
                             <constraint firstItem="rKJ-CX-jbG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sAM-gS-V0v"/>
                             <constraint firstItem="sbB-iC-mtk" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="zBS-jA-Q9I"/>
                             <constraint firstItem="sbB-iC-mtk" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="zG8-kW-PoB"/>

@@ -129,8 +129,8 @@ struct ContentView : View
 				.padding([ .top ], 30)
 			
 			Group { self.currentLocationButton }
-				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
-				.padding([ .bottom ], 40)
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+				.padding([ .top ], 30)
 				
 			SidebarView(dataModel: self.dataModel, isSidebarVisible: $isSidebarVisible)
 		}
