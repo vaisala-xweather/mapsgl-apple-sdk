@@ -51,7 +51,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate
 	{
 		super.viewDidLoad()
 		
-		self.mapView.mapboxMap.styleURI = .dark
+		self.mapView.mapboxMap.styleURI = (self.traitCollection.userInterfaceStyle == .dark) ? .dark : .light
 		try! self.mapView.mapboxMap.setProjection(.init(name: .mercator)) // Set 2D map projection
 		self.mapView.mapboxMap.setCamera(to: .init(center: .geographicCenterOfContiguousUSA, zoom: initialZoom))
 		

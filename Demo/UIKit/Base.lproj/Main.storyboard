@@ -115,11 +115,6 @@
                             <constraint firstItem="sbB-iC-mtk" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="zG8-kW-PoB"/>
                         </constraints>
                     </view>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="preferredUserInterfaceStyle">
-                            <integer key="value" value="2"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="mapView" destination="rKJ-CX-jbG" id="py8-1x-gbd"/>
                         <outlet property="sidebarView" destination="sbB-iC-mtk" id="i4D-tg-Lxy"/>

@@ -54,6 +54,8 @@ struct ContentView : View
 		
 		/// Mapbox's camera manager, used to trigger `fly(to:…)` animations.
 		var camera: MapboxMaps.CameraAnimationsManager?
+		
+		let colorScheme: ColorScheme = (UITraitCollection.current.userInterfaceStyle == .dark) ? .dark : .light
 	}
 	private let coordinator = Coordinator()
 	
@@ -62,7 +64,7 @@ struct ContentView : View
 		ZStack {
 			MapReader { proxy in
 				Map(initialViewport: .camera(center: .geographicCenterOfContiguousUSA, zoom: initialZoom))
-					.mapStyle(.dark)
+					.mapStyle((coordinator.colorScheme == .dark) ? .dark : .light)
 					#if os(iOS) || targetEnvironment(macCatalyst) || os(tvOS)
 					.frameRate(range: (maximumFPS * 2 / 3)...maximumFPS, preferred: maximumFPS)
 					#endif // iOS, macCatalyst, tvOS
@@ -88,6 +90,7 @@ struct ContentView : View
 				
 			SidebarView(dataModel: self.dataModel, isSidebarVisible: $isSidebarVisible)
 		}
+			.environment(\.colorScheme, coordinator.colorScheme)
 	}
 	
 	private func setUpMap(map: MapboxMap, camera: CameraAnimationsManager?)

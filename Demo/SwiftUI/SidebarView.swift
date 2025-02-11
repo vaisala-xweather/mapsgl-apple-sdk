@@ -17,7 +17,7 @@ struct SidebarView : View
 			}
 			self.content
 		}
-			.preferredColorScheme(.dark)
+			.environment(\.colorScheme, .dark)
 	}
 	
 	var tapOutsideToClose: some View {
