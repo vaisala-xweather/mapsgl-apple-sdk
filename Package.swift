@@ -16,7 +16,7 @@ let xcframeworkChecksums = (
 
 let package = Package(
 	name: "MapsGL",
-	platforms: [ .iOS(.v16), .macCatalyst(.v16), .visionOS(.v1) ],
+	platforms: [ .iOS(.v14), .macCatalyst(.v16), .visionOS(.v1) ],
 	products: [
 		.library(name: "MapsGL", targets: [
 			"MapsGLRendererWrapper",

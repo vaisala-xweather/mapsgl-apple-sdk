@@ -33,13 +33,17 @@ extension MapsGLMaps.Viewport
 		let coordinateBoundsUnwrapped = mapboxMap.coordinateBoundsUnwrapped(for: MapboxMaps.CameraOptions(cameraState: cameraState))
 		
 		self.center = MapCoordinate<LatitudeLongitude>(cameraState.center).converted(to: UnitMercator())
-		self.projectionMatrix = mapboxParameters.projectionMatrixSpatialValue
+        if #available(iOS 16.0, *) {
+            self.projectionMatrix = mapboxParameters.projectionMatrixSpatialValue
+        }
 		self.zoom = cameraState.zoom
 		self.angle = CameraAngle(
 			bearing: .init(value: cameraState.bearing, unit: .degrees),
 			pitch: .init(value: cameraState.pitch, unit: .radians)
 		)
-		self.fovY = mapboxParameters.fieldOfViewSpatialValue
+        if #available(iOS 16.0, *) {
+            self.fovY = mapboxParameters.fieldOfViewSpatialValue
+        }
 		self.bounds = MapBounds<LatitudeLongitude>(coordinateBoundsUnwrapped).converted(to: UnitMercator())
 		self.screenSize = CGSize(width: mapboxParameters.width, height: mapboxParameters.height)
 	}
