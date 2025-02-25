@@ -31,11 +31,13 @@ extension MapboxMaps.CustomLayerRenderParameters
 		)
 	}
 	
-	var projectionMatrixSpatialValue: ProjectiveTransform3D {
+    @available(iOS 16.0, *)
+    var projectionMatrixSpatialValue: ProjectiveTransform3D {
 		ProjectiveTransform3D(self.projectionMatrixSIMDDouble4x4Value)
 	}
 	
-	var fieldOfViewSpatialValue: Angle2D {
+    @available(iOS 16.0, *)
+    var fieldOfViewSpatialValue: Angle2D {
 		Angle2D(radians: self.fieldOfView) // Mapbox docs say `parameters.fieldOfView` is in degrees, but it's actually in radians
 	}
 }
