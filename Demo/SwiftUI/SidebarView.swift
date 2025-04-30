@@ -1,14 +1,11 @@
 import SwiftUI
 import MapsGLMaps
 
-
-
-struct SidebarView : View
-{
+struct SidebarView : View {
 	@ObservedObject var dataModel: WeatherLayersModel
 	@Binding var isSidebarVisible: Bool
 	
-	var sideBarWidth: CGFloat = 250
+	var sideBarWidth: CGFloat = 300
 	
 	var body: some View {
 		ZStack {
@@ -16,8 +13,7 @@ struct SidebarView : View
 				self.tapOutsideToClose
 			}
 			self.content
-		}
-			.environment(\.colorScheme, .dark)
+		}.environment(\.colorScheme, .dark)
 	}
 	
 	var tapOutsideToClose: some View {
@@ -93,9 +89,7 @@ struct SidebarView : View
 	}
 }
 
-
-struct CellGroup : View
-{
+struct CellGroup : View {
 	var headerText: String
 	var items: [WeatherLayersModel.Layer]
 	@Binding var selectedLayerCodes: Set<WeatherLayersModel.Layer.ID>
@@ -118,7 +112,7 @@ struct CellGroup : View
 		}
 			.listStyle(.plain)
 			.environment(\.defaultMinListRowHeight, 0)
-			.frame(minHeight: CGFloat(32 * self.items.count))
+			.frame(minHeight: CGFloat(36 * self.items.count))
 	}
 	
 	var header: some View {
@@ -136,9 +130,7 @@ struct CellGroup : View
 	}
 }
 
-
-struct CellListItem : View
-{
+struct CellListItem : View {
 	var text: String
 	var selected: Bool = false
 	
@@ -153,7 +145,7 @@ struct CellListItem : View
 		}
 			.padding(.horizontal, 20)
 			.padding(.vertical, 6)
-			.frame(height: 32)
+			.frame(height: 36)
 			.contentShape(Rectangle())
 			.listRowBackground(
 				self.selected ? Color.backgroundHighlightedColor : Color.backgroundColor
@@ -163,8 +155,6 @@ struct CellListItem : View
 			.listRowInsets(EdgeInsets())
 	}
 }
-
-
 
 #Preview {
 	SidebarView(

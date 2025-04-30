@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -22,7 +22,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Nz-gH-55W" userLabel="Layers Button" customClass="CircleIconButtonView" customModule="Demo___UIKit" customModuleProvider="target">
-                                <rect key="frame" x="12" y="101" width="44" height="44"/>
+                                <rect key="frame" x="12" y="160" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="53j-5L-mEj"/>
                                     <constraint firstAttribute="height" constant="44" id="zQa-E9-CPS"/>
@@ -39,7 +39,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hrv-0m-rGz" userLabel="Current Location Button" customClass="CircleIconButtonView" customModule="Demo___UIKit" customModuleProvider="target">
-                                <rect key="frame" x="337" y="101" width="44" height="44"/>
+                                <rect key="frame" x="337" y="160" width="44" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="7CA-NP-AvR"/>
                                     <constraint firstAttribute="height" constant="44" id="T7n-iK-m74"/>
@@ -59,13 +59,13 @@
                                 <rect key="frame" x="0.0" y="0.0" width="250" height="852"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Layers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uc3-pe-lCV" userLabel="Layers Label">
-                                        <rect key="frame" x="20" y="79" width="186" height="34"/>
+                                        <rect key="frame" x="20" y="138" width="186" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KHC-5o-PLH" userLabel="Close Button">
-                                        <rect key="frame" x="214" y="88" width="16" height="16"/>
+                                        <rect key="frame" x="214" y="147" width="16" height="16"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="16" id="Ex4-4x-20u"/>
                                             <constraint firstAttribute="width" constant="16" id="HxP-TE-Gvk"/>
@@ -78,7 +78,7 @@
                                         </connections>
                                     </button>
                                     <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j5r-dR-mOa">
-                                        <rect key="frame" x="0.0" y="134" width="250" height="718"/>
+                                        <rect key="frame" x="0.0" y="193" width="250" height="659"/>
                                         <connections>
                                             <segue destination="UM1-CQ-0Hy" kind="embed" identifier="embed_segue" id="EwA-vm-nkl"/>
                                         </connections>
@@ -181,8 +181,8 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="«Item Title»" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7DN-0G-6eo">
-                                            <rect key="frame" x="20" y="9" width="210" height="14.333333333333336"/>
-                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
+                                            <rect key="frame" x="20" y="7.6666666666666679" width="210" height="17"/>
+                                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>

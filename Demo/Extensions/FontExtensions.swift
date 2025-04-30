@@ -13,7 +13,7 @@ internal extension UIFont
 {
 	static var titleFont: UIFont { UIFont.systemFont(ofSize: 28) }
 	static var headerFont: UIFont { UIFont.systemFont(ofSize: 20, weight: .medium) }
-	static var cellFont: UIFont { UIFont.systemFont(ofSize: 12, weight: .medium) }
+	static var cellFont: UIFont { UIFont.systemFont(ofSize: 14, weight: .medium) }
 }
 
 
