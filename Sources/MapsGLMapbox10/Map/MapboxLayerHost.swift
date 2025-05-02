@@ -11,10 +11,8 @@ import MapsGLMaps
 import MapsGLRenderer
 import MapboxMaps
 
-
-
-final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost
-	where Layer : MapLayer
+public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost
+	where Layer : MapsGLLayer
 {
 	var map: MapboxMap
 	
@@ -26,8 +24,7 @@ final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHos
 	
 	// MARK: Render Loop
 	
-	func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat colorPixelFormatRawValue: UInt, depthStencilPixelFormat depthStencilPixelFormatRawValue: UInt)
-	{
+	public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat colorPixelFormatRawValue: UInt, depthStencilPixelFormat depthStencilPixelFormatRawValue: UInt) {
 		super.beginRendering(
 			metalDevice: metalDevice,
 			colorPixelFormat: MTLPixelFormat(rawValue: colorPixelFormatRawValue)!,
@@ -35,8 +32,7 @@ final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHos
 		)
 	}
 	
-	func prerender(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer) -> MapboxMaps.CustomLayerRenderConfiguration
-	{
+	public func prerender(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer) -> MapboxMaps.CustomLayerRenderConfiguration {
 		self.layer.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: self.map)
 		
 		super.prerender(
@@ -47,15 +43,14 @@ final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHos
 		return .init()
 	}
 	
-	func render(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor)
-	{
+	public func render(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
 		super.render(
 			mtlCommandBuffer: mtlCommandBuffer, mtlRenderPassDescriptor: mtlRenderPassDescriptor,
 			renderTargetSize: .init(width: parameters.width, height: parameters.height)
 		)
 	}
 	
-	func renderingWillEnd() {
+	public func renderingWillEnd() {
 		super.finishRendering()
 	}
 }

@@ -14,8 +14,6 @@ import MapsGLCore
 import MapsGLMaps
 @_spi(Experimental) import MapboxMaps // SPI Experimental req'd for `MapboxMaps.CustomLayer`
 
-
-
 public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 {
 	private lazy var _logger = Logger(for: self)
@@ -30,15 +28,14 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 		super.init(map: map, window: window, account: account)
 	}
 	
-	public override func addToMap(layer: some MapLayer, beforeId: String?)
-	{
+	public override func addToMap(layer: some MapsGLLayer, beforeId: String?) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			
 			do {
 				guard !containsLayerHost(forId: layer.id) && !self.map.layerExists(withId: layer.id) else { return }
 				
-				// Create the `MapboxLayerHost` (with the `MapLayer`), and add to the superclass `MapController`.
+				// Create the `MapboxLayerHost` (with the `MapsGLLayer`), and add to the superclass `MapController`.
 				let layerHost = try MapboxLayerHost(map: self.map, layer: layer)
 				try addLayerHost(layerHost)
 				
@@ -57,8 +54,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 		}
 	}
 	
-	public override func removeFromMap(layer: any MapLayer)
-	{
+	public override func removeFromMap(layer: any MapsGLLayer) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			
@@ -81,21 +77,18 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 		self.map.triggerRepaint()
 	}
 	
-	public override func setUpEvents()
-	{
+	public override func setUpEvents() {
 		doEnsuringStyleLoaded {
 			self.trigger(event: MapEvents.Load())
 		}
 	}
 }
 
-
 // MARK: Utility
 
 extension MapboxMapController
 {
-	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void)
-	{
+	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void) {
 		if self.map.isStyleLoaded {
 			closure()
 		} else {

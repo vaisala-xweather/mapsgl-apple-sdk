@@ -1,6 +1,6 @@
 //
 //  ViewportExtensions.swift
-//  MapsGLMapbox10 framework
+//  
 //
 //  Created by Slipp Douglas Thompson on 6/26/24.
 //
@@ -14,15 +14,13 @@ import MapboxMaps
 
 extension MapsGLMaps.Viewport
 {
-	internal static func make(mapboxParameters: MapboxMaps.CustomLayerRenderParameters, mapboxMap: MapboxMap, retinaScale: RetinaScaleFactor? = nil) -> Self
-	{
+	internal static func make(mapboxParameters: MapboxMaps.CustomLayerRenderParameters, mapboxMap: MapboxMap, retinaScale: RetinaScaleFactor? = nil) -> Self {
 		var viewport = self.init(retinaScale: retinaScale)
 		viewport.updateFrom(mapboxParameters: mapboxParameters, mapboxMap: mapboxMap)
 		return viewport
 	}
 	
-	internal mutating func updateFrom(mapboxParameters: MapboxMaps.CustomLayerRenderParameters, mapboxMap: MapboxMap)
-	{
+	internal mutating func updateFrom(mapboxParameters: MapboxMaps.CustomLayerRenderParameters, mapboxMap: MapboxMap) {
 		let cameraState = MapboxMaps.CameraState(
 			center: CLLocationCoordinate2D(latitude: mapboxParameters.latitude, longitude: mapboxParameters.longitude),
 			padding: UIEdgeInsets(),

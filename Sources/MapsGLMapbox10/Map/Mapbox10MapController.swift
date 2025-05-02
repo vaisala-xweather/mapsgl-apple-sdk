@@ -14,8 +14,6 @@ import MapsGLCore
 import MapsGLMaps
 import MapboxMaps
 
-
-
 public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 {
 	private lazy var _logger = Logger(for: self)
@@ -28,7 +26,7 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 		super.init(map: map, window: window, account: account)
 	}
 	
-	public override func addToMap(layer: some MapLayer, beforeId: String?)
+	public override func addToMap(layer: some MapsGLLayer, beforeId: String?)
 	{
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
@@ -36,7 +34,7 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 			do {
 				guard !containsLayerHost(forId: layer.id) && !self.map.style.layerExists(withId: layer.id) else { return }
 				
-				// Create the `MapboxLayerHost` (with the `MapLayer`), and add to the superclass `MapController`.
+				// Create the `MapboxLayerHost` (with the `MapsGLLayer`), and add to the superclass `MapController`.
 				let layerHost = try MapboxLayerHost(map: self.map, layer: layer)
 				try addLayerHost(layerHost)
 				
@@ -54,7 +52,7 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 		}
 	}
 	
-	public override func removeFromMap(layer: any MapLayer)
+	public override func removeFromMap(layer: any MapsGLLayer)
 	{
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }

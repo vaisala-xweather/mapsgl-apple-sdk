@@ -11,6 +11,8 @@
 		2B05365E2DC26D99007D41F3 /* CircularIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05365D2DC26D95007D41F3 /* CircularIconButton.swift */; };
 		2B18B4EC2DC41AC10056B9B5 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2B18B4EB2DC41AC10056B9B5 /* MapsGL */; };
 		2BC47DD42DC5322B006A6333 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC47DD32DC5322B006A6333 /* MapsGL */; };
+		2BC47DD72DC53641006A6333 /* TimelineSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC47DD52DC53641006A6333 /* TimelineSettingsViewController.swift */; };
+		2BC47DD82DC53641006A6333 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC47DD62DC53641006A6333 /* TimelineView.swift */; };
 		A60286272C5B376B002BC40B /* SidebarItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60286252C5B376B002BC40B /* SidebarItemTableViewCell.swift */; };
 		A60286282C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60286262C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift */; };
 		A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509372B74553D00E2D3AB /* Preview Assets.xcassets */; };
@@ -27,7 +29,6 @@
 		A69E7F662C3F3D5D00A06B81 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A6E654F22BCDEBBA00AEBE94 /* PrivacyInfo.xcprivacy */; };
 		A69E7F6C2C3F3E4700A06B81 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69E7F3B2C3F2E8100A06B81 /* AppDelegate.swift */; };
 		A69E7F6D2C3F3E4B00A06B81 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A69E7F462C3F2E8200A06B81 /* LaunchScreen.storyboard */; };
-		A69E7F6E2C3F3E4E00A06B81 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A69E7F412C3F2E8100A06B81 /* Main.storyboard */; };
 		A69E7F6F2C3F3E5100A06B81 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69E7F3D2C3F2E8100A06B81 /* SceneDelegate.swift */; };
 		A69E7F702C3F3E5400A06B81 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69E7F3F2C3F2E8100A06B81 /* MapViewController.swift */; };
 		A69E7F712C3F3EA600A06B81 /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A625092F2B74553700E2D3AB /* DemoApp.swift */; };
@@ -48,6 +49,8 @@
 /* Begin PBXFileReference section */
 		2B05365B2DC25CDF007D41F3 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		2B05365D2DC26D95007D41F3 /* CircularIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularIconButton.swift; sourceTree = "<group>"; };
+		2BC47DD52DC53641006A6333 /* TimelineSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineSettingsViewController.swift; sourceTree = "<group>"; };
+		2BC47DD62DC53641006A6333 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
 		A60286252C5B376B002BC40B /* SidebarItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarItemTableViewCell.swift; sourceTree = "<group>"; };
 		A60286262C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarGroupHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		A625092C2B74553700E2D3AB /* Demo - SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo - SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,7 +64,6 @@
 		A69E7F3B2C3F2E8100A06B81 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A69E7F3D2C3F2E8100A06B81 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		A69E7F3F2C3F2E8100A06B81 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		A69E7F422C3F2E8100A06B81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A69E7F472C3F2E8200A06B81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A69E7F492C3F2E8200A06B81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A69E7F6A2C3F3D5D00A06B81 /* Demo - UIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo - UIKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,18 +99,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2BC47DD22DC5322B006A6333 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		A62509232B74553700E2D3AB = {
 			isa = PBXGroup;
 			children = (
 				A625092E2B74553700E2D3AB /* Demo */,
-				2BC47DD22DC5322B006A6333 /* Frameworks */,
 				A625092D2B74553700E2D3AB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -168,12 +162,13 @@
 				A6D632762C3F5655007D1BD9 /* CircleIconButtonView.swift */,
 				A69E7F492C3F2E8200A06B81 /* Info.plist */,
 				A69E7F462C3F2E8200A06B81 /* LaunchScreen.storyboard */,
-				A69E7F412C3F2E8100A06B81 /* Main.storyboard */,
 				A69E7F3F2C3F2E8100A06B81 /* MapViewController.swift */,
 				A69E7F3D2C3F2E8100A06B81 /* SceneDelegate.swift */,
 				A60286262C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift */,
 				A60286252C5B376B002BC40B /* SidebarItemTableViewCell.swift */,
 				A63C91782C3F6229003E15BA /* SidebarViewController.swift */,
+				2BC47DD52DC53641006A6333 /* TimelineSettingsViewController.swift */,
+				2BC47DD62DC53641006A6333 /* TimelineView.swift */,
 			);
 			path = UIKit;
 			sourceTree = "<group>";
@@ -289,7 +284,6 @@
 				A69E7F632C3F3D5D00A06B81 /* AccessKeys.plist in Resources */,
 				A69E7F642C3F3D5D00A06B81 /* Preview Assets.xcassets in Resources */,
 				A69E7F652C3F3D5D00A06B81 /* Assets.xcassets in Resources */,
-				A69E7F6E2C3F3E4E00A06B81 /* Main.storyboard in Resources */,
 				A69E7F6D2C3F3E4B00A06B81 /* LaunchScreen.storyboard in Resources */,
 				A69E7F662C3F3D5D00A06B81 /* PrivacyInfo.xcprivacy in Resources */,
 			);
@@ -372,6 +366,8 @@
 				A69E7F5C2C3F3D5D00A06B81 /* WeatherLayersModel.swift in Sources */,
 				A6D569E42CE3E5D90005790C /* LocationFinder.swift in Sources */,
 				A6D632772C3F5655007D1BD9 /* CircleIconButtonView.swift in Sources */,
+				2BC47DD72DC53641006A6333 /* TimelineSettingsViewController.swift in Sources */,
+				2BC47DD82DC53641006A6333 /* TimelineView.swift in Sources */,
 				A60286282C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift in Sources */,
 				A69E7F5D2C3F3D5D00A06B81 /* ColorExtensions.swift in Sources */,
 				A60286272C5B376B002BC40B /* SidebarItemTableViewCell.swift in Sources */,
@@ -382,14 +378,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		A69E7F412C3F2E8100A06B81 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A69E7F422C3F2E8100A06B81 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		A69E7F462C3F2E8200A06B81 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -724,8 +712,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
 			requirement = {
-				kind = exactVersion;
-				version = "1.1.0-beta.1";
+				branch = "release/1.1.0-beta.1";
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
