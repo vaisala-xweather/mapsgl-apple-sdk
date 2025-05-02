@@ -6,11 +6,11 @@ import PackageDescription
 
 
 let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
-let version: Version = "1.0.5"
+let version: Version = "1.1.0-beta.1"
 let xcframeworkChecksums = (
-	core: "e917699e03f102a89d20fc1bfb5811bb79f3b659021b3ffddf4b4f98e034c3b5",
-	renderer: "8aff03ed6218e95a53a92775783f77866c64cddbba07fbc0247439c06fbe5dd2",
-	maps: "9f7278434705a3ee1d101d60e04f7257f954b84b5351639f8b022e19f6d1fd7d"
+	core: "02c392c5d62f5282e1fff96f3cd5f39f62bac42e8a464e5e4ef915e3160cab42",
+	renderer: "1d569fa5c23b8cc0c48d988e7ed673c410936a0a3f8b7ecaa4e566731bc19be7",
+	maps: "fd93e54e0e974611ffd19a274d1986fe1a5d588b5de14aa01144bf7757ef0895"
 )
 
 
@@ -29,7 +29,7 @@ let package = Package(
 	],
 	targets: [
 		.binaryTarget(name: "MapsGLCore",
-			url: "https://github.com/\(repositoryPath)/releases/download/v\(version)/MapsGLCore.xcframework.zip",
+			url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLCore.xcframework.zip",
 			checksum: xcframeworkChecksums.core
 		),
 		
@@ -40,7 +40,7 @@ let package = Package(
 			]
 		),
 		.binaryTarget(name: "MapsGLRenderer",
-			url: "https://github.com/\(repositoryPath)/releases/download/v\(version)/MapsGLRenderer.xcframework.zip",
+			url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLRenderer.xcframework.zip",
 			checksum: xcframeworkChecksums.renderer
 		),
 		
@@ -52,7 +52,7 @@ let package = Package(
 			]
 		),
 		.binaryTarget(name: "MapsGLMaps",
-			url: "https://github.com/\(repositoryPath)/releases/download/v\(version)/MapsGLMaps.xcframework.zip",
+			url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLMaps.xcframework.zip",
 			checksum: xcframeworkChecksums.maps
 		),
 		
