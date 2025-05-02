@@ -9,34 +9,35 @@ import UIKit
 import OSLog
 import MapsGLMaps
 
-
-
 fileprivate let logger = Logger(type: SidebarViewController.self)
 
-
-
-class SidebarViewController : UITableViewController
-{
-	@IBInspectable var headerCellReuseIdentifier: String!
-	@IBInspectable var itemCellReuseIdentifier: String!
-	
-	@IBOutlet weak var delegate: SidebarViewControllerDelegate!
-	
+class SidebarViewController : UITableViewController {
+	weak var delegate: SidebarViewControllerDelegate!
 	
 	override func loadView() {
 		super.loadView()
 		
-		self.tableView.rowHeight = UITableView.automaticDimension
+        tableView.register(SidebarGroupHeaderTableViewCell.self, forCellReuseIdentifier: SidebarGroupHeaderTableViewCell.reuseIdentifier)
+        tableView.register(SidebarItemTableViewCell.self, forCellReuseIdentifier: SidebarItemTableViewCell.reuseIdentifier)
+		tableView.rowHeight = UITableView.automaticDimension
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+        self.view.backgroundColor = .backgroundColor
 		self.clearsSelectionOnViewWillAppear = false
+        
+        let headerView = SidebarHeaderView()
+        headerView.title = "Layers"
+        headerView.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 68)
+        headerView.onClose = {
+            self.delegate.sidebarDidRequestToClose()
+        }
+        tableView.tableHeaderView = headerView
 	}
 	
-	override func viewWillAppear(_ animated: Bool)
-	{
+	override func viewWillAppear(_ animated: Bool) {
 		for code in self.delegate.sidebarSelectedLayerCodes {
 			let layer = WeatherLayersModel.allLayersByCode[code]!
 			let categoryIndex = WeatherLayersModel.Category.allCases.firstIndex(of: layer.category)!
@@ -46,17 +47,14 @@ class SidebarViewController : UITableViewController
 		}
 	}
 	
-	
-	private func category(forIndexPath indexPath: IndexPath) -> WeatherLayersModel.Category?
-	{
+	private func category(forIndexPath indexPath: IndexPath) -> WeatherLayersModel.Category? {
 		guard WeatherLayersModel.Category.allCases.indices.contains(indexPath.section) else {
 			return nil
 		}
 		return WeatherLayersModel.Category.allCases[indexPath.section]
 	}
 	
-	private func layer(forIndexPath indexPath: IndexPath) -> WeatherLayersModel.Layer?
-	{
+	private func layer(forIndexPath indexPath: IndexPath) -> WeatherLayersModel.Layer? {
 		guard let category = category(forIndexPath: indexPath),
 			let layers = WeatherLayersModel.allLayersByCategory[category] else {
 			return nil
@@ -73,7 +71,6 @@ class SidebarViewController : UITableViewController
 		}
 	}
 	
-	
 	// MARK: UITableViewDataSource Conformance
 	
 	override func numberOfSections(in tableView: UITableView) -> Int {
@@ -88,21 +85,18 @@ class SidebarViewController : UITableViewController
 		return itemCount + 1
 	}
 	
-	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-	{
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let category = WeatherLayersModel.Category.allCases[indexPath.section]
 		
 		if indexPath.row == 0 { // header cell
-			let cell = tableView.dequeueReusableCell(withIdentifier: self.headerCellReuseIdentifier, for: indexPath) as! SidebarGroupHeaderTableViewCell
-			cell.label.text = category.title
+            let cell = tableView.dequeueReusableCell(withIdentifier: SidebarGroupHeaderTableViewCell.reuseIdentifier, for: indexPath) as! SidebarGroupHeaderTableViewCell
+            cell.configure(with: category.title)
 			return cell
-		}
-		else { // item cell
+		} else { // item cell
 			let layer = layer(forIndexPath: indexPath)!
-			
-			let cell = tableView.dequeueReusableCell(withIdentifier: self.itemCellReuseIdentifier, for: indexPath) as! SidebarItemTableViewCell
-			cell.label.text = layer.title
-			cell.code = layer.code
+            let cell = tableView.dequeueReusableCell(withIdentifier: SidebarItemTableViewCell.reuseIdentifier, for: indexPath) as! SidebarItemTableViewCell
+            cell.configure(layer: layer)
+            cell.isSelected = delegate.sidebarSelectedLayerCodes.contains(layer.code)
 			return cell
 		}
 	}
@@ -111,10 +105,9 @@ class SidebarViewController : UITableViewController
 		if indexPath.row == 0 { // header cell
 			68
 		} else { // item cell
-			32
+			36
 		}
 	}
-	
 	
 	// MARK: UITableViewDelegate Conformance
 	
@@ -129,16 +122,20 @@ class SidebarViewController : UITableViewController
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		self.tableView(tableView, didChangeSelectionOfRowAt: indexPath, selected: true)
 	}
+    
 	override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
 		self.tableView(tableView, didChangeSelectionOfRowAt: indexPath, selected: false)
 	}
 	
-	private func tableView(_ tableView: UITableView, didChangeSelectionOfRowAt indexPath: IndexPath, selected: Bool)
-	{
+	private func tableView(_ tableView: UITableView, didChangeSelectionOfRowAt indexPath: IndexPath, selected: Bool) {
 		if indexPath.row == 0 { // header cell
 			return
 		} else { // item cell
 			let layer = layer(forIndexPath: indexPath)!
+            
+            if let cell = tableView.cellForRow(at: indexPath) as? SidebarItemTableViewCell {
+                cell.isSelected = selected
+            }
 			
 			if selected {
 				self.delegate.sidebarSelectedLayerCodes.update(with: layer.code)
@@ -151,27 +148,93 @@ class SidebarViewController : UITableViewController
 	}
 }
 
+// MARK: - SidebarViewControllerDelegate
 
-
-@objc protocol SidebarViewControllerDelegate
-{
+@objc protocol SidebarViewControllerDelegate {
+    var sidebarSelectedLayerCodeValues: Set<WeatherService.LayerCode.RawValue> { get set }
+    
 	func sidebarDidEnableLayerCode(_ codeValue: WeatherService.LayerCode.RawValue)
 	func sidebarDidDisableLayerCode(_ codeValue: WeatherService.LayerCode.RawValue)
-	
-	var sidebarSelectedLayerCodeValues: Set<WeatherService.LayerCode.RawValue> { get set }
+    func sidebarDidRequestToClose()
 }
 
-extension SidebarViewControllerDelegate
-{
+extension SidebarViewControllerDelegate {
+    var sidebarSelectedLayerCodes: Set<WeatherService.LayerCode> {
+        get {
+            Set(self.sidebarSelectedLayerCodeValues.compactMap { WeatherService.LayerCode(rawValue: $0) })
+        }
+        set {
+            self.sidebarSelectedLayerCodeValues = Set(newValue.map(\.rawValue))
+        }
+    }
+    
 	func sidebarDidEnableLayerCode(_ code: WeatherService.LayerCode) {
 		sidebarDidEnableLayerCode(code.rawValue)
 	}
+    
 	func sidebarDidDisableLayerCode(_ code: WeatherService.LayerCode) {
 		sidebarDidDisableLayerCode(code.rawValue)
 	}
-	
-	var sidebarSelectedLayerCodes: Set<WeatherService.LayerCode> {
-		get { Set(self.sidebarSelectedLayerCodeValues.compactMap { WeatherService.LayerCode(rawValue: $0) }) }
-		set { self.sidebarSelectedLayerCodeValues = Set(newValue.map(\.rawValue)) }
-	}
+}
+
+// MARK: - SidebarHeaderView
+
+class SidebarHeaderView : UIView {
+    var title: String? {
+        didSet {
+            titleLabel.text = title
+        }
+    }
+    private let titleLabel: UILabel = .init()
+    let closeButton: UIButton = .init(type: .system)
+    var onClose: (() -> Void)?
+    
+    // MARK: Init
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupViews()
+    }
+
+    // MARK: Setup
+    
+    private func setupViews() {
+        titleLabel.font = .titleFont
+        titleLabel.textColor = .textColor
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(titleLabel)
+        
+        let closeImage = UIImage(systemName: "xmark")?.withRenderingMode(.alwaysTemplate)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        closeButton.setImage(closeImage, for: .normal)
+        closeButton.tintColor = .closeButtonColor
+        closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
+        addSubview(closeButton)
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 28),
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -20),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+            
+            closeButton.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            closeButton.widthAnchor.constraint(equalToConstant: 24),
+            closeButton.heightAnchor.constraint(equalToConstant: 24)
+        ])
+    }
+
+    /// Set the displayed title
+    func setTitle(_ text: String) {
+        titleLabel.text = text
+    }
+    
+    @objc private func closeTapped() {
+        onClose?()
+    }
 }

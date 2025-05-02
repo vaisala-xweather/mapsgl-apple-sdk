@@ -7,19 +7,12 @@
 
 import UIKit
 
-
-
-@IBDesignable
-class CircleIconButtonView : UIButton
-{
-	@IBInspectable public var circleBackgroundColor: UIColor = .init(white: 0.5, alpha: 0.5)
-	
+class CircleIconButtonView : UIButton {	
 	/// Ensure the default UIButton `backgroundColor` has no effect (and doesn't draw a square background).
 	override var backgroundColor: UIColor? {
 		get { return .clear }
 		set { super.backgroundColor = .clear }
 	}
-	
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -31,10 +24,8 @@ class CircleIconButtonView : UIButton
 		setup()
 	}
 	
-	private func setup()
-	{
-		self.backgroundColor = .clear
-		
+	private func setup() {
+		self.backgroundColor = .backgroundColor
 		self.tintColor = .textColor
 		
 		self.layer.shadowColor = .shadowColor
@@ -48,10 +39,8 @@ class CircleIconButtonView : UIButton
 		#endif // iOS, macCatalyst, tvOS
 	}
 	
-	
-	override func draw(_ rect: CGRect)
-	{
-		self.circleBackgroundColor.setFill()
+	override func draw(_ rect: CGRect) {
+		UIColor.backgroundColor.setFill()
 		UIBezierPath(ovalIn: rect).fill()
 		
 		super.draw(rect)

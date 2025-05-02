@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B05365C2DC25CE2007D41F3 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05365B2DC25CDF007D41F3 /* TimelineView.swift */; };
+		2B05365E2DC26D99007D41F3 /* CircularIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05365D2DC26D95007D41F3 /* CircularIconButton.swift */; };
+		2B18B4EC2DC41AC10056B9B5 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2B18B4EB2DC41AC10056B9B5 /* MapsGL */; };
+		2BC47DD42DC5322B006A6333 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2BC47DD32DC5322B006A6333 /* MapsGL */; };
 		A60286272C5B376B002BC40B /* SidebarItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60286252C5B376B002BC40B /* SidebarItemTableViewCell.swift */; };
 		A60286282C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60286262C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift */; };
 		A62509382B74553D00E2D3AB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509372B74553D00E2D3AB /* Preview Assets.xcassets */; };
 		A63C917A2C3F6229003E15BA /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63C91782C3F6229003E15BA /* SidebarViewController.swift */; };
-		A6484C442B8699E3008DF0B6 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = A6484C432B8699E3008DF0B6 /* MapsGL */; };
 		A65864342BF40C1E00706D11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A62509332B74553D00E2D3AB /* Assets.xcassets */; };
 		A69E7F582C3F3D5D00A06B81 /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A4A8BE2B7B512B00024DE0 /* FontExtensions.swift */; };
 		A69E7F5A2C3F3D5D00A06B81 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
@@ -35,7 +38,6 @@
 		A6A9F41A2B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A9F4192B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift */; };
 		A6D569E32CE3E5D90005790C /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B59DA62CE3C8B000AB2542 /* LocationFinder.swift */; };
 		A6D569E42CE3E5D90005790C /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B59DA62CE3C8B000AB2542 /* LocationFinder.swift */; };
-		A6D569E52CE3F7870005790C /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = A6484C432B8699E3008DF0B6 /* MapsGL */; };
 		A6D632772C3F5655007D1BD9 /* CircleIconButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D632762C3F5655007D1BD9 /* CircleIconButtonView.swift */; };
 		A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E538052B7AA874007EE086 /* AccessKeys.swift */; };
 		A6E538082B7AA891007EE086 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = A6E538072B7AA887007EE086 /* AccessKeys.plist */; };
@@ -44,6 +46,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2B05365B2DC25CDF007D41F3 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
+		2B05365D2DC26D95007D41F3 /* CircularIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularIconButton.swift; sourceTree = "<group>"; };
 		A60286252C5B376B002BC40B /* SidebarItemTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarItemTableViewCell.swift; sourceTree = "<group>"; };
 		A60286262C5B376B002BC40B /* SidebarGroupHeaderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarGroupHeaderTableViewCell.swift; sourceTree = "<group>"; };
 		A625092C2B74553700E2D3AB /* Demo - SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo - SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6484C442B8699E3008DF0B6 /* MapsGL in Frameworks */,
+				2B18B4EC2DC41AC10056B9B5 /* MapsGL in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,17 +90,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6D569E52CE3F7870005790C /* MapsGL in Frameworks */,
+				2BC47DD42DC5322B006A6333 /* MapsGL in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2BC47DD22DC5322B006A6333 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		A62509232B74553700E2D3AB = {
 			isa = PBXGroup;
 			children = (
 				A625092E2B74553700E2D3AB /* Demo */,
+				2BC47DD22DC5322B006A6333 /* Frameworks */,
 				A625092D2B74553700E2D3AB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -139,6 +151,8 @@
 		A69E7F502C3F2EC100A06B81 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				2B05365D2DC26D95007D41F3 /* CircularIconButton.swift */,
+				2B05365B2DC25CDF007D41F3 /* TimelineView.swift */,
 				A62509312B74553700E2D3AB /* ContentView.swift */,
 				A625092F2B74553700E2D3AB /* DemoApp.swift */,
 				A62F5C792BB24CDB00939F25 /* Info.plist */,
@@ -192,7 +206,7 @@
 			);
 			name = "Demo - SwiftUI";
 			packageProductDependencies = (
-				A6484C432B8699E3008DF0B6 /* MapsGL */,
+				2B18B4EB2DC41AC10056B9B5 /* MapsGL */,
 			);
 			productName = Demo;
 			productReference = A625092C2B74553700E2D3AB /* Demo - SwiftUI.app */;
@@ -213,7 +227,7 @@
 			);
 			name = "Demo - UIKit";
 			packageProductDependencies = (
-				A6484C432B8699E3008DF0B6 /* MapsGL */,
+				2BC47DD32DC5322B006A6333 /* MapsGL */,
 			);
 			productName = Demo;
 			productReference = A69E7F6A2C3F3D5D00A06B81 /* Demo - UIKit.app */;
@@ -244,7 +258,7 @@
 			);
 			mainGroup = A62509232B74553700E2D3AB;
 			packageReferences = (
-				A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */,
+				2B18B4EA2DC41AC10056B9B5 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */,
 			);
 			productRefGroup = A625092D2B74553700E2D3AB /* Products */;
 			projectDirPath = "";
@@ -334,12 +348,14 @@
 				A6A4A8BF2B7B512B00024DE0 /* FontExtensions.swift in Sources */,
 				A69E7F732C3F3EF100A06B81 /* SidebarView.swift in Sources */,
 				A6E538062B7AA874007EE086 /* AccessKeys.swift in Sources */,
+				2B05365C2DC25CE2007D41F3 /* TimelineView.swift in Sources */,
 				A69E7F722C3F3EE900A06B81 /* ContentView.swift in Sources */,
 				A69E7F712C3F3EA600A06B81 /* DemoApp.swift in Sources */,
 				A6EBAD3E2B7B23DE00848952 /* WeatherLayersModel.swift in Sources */,
 				A6D569E32CE3E5D90005790C /* LocationFinder.swift in Sources */,
 				A6A4A8BD2B7B4E9E00024DE0 /* ColorExtensions.swift in Sources */,
 				A6A9F41A2B7D7BC80045324A /* CLLocationCoordinate2DExtensions.swift in Sources */,
+				2B05365E2DC26D99007D41F3 /* CircularIconButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -700,7 +716,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {
+		2B18B4EA2DC41AC10056B9B5 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
 			requirement = {
@@ -711,9 +727,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		A6484C432B8699E3008DF0B6 /* MapsGL */ = {
+		2B18B4EB2DC41AC10056B9B5 /* MapsGL */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A6484C422B8699E3008DF0B6 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */;
+			package = 2B18B4EA2DC41AC10056B9B5 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */;
+			productName = MapsGL;
+		};
+		2BC47DD32DC5322B006A6333 /* MapsGL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B18B4EA2DC41AC10056B9B5 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */;
 			productName = MapsGL;
 		};
 /* End XCSwiftPackageProductDependency section */
