@@ -2,7 +2,7 @@ Pod::Spec.new do |spec|
   repository_path = 'vaisala-xweather/mapsgl-apple-sdk'
   
   spec.name         = "MapsGL"
-  spec.version      = "1.1.0-beta.1"
+  spec.version      = "1.1.0-beta.2"
   spec.summary      = "MapsGL is an easy-to-use, highly customizable Swift SDK for visualizing both weather and custom data, powered by Metal."
   spec.description  = <<-DESC
 MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It enables the integration of MapsGL's rich mapping features into iOS applications, providing a seamless and interactive user experience.
@@ -17,7 +17,7 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   spec.swift_versions = [ '5' ]
   spec.source       = {
     http: "https://github.com/#{repository_path}/releases/download/v#{spec.version.to_s}/MapsGL.zip",
-    sha256: "567b168d474d230823fee388abe9b8ebe41b2550f43135322f6d80a596434333",
+    sha256: "b35732afe8826c2fd00faac46421f9b62b38587bf1b8f7c86a534b3a46cb3b39",
     flatten: true
   }
   spec.default_subspecs = 'Core', 'Renderer', 'Maps', 'Mapbox'
