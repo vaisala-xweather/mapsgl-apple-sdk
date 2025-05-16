@@ -1,15 +1,12 @@
 //
 //  CustomLayerRenderParametersExtensions.swift
-//  MapsGLMapbox10 framework
+//  MapsGLMapbox framework
 //
 //  Created by Slipp Douglas Thompson on 2/28/24.
 //
 
-
 import MapboxMaps
 import Spatial
-
-
 
 extension MapboxMaps.CustomLayerRenderParameters
 {

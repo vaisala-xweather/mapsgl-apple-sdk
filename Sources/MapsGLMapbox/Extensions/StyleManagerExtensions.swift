@@ -7,8 +7,6 @@
 
 import MapboxMaps
 
-
-
 extension MapboxMaps.StyleManager
 {
 	/// Find the first layer which has an `id` matching the given `Regex`, and is of the given `LayerType`.

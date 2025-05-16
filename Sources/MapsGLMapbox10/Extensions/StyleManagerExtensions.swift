@@ -1,13 +1,11 @@
 //
 //  StyleManagerExtensions.swift
-//  MapsGLMapbox10 framework
+//  
 //
 //  Created by Slipp Douglas Thompson on 3/1/24.
 //
 
 import MapboxMaps
-
-
 
 extension MapboxMaps.Style
 {

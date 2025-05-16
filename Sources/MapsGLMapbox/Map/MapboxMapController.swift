@@ -14,10 +14,7 @@ import MapsGLCore
 import MapsGLMaps
 @_spi(Experimental) import MapboxMaps // SPI Experimental req'd for `MapboxMaps.CustomLayer`
 
-public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
-{
-	private lazy var _logger = Logger(for: self)
-	
+public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {	
 	private var _mapboxSubscriptions: Set<AnyCancellable> = []
 	
 	public convenience init(map: MapboxMaps.MapView, account: XweatherAccount) {
@@ -27,6 +24,15 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 	public override init(map: MapboxMaps.MapboxMap, window: UIWindow? = nil, account: XweatherAccount) {
 		super.init(map: map, window: window, account: account)
 	}
+	
+	// MARK: MapController
+	
+	override public func moveLayer(id: String, beforeId: String) throws {
+		try super.moveLayer(id: id, beforeId: beforeId)
+		try map.moveLayer(withId: id, to: .below(beforeId))
+	}
+	
+	// MARK: Layer Hosts
 	
 	public override func addToMap(layer: some MapsGLLayer, beforeId: String?) {
 		doEnsuringStyleLoaded { [weak self] in
@@ -47,9 +53,8 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 				}
 				let mapboxCustomLayer = MapboxMaps.CustomLayer(id: layer.id, renderer: layerHost, slot: positionAndSlot.slot)
 				try self.map.addLayer(mapboxCustomLayer, layerPosition: positionAndSlot.position)
-			}
-			catch {
-				_logger.fault("Failed to add layer to map: \(error)")
+			} catch {
+				Logger.map.fault("Failed to add layer to map: \(error)")
 			}
 		}
 	}
@@ -66,9 +71,8 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 				
 				// Remove the `MapboxLayerHost` from the superclass `MapController`.
 				try removeLayerHost(id: layer.id)
-			}
-			catch {
-				_logger.fault("Failed to remove layer from map: \(error)")
+			} catch {
+				Logger.map.fault("Failed to remove layer from map: \(error)")
 			}
 		}
 	}
@@ -80,6 +84,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap>
 	public override func setUpEvents() {
 		doEnsuringStyleLoaded {
 			self.trigger(event: MapEvents.Load())
+			self.onLoad.send(())
 		}
 	}
 }

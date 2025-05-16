@@ -14,9 +14,8 @@ import MapsGLCore
 import MapsGLMaps
 import MapboxMaps
 
-public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
-{
-	private lazy var _logger = Logger(for: self)
+public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap> {
+	private var _mapboxSubscriptions: Set<AnyCancellable> = []
 	
 	public convenience init(map: MapboxMaps.MapView, account: XweatherAccount) {
 		self.init(map: map.mapboxMap, window: map.window, account: account)
@@ -26,8 +25,7 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 		super.init(map: map, window: window, account: account)
 	}
 	
-	public override func addToMap(layer: some MapsGLLayer, beforeId: String?)
-	{
+	public override func addToMap(layer: some MapsGLLayer, beforeId: String?) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			
@@ -45,15 +43,13 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 					.default
 				}
 				try self.map.style.addPersistentCustomLayer(withId: layer.id, layerHost: layerHost, layerPosition: position)
-			}
-			catch {
-				_logger.fault("Failed to add layer to map: \(error)")
+			} catch {
+				Logger.map.fault("Failed to add layer to map: \(error)")
 			}
 		}
 	}
 	
-	public override func removeFromMap(layer: any MapsGLLayer)
-	{
+	public override func removeFromMap(layer: any MapsGLLayer) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			
@@ -65,9 +61,8 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 				
 				// Remove the `MapboxLayerHost` from the superclass `MapController`.
 				try removeLayerHost(id: layer.id)
-			}
-			catch {
-				_logger.fault("Failed to remove layer from map: \(error)")
+			} catch {
+				Logger.map.fault("Failed to remove layer from map: \(error)")
 			}
 		}
 	}
@@ -76,28 +71,26 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap>
 		self.map.triggerRepaint()
 	}
 	
-	public override func setUpEvents()
-	{
+	public override func setUpEvents() {
 		doEnsuringStyleLoaded {
 			self.trigger(event: MapEvents.Load())
+			self.onLoad.send(())
 		}
 	}
 }
-
 
 // MARK: Utility
 
 extension Mapbox10MapController
 {
-	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void)
-	{
-		if self.map.style.isLoaded {
+	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void) {
+		if self.map.isStyleLoaded {
 			closure()
 		} else {
-			self.map.onNext(event: .styleLoaded) { [weak self] _ in
+			self.map.onStyleLoaded.observeNext { [weak self] _ in
 				guard self != nil else { return }
 				closure()
-			}
+			}.store(in: &_mapboxSubscriptions)
 		}
 	}
 }

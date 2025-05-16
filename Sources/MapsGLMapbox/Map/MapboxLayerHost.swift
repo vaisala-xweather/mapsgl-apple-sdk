@@ -18,7 +18,6 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	
 	init(map: MapboxMap, layer: Layer) throws {
 		self.map = map
-		
 		try super.init(layer: layer)
 	}
 	

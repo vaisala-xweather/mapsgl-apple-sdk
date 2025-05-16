@@ -10,8 +10,6 @@ import MapsGLMaps
 import struct UIKit.UIEdgeInsets
 import MapboxMaps
 
-
-
 extension MapsGLMaps.Viewport
 {
 	internal static func make(mapboxParameters: MapboxMaps.CustomLayerRenderParameters, mapboxMap: MapboxMap, retinaScale: RetinaScaleFactor? = nil) -> Self {
