@@ -17,7 +17,7 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   spec.swift_versions = [ '5' ]
   spec.source       = {
     http: "https://github.com/#{repository_path}/releases/download/v#{spec.version.to_s}/MapsGL.zip",
-    sha256: "b35732afe8826c2fd00faac46421f9b62b38587bf1b8f7c86a534b3a46cb3b39",
+    sha256: "a966ef9e54c4c5cb9f54befe6186ab2650199029f443a5215deccb3e37cf619f",
     flatten: true
   }
   spec.default_subspecs = 'Core', 'Renderer', 'Maps', 'Mapbox'
