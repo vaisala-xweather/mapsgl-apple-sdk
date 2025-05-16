@@ -223,7 +223,7 @@ struct ContentView : View {
             }.store(in: &coordinator.eventSubscriptions)
 			
 			// Once the map has completed initial load…
-			mapController.subscribe(to: MapEvents.Load.self) { _ in
+            mapController.onLoad.observe { _ in
 				// Start listening to Combine-provided change events of the `dataModel`'s selected layers.
 				self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
 					// Remove any layers that are no longer selected.
@@ -231,7 +231,7 @@ struct ContentView : View {
 					if !layerCodesToRemove.isEmpty {
 						_logger.debug("Removing layers: \(layerCodesToRemove)")
 						for code in layerCodesToRemove {
-							mapController.removeWeatherLayer(forCode: code)
+							mapController.removeWeatherLayer(for: code)
 						}
 					}
 					
@@ -254,8 +254,7 @@ struct ContentView : View {
 					coordinator.activeLayerCodes = selectedLayerCodes
 				}
 				.store(in: &coordinator.eventSubscriptions)
-			}
-			.store(in: &coordinator.eventSubscriptions)
+			}.store(in: &coordinator.eventSubscriptions)
 	}
 	
 	var layersButton: some View {

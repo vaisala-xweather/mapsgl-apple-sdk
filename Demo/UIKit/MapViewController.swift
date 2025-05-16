@@ -223,7 +223,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
             .store(in: &_eventSubscriptions)
 
         // Once the map has completed initial load…
-        mapController.subscribe(to: MapEvents.Load.self) { _ in
+        mapController.onLoad.observe { _ in
             // Start listening to Combine-provided change events of the `dataModel`'s selected layers.
             self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
                 // Remove any layers that are no longer selected.
@@ -255,8 +255,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                 self._activeLayerCodes = selectedLayerCodes
             }
             .store(in: &self._eventSubscriptions)
-        }
-        .store(in: &_eventSubscriptions)
+        }.store(in: &_eventSubscriptions)
     }
     
     // MARK: Timeline View
