@@ -1,6 +1,6 @@
 # MapsGL SDK for Apple Platforms
 
-<img src="images/MapsGL-iPad-PM10-layer.png" alt="MapsGL Screenshot"/>
+<img src="images/mapsgl-apple-sdk-intro.webp" alt="MapsGL Demo screenshot"/>
 
 [![Release version](https://img.shields.io/github/v/release/vaisala-xweather/mapsgl-apple-sdk.svg?label=Release&labelColor=2D323A&color=4ed9c2&include_prereleases)](https://github.com/vaisala-xweather/mapsgl-apple-sdk/releases)
 [![Swift workflow badge](https://github.com/vaisala-xweather/mapsgl-apple-sdk/actions/workflows/xcodebuild-Demo.yml/badge.svg)](https://github.com/vaisala-xweather/mapsgl-apple-sdk/actions)
@@ -68,4 +68,4 @@ If you encounter any issues while running the demo application, ensure that:
 - You have correctly configured the `AccessKeys.plist` with valid API keys.
 - There are no build errors related to missing dependencies or configurations.
 
-For further assistance, please refer to the [Documentation](http://www.xweather.com/docs/mapsgl-apple-sdk) or contact [Support](https://www.xweather.com/support).
+For further assistance, please refer to the [documentation](http://www.xweather.com/docs/mapsgl-apple-sdk) or contact [support](https://www.xweather.com/support).
