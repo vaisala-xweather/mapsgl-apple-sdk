@@ -11,11 +11,21 @@ import MapsGLMaps
 import MapsGLRenderer
 import MapboxMaps
 
-public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost
-	where Layer : MapsGLLayer
-{
+/// A custom layer host that integrates a `MapsGLLayer` with Mapbox’s `CustomLayerHost`.
+///
+/// This class bridges MapsGL rendering into the Mapbox rendering pipeline using Metal.
+/// It implements the required `CustomLayerHost` methods to control rendering lifecycle,
+/// including setup, prerendering, and final rendering steps.
+public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost where Layer : MapsGLLayer {
+	
+	/// The Mapbox map associated with the custom layer.
 	var map: MapboxMap
 	
+	/// Creates a new layer host bound to a Mapbox map and a MapsGL-compatible layer.
+	/// - Parameters:
+	///   - map: The Mapbox map to attach to.
+	///   - layer: The MapsGL layer to manage.
+	/// - Throws: An error if the superclass initialization fails.
 	init(map: MapboxMap, layer: Layer) throws {
 		self.map = map
 		try super.init(layer: layer)
@@ -23,6 +33,12 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	
 	// MARK: Render Loop
 	
+	/// Called when rendering is about to start.
+	/// Sets up the Metal device and pixel formats for the render loop.
+	/// - Parameters:
+	///   - metalDevice: The Metal device used for rendering.
+	///   - colorPixelFormatRawValue: The raw value of the color pixel format.
+	///   - depthStencilPixelFormatRawValue: The raw value of the depth-stencil pixel format.
 	public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat colorPixelFormatRawValue: UInt, depthStencilPixelFormat depthStencilPixelFormatRawValue: UInt) {
 		super.beginRendering(
 			metalDevice: metalDevice,
@@ -31,6 +47,12 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 		)
 	}
 	
+	/// Called before rendering to perform preparation work.
+	/// Updates the viewport and prepares the rendering layer.
+	/// - Parameters:
+	///   - parameters: The render parameters provided by Mapbox.
+	///   - mtlCommandBuffer: The Metal command buffer used for rendering.
+	/// - Returns: A custom layer render configuration.
 	public func prerender(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer) -> MapboxMaps.CustomLayerRenderConfiguration {
 		self.layer.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: self.map)
 		
@@ -42,6 +64,11 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 		return .init()
 	}
 	
+	/// Executes the final rendering commands for the layer.
+	/// - Parameters:
+	///   - parameters: The render parameters provided by Mapbox.
+	///   - mtlCommandBuffer: The Metal command buffer.
+	///   - mtlRenderPassDescriptor: The Metal render pass descriptor.
 	public func render(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
 		super.render(
 			mtlCommandBuffer: mtlCommandBuffer, mtlRenderPassDescriptor: mtlRenderPassDescriptor,
@@ -49,6 +76,8 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 		)
 	}
 	
+	/// Called when rendering is finished.
+	/// Performs cleanup of rendering resources.
 	public func renderingWillEnd() {
 		super.finishRendering()
 	}

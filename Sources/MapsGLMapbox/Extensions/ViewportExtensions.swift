@@ -10,8 +10,7 @@ import MapsGLMaps
 import struct UIKit.UIEdgeInsets
 import MapboxMaps
 
-extension MapsGLMaps.Viewport
-{
+extension MapsGLMaps.Viewport {
 	internal static func make(mapboxParameters: MapboxMaps.CustomLayerRenderParameters, mapboxMap: MapboxMap, retinaScale: RetinaScaleFactor? = nil) -> Self {
 		var viewport = self.init(retinaScale: retinaScale)
 		viewport.updateFrom(mapboxParameters: mapboxParameters, mapboxMap: mapboxMap)
@@ -31,10 +30,8 @@ extension MapsGLMaps.Viewport
 		self.center = MapCoordinate<LatitudeLongitude>(cameraState.center).converted(to: UnitMercator())
 		self.projectionMatrix = mapboxParameters.projectionMatrixSpatialValue
 		self.zoom = cameraState.zoom
-		self.angle = CameraAngle(
-			bearing: .init(value: cameraState.bearing, unit: .degrees),
-			pitch: .init(value: cameraState.pitch, unit: .radians)
-		)
+		self.bearing = .init(value: cameraState.bearing, unit: .degrees)
+		self.pitch = .init(value: cameraState.pitch, unit: .radians)
 		self.fovY = mapboxParameters.fieldOfViewSpatialValue
 		self.bounds = MapBounds<LatitudeLongitude>(coordinateBoundsUnwrapped).converted(to: UnitMercator())
 		self.screenSize = CGSize(width: mapboxParameters.width, height: mapboxParameters.height)

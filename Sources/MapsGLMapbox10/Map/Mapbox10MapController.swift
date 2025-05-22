@@ -87,7 +87,7 @@ extension Mapbox10MapController
 		if self.map.isStyleLoaded {
 			closure()
 		} else {
-			self.map.onStyleLoaded.observeNext { [weak self] _ in
+			self.map.onNext(event: .styleLoaded) { [weak self] _ in
 				guard self != nil else { return }
 				closure()
 			}.store(in: &_mapboxSubscriptions)
