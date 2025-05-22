@@ -119,8 +119,8 @@ class TimelineView: UIView {
 
         let hStack = UIStackView(arrangedSubviews: [
             labelsStack,
-            activityIndicator,
             UIView(),     // spacer
+            activityIndicator,
             controlsStack
         ])
         hStack.axis = .horizontal

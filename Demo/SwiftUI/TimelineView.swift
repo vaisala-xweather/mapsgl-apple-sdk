@@ -32,14 +32,14 @@ struct TimelineView: View {
                         .foregroundColor(.secondary)
                 }
                 
+                Spacer()
+                
                 // activity spinner
                 if isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle())
                         .padding(.leading, 8)
                 }
-
-                Spacer()
 
                 // playback + settings
                 HStack(spacing: 12) {
