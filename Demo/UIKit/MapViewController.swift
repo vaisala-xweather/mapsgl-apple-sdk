@@ -232,7 +232,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                     self._logger.debug("Removing layers: \(layerCodesToRemove)")
                     
                     for code in layerCodesToRemove {
-                        self.mapController.removeWeatherLayer(forCode: code)
+                        self.mapController.removeWeatherLayer(for: code)
                     }
                 }
                 
