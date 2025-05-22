@@ -128,6 +128,31 @@ extension WeatherLayersModel
 			category: .conditions,
 			makeConfiguration: { WeatherService.Radar(service: $0) }
 		),
+        .init(code: .satellite,
+              title: "Satellite",
+              category: .conditions,
+              makeConfiguration: { WeatherService.Satellite(service: $0) }
+        ),
+        .init(code: .satelliteGeocolor,
+              title: "Satellite Geocolor",
+              category: .conditions,
+              makeConfiguration: { WeatherService.SatelliteGeocolor(service: $0) }
+        ),
+        .init(code: .satelliteVisible,
+              title: "Satellite Visible",
+              category: .conditions,
+              makeConfiguration: { WeatherService.SatelliteVisible(service: $0) }
+        ),
+        .init(code: .satelliteInfraredColor,
+              title: "Satellite Color Infrared",
+              category: .conditions,
+              makeConfiguration: { WeatherService.SatelliteInfraredColor(service: $0) }
+        ),
+        .init(code: .satelliteWaterVapor,
+              title: "Satellite Water Vapor",
+              category: .conditions,
+              makeConfiguration: { WeatherService.SatelliteWaterVapor(service: $0) }
+        ),
 		.init(
 			code: .airQualityIndex,
 			title: "AQI", 
@@ -225,7 +250,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.WaveParticles(service: $0)
-				configuration.layer.paint.sample.opacity = 0.6
+				configuration.layer.paint.opacity = 0.6
 				return configuration
 			}
 		),
@@ -247,7 +272,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.SwellParticles(service: $0)
-				configuration.layer.paint.sample.opacity = 0.6
+				configuration.layer.paint.opacity = 0.6
 				return configuration
 			}
 		),
@@ -269,7 +294,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.Swell2Particles(service: $0)
-				configuration.layer.paint.sample.opacity = 0.6
+				configuration.layer.paint.opacity = 0.6
 				return configuration
 			}
 		),
@@ -291,7 +316,7 @@ extension WeatherLayersModel
 			category: .maritime,
 			makeConfiguration: {
 				var configuration = WeatherService.Swell3Particles(service: $0)
-				configuration.layer.paint.sample.opacity = 0.6
+				configuration.layer.paint.opacity = 0.6
 				return configuration
 			}
 		),
