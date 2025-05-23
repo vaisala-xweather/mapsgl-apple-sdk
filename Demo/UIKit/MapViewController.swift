@@ -89,6 +89,9 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 		
         layersButton.addTarget(self, action: #selector(didTapLayersButton), for: .touchUpInside)
         currentLocationButton.addTarget(self, action: #selector(didTapCurrentLocationButton), for: .touchUpInside)
+        
+        // Observe app becoming active to update timeline dates
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     @objc private func didTapLayersButton() {
@@ -208,7 +211,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 
         // timeline wiring
         let timeline = mapController.timeline
-        timeline.startDate = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
+        timeline.startDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
         timeline.endDate = Date()
 
         timeline.onAdvance.publisher
@@ -396,6 +399,14 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 			self.present(alert, animated: true)
 		}
 	}
+    
+    // MARK: NSNotification
+    
+    @objc private func appDidBecomeActive() {
+        mapController.timeline.startDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        mapController.timeline.endDate = Date()
+        mapController.timeline.goTo(date: Date())
+    }
 	
 	// MARK: SidebarViewControllerDelegate Conformance
 	

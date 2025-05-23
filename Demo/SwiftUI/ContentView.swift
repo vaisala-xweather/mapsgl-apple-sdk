@@ -185,7 +185,13 @@ struct ContentView : View {
             }
             
             SidebarView(dataModel: self.dataModel, isSidebarVisible: $isSidebarVisible)
-        }.environment(\.colorScheme, coordinator.colorScheme)
+        }
+        .environment(\.colorScheme, coordinator.colorScheme)
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+            $startDate.wrappedValue = Calendar.current.date(byAdding: .day, value: -1, to: .now)!
+            $endDate.wrappedValue = Date()
+            $currentDate.wrappedValue = Date()
+        }
 	}
 	
 	private func setUpMap(map: MapboxMap, camera: CameraAnimationsManager?) {
