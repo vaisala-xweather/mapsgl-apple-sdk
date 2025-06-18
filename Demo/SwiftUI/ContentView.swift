@@ -230,6 +230,7 @@ struct ContentView : View {
 			
 			// Once the map has completed initial load…
             mapController.onLoad.observe { _ in
+                WeatherLayersModel.store.loadMetadata(service: coordinator.mapController.service)
 				// Start listening to Combine-provided change events of the `dataModel`'s selected layers.
 				self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
 					// Remove any layers that are no longer selected.
@@ -249,8 +250,9 @@ struct ContentView : View {
 						let roadLayerId = mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
 						for code in layerCodesToAdd {
 							do {
-								let layer = WeatherLayersModel.allLayersByCode[code]!
-								try mapController.addWeatherLayer(config: layer.makeConfiguration(mapController.service), beforeId: roadLayerId)
+                                if let layer = WeatherLayersModel.store.allLayersByCode()[code] {
+                                    try mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
+                                }
 							} catch {
 								_logger.error("Failed to add weather layer: \(error)")
 							}

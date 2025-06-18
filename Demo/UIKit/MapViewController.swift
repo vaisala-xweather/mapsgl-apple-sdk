@@ -248,7 +248,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                     for code in layerCodesToAdd {
                         do {
                             let layer = WeatherLayersModel.allLayersByCode[code]!
-                            try self.mapController.addWeatherLayer(config: layer.makeConfiguration(self.mapController.service), beforeId: roadLayerId)
+                            try self.mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
                         } catch {
                             self._logger.error("Failed to add weather layer: \(error)")
                         }

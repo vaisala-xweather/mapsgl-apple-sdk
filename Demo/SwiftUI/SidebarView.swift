@@ -12,7 +12,11 @@ struct SidebarView : View {
 			if UIDevice.current.userInterfaceIdiom == .phone {
 				self.tapOutsideToClose
 			}
-			self.content
+            if WeatherLayersModel.store.isLoading {
+                ProgressView("Loading layers...").padding()
+            } else {
+                self.content
+            }
 		}.environment(\.colorScheme, .dark)
 	}
 	
@@ -80,7 +84,7 @@ struct SidebarView : View {
 				ForEach(Array(WeatherLayersModel.Category.allCases)) { category in
 					CellGroup(
 						headerText: category.title,
-						items: WeatherLayersModel.allLayersByCategory[category]!,
+                        items: WeatherLayersModel.store.allLayersByCategory()[category]!,
 						selectedLayerCodes: $dataModel.selectedLayerCodes
 					)
 				}

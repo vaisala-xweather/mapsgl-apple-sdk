@@ -7,19 +7,14 @@
 
 import CoreLocation
 
-
-
 #if os(visionOS)
 	fileprivate let authorizedStatuses: [CLAuthorizationStatus] = [.authorizedWhenInUse]
 #else
 	fileprivate let authorizedStatuses: [CLAuthorizationStatus] = [.authorizedWhenInUse, .authorizedAlways]
 #endif
 
-
-
 /// Finds the current low-accuracy location of the user on-demand, with location updating only active until the callback is called.
-final class LocationFinder : NSObject, CLLocationManagerDelegate
-{
+final class LocationFinder : NSObject, CLLocationManagerDelegate {
 	private lazy var _locationManager: CLLocationManager = {
 		var manager = CLLocationManager()
 		manager.delegate = self
@@ -43,11 +38,9 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 		}
 	}
 	
-	
 	// MARK: CLLocationManagerDelegate callbacks
 	
-	func locationManagerDidChangeAuthorization(_ _: CLLocationManager)
-	{
+	func locationManagerDidChangeAuthorization(_ _: CLLocationManager) {
 		if [.restricted, .denied].contains(_locationManager.authorizationStatus) {
 			_completions.forEach { $0(.failure(.notAuthorized)) }
 			_completions = []
@@ -59,14 +52,12 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 		}
 	}
 	
-	func locationManager(_ _: CLLocationManager, didUpdateLocations locations: [CLLocation])
-	{
+	func locationManager(_ _: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
 		_completions.forEach { $0(.success(locations.last!)) }
 		_completions = []
 	}
 	
-	func locationManager(_ _: CLLocationManager, didFailWithError error: any Swift.Error)
-	{
+	func locationManager(_ _: CLLocationManager, didFailWithError error: any Swift.Error) {
 		let clError = CLError(CLError.Code(rawValue: (error as NSError).code)!)
 		_completions.forEach { $0(.failure(.coreLocation(clError))) }
 		_completions = []
@@ -96,10 +87,7 @@ final class LocationFinder : NSObject, CLLocationManagerDelegate
 	}
 }
 
-
-
-extension LocationFinder
-{
+extension LocationFinder {
 	/// Convenience variant method for dual success/failure closures.
 	func findCurrentLocation(_ locationCompletion: @escaping (CLLocation) -> Void, failure failureCompletion: @escaping (Error) -> Void) {
 		findCurrentLocation { result in
