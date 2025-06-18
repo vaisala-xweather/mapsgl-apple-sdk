@@ -227,6 +227,8 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 
         // Once the map has completed initial load…
         mapController.onLoad.observe { _ in
+            WeatherLayersModel.store.loadMetadata(service: self.mapController.service)
+            
             // Start listening to Combine-provided change events of the `dataModel`'s selected layers.
             self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
                 // Remove any layers that are no longer selected.
@@ -247,7 +249,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                     let roadLayerId = self.mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
                     for code in layerCodesToAdd {
                         do {
-                            let layer = WeatherLayersModel.allLayersByCode[code]!
+                            let layer = WeatherLayersModel.store.allLayersByCode()[code]!
                             try self.mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
                         } catch {
                             self._logger.error("Failed to add weather layer: \(error)")

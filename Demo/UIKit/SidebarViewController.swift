@@ -39,9 +39,9 @@ class SidebarViewController : UITableViewController {
 	
 	override func viewWillAppear(_ animated: Bool) {
 		for code in self.delegate.sidebarSelectedLayerCodes {
-			let layer = WeatherLayersModel.allLayersByCode[code]!
+            let layer = WeatherLayersModel.store.allLayersByCode()[code]!
 			let categoryIndex = WeatherLayersModel.Category.allCases.firstIndex(of: layer.category)!
-			let layerIndex = WeatherLayersModel.allLayersByCategory[layer.category]!.firstIndex { $0.code == code }!
+            let layerIndex = WeatherLayersModel.store.allLayersByCategory()[layer.category]!.firstIndex { $0.code == code }!
 			let indexPath = IndexPath(row: layerIndex + 1, section: categoryIndex)
 			self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
 		}
@@ -56,7 +56,7 @@ class SidebarViewController : UITableViewController {
 	
 	private func layer(forIndexPath indexPath: IndexPath) -> WeatherLayersModel.Layer? {
 		guard let category = category(forIndexPath: indexPath),
-			let layers = WeatherLayersModel.allLayersByCategory[category] else {
+              let layers = WeatherLayersModel.store.allLayersByCategory()[category] else {
 			return nil
 		}
 		
@@ -79,7 +79,7 @@ class SidebarViewController : UITableViewController {
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		let category = WeatherLayersModel.Category.allCases[section]
-		guard let itemCount = WeatherLayersModel.allLayersByCategory[category]?.count else {
+        guard let itemCount = WeatherLayersModel.store.allLayersByCategory()[category]?.count else {
 			return 0
 		}
 		return itemCount + 1
