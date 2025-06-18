@@ -59,31 +59,144 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	
 	// MARK: Layer Hosts
 	
-	/// Adds a custom rendering layer to the map.
-	/// - Parameters:
-	///   - layer: The layer to add.
-	///   - beforeId: Optional ID of the layer to insert beneath.
-	public override func addToMap(layer: some MapsGLLayer, beforeId: String?) {
+	public override func addToMap(source: some DataSource, onSourceAdded: (() -> Void)? = nil) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			
 			do {
-				guard !containsLayerHost(forId: layer.id) && !self.map.layerExists(withId: layer.id) else { return }
+				guard !self.map.sourceExists(withId: source.id) else { return }
 				
-				// Create the `MapboxLayerHost` (with the `MapsGLLayer`), and add to the superclass `MapController`.
-				let layerHost = try MapboxLayerHost(map: self.map, layer: layer)
-				try addLayerHost(layerHost)
-				
-				// Create the `MapboxMaps.CustomLayer` (with the `MapboxLayerHost`), and add to the `MapboxMaps.MapboxMap`.
+				// Create the Mapbox data source
+				switch source {
+				case let source as MapsGLMaps.VectorTileSource:
+					let adapter = MapboxVectorSourceAdapter(source: source, map: self.map)
+					Task { @MainActor in
+						let customSource = await adapter.makeSource()
+						source.setInvalidateFunction(adapter.invalidate)					
+						try self.map.addSource(customSource)
+						onSourceAdded?()
+					}
+				case let source as MapsGLMaps.GeoJSONSource:
+					var mapboxSource = MapboxMaps.GeoJSONSource(id: source.id)
+					if let data = source.data {
+						mapboxSource.data = .featureCollection(data)
+					} else if let dataURL = source.makeDataURL() {
+						mapboxSource.data = .url(dataURL)
+					}
+					try self.map.addSource(mapboxSource)
+					onSourceAdded?()
+				default: break
+				}
+			} catch {
+				Logger.map.fault("Failed to add source to map: \(error)")
+			}
+		}
+	}
+	
+	/// Adds a custom rendering layer to the map.
+	/// - Parameters:
+	///   - layer: The layer to add.
+	///   - beforeId: Optional ID of the layer to insert beneath.
+	public override func addToMap(layer: any MapsGLLayer, beforeId: String?) {
+		doEnsuringStyleLoaded { [weak self] in
+			guard let self = self else { return }
+			guard !self.map.layerExists(withId: layer.id) else { return }
+			
+			do {
 				let positionAndSlot: (position: MapboxMaps.LayerPosition, slot: MapboxMaps.Slot?) = if let beforeId {
 					( .below(beforeId), nil )
 				} else {
 					( .default, .top )
 				}
-				let mapboxCustomLayer = MapboxMaps.CustomLayer(id: layer.id, renderer: layerHost, slot: positionAndSlot.slot)
-				try self.map.addLayer(mapboxCustomLayer, layerPosition: positionAndSlot.position)
+				
+				switch layer {
+				case let vectorTileLayer as MapsGLMaps.VectorTileLayer:					
+					var style = vectorTileLayer.paint.asStyleJSON(id: vectorTileLayer.id, source: vectorTileLayer.source.id, sourceLayer: vectorTileLayer.sourceLayer)
+					style.filter = vectorTileLayer.filter
+					
+					let styleJSON = style.asStyleJSONObject()
+					var mapboxLayer: Layer?
+					
+					#if DEBUG
+					if let jsonData = try? JSONSerialization.data(withJSONObject: styleJSON, options: .prettyPrinted),
+					   let jsonString = String(data: jsonData, encoding: .utf8) {
+						print("Style JSON for layer \(vectorTileLayer.id):\n\(jsonString)")
+					}
+					#endif
+					
+					switch style.type {
+					case .fill: mapboxLayer = try FillLayer(jsonObject: styleJSON)
+					case .line: mapboxLayer = try LineLayer(jsonObject: styleJSON)
+					case .circle: mapboxLayer = try CircleLayer(jsonObject: styleJSON)
+					case .heatmap: mapboxLayer = try HeatmapLayer(jsonObject: styleJSON)
+					case .symbol: mapboxLayer = try SymbolLayer(jsonObject: styleJSON)
+					case .background, .fillExtrusion, .hillshade, .raster:
+						mapboxLayer = nil // Extend this later as needed
+					}
+					
+					if let layer = mapboxLayer {
+						if let layer = layer as? PlatformStyleLayer {
+							vectorTileLayer.platformLayer = layer
+						}
+						
+						guard self.map.sourceExists(withId: vectorTileLayer.source.id) else {
+							self.onSourceAdded.publisher
+								.filter { $0 == vectorTileLayer.source.id }
+								.first()
+								.sink { [weak self] _ in
+									do {
+										try self?.map.addLayer(layer, layerPosition: positionAndSlot.position)
+									} catch {
+										print("\(error)")
+									}
+								}
+								.store(in: &self.mapboxCancellables)
+							return
+						}
+						try self.map.addLayer(layer, layerPosition: positionAndSlot.position)
+						
+					}					
+				case let metalLayer as any MapsGLMetalLayer:
+					addCustomLayer(layer: metalLayer, beforeId: beforeId)
+				default: break
+				}
 			} catch {
 				Logger.map.fault("Failed to add layer to map: \(error)")
+			}
+		}
+	}
+	
+	private func addCustomLayer(layer: some MapsGLMetalLayer, beforeId: String?) {
+		guard !containsLayerHost(forId: layer.id) else { return }
+		
+		let positionAndSlot: (position: MapboxMaps.LayerPosition, slot: MapboxMaps.Slot?) = if let beforeId {
+			( .below(beforeId), nil )
+		} else {
+			( .default, .top )
+		}
+		
+		do {
+			// Create the `MapboxLayerHost` (with the `MapsGLLayer`), and add to the superclass `MapController`.
+			let layerHost = try MapboxLayerHost(map: self.map, layer: layer)
+			try addLayerHost(layerHost)
+			
+			let mapboxCustomLayer = MapboxMaps.CustomLayer(id: layer.id, renderer: layerHost, slot: positionAndSlot.slot)
+			try self.map.addLayer(mapboxCustomLayer, layerPosition: positionAndSlot.position)
+		} catch {
+			
+		}
+	}
+	
+	public override func removeFromMap(source: any DataSource) {
+		doEnsuringStyleLoaded { [weak self] in
+			guard let self = self else { return }
+			
+			do {
+				if let source = source as? VectorTileSource, self.map.sourceExists(withId: source.id) {
+					try self.map.removeSource(withId: source.id)
+				}
+			} catch {
+				Logger.map.fault("Failed to remove source from map: \(error)")
 			}
 		}
 	}
@@ -116,8 +229,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	/// Sets up event handlers and emits a map load event once the style has loaded.
 	public override func setUpEvents() {
 		doEnsuringStyleLoaded {
-			self.trigger(event: MapEvents.Load())
-			self.onLoad.send(())
+			self.loadStyles()
 		}
 	}
 }
@@ -129,12 +241,22 @@ extension MapboxMapController {
 	/// - Parameter closure: The block to run once the style is ready.
 	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void) {
 		if self.map.isStyleLoaded {
-			closure()
+			Task { @MainActor in
+				closure()
+			}
 		} else {
 			self.map.onStyleLoaded.observeNext { [weak self] _ in
 				guard self != nil else { return }
 				closure()
 			}.store(in: &mapboxCancellables)
+		}
+	}
+}
+
+extension MapboxMaps.MapboxMap: ImageRegisteringMap {
+	public func addImage(id: String, image: UIImage, sdf: Bool) throws {
+		Task { @MainActor in
+			try self.addImage(image, id: id, sdf: sdf)
 		}
 	}
 }

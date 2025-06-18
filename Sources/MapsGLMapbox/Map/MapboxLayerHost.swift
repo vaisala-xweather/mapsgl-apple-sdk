@@ -11,13 +11,12 @@ import MapsGLMaps
 import MapsGLRenderer
 import MapboxMaps
 
-/// A custom layer host that integrates a `MapsGLLayer` with Mapbox’s `CustomLayerHost`.
+/// A custom layer host that integrates a `MapsGLMetalLayer` with Mapbox’s `CustomLayerHost`.
 ///
 /// This class bridges MapsGL rendering into the Mapbox rendering pipeline using Metal.
 /// It implements the required `CustomLayerHost` methods to control rendering lifecycle,
 /// including setup, prerendering, and final rendering steps.
-public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost where Layer : MapsGLLayer {
-	
+public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost where Layer : MetalLayerProtocol {
 	/// The Mapbox map associated with the custom layer.
 	var map: MapboxMap
 	
@@ -82,3 +81,9 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 		super.finishRendering()
 	}
 }
+
+extension FillLayer: PlatformStyleLayer {}
+extension LineLayer: PlatformStyleLayer {}
+extension CircleLayer: PlatformStyleLayer {}
+extension SymbolLayer: PlatformStyleLayer {}
+extension HeatmapLayer: PlatformStyleLayer {}
