@@ -716,7 +716,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
 			requirement = {
-				branch = release/1.1.0;
+				branch = "release/1.2.0-beta.1";
 				kind = branch;
 			};
 		};
