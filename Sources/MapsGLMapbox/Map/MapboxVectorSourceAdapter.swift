@@ -26,7 +26,7 @@ public struct MapboxVectorSourceAdapter {
 				fetchTileFunction: { tileID in
 					Task {
 						if let data = try await source.requestTile(x: Int(tileID.x), y: Int(tileID.y), z: Int(tileID.z)) {
-							Task { @MainActor in
+							try await MainActor.run {
 								try map.setCustomGeometrySourceTileData(forSourceId: source.id, tileId: tileID, features: data.features)
 							}
 						}

@@ -28,6 +28,9 @@ import MapsGLMaps
 public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {	
 	private var mapboxCancellables: Set<AnyCancellable> = []
 	
+	// Stores layers waiting for their source to be added once initial metadata loads
+	private var pendingLayersBySource: [String: [(layer: Layer, position: LayerPosition)]] = [:]
+	
 	/// Creates a `MapboxMapController` from a `MapboxMaps.MapView`.
 	/// - Parameters:
 	///   - map: The map view instance.
@@ -52,13 +55,21 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	///   - id: The ID of the layer to move.
 	///   - beforeId: The ID of the layer to move below.
 	/// - Throws: An error if the move operation fails.
-	override public func moveLayer(id: String, beforeId: String) throws {
+	override public func moveLayer(id: String, beforeId: String?) throws {
 		try super.moveLayer(id: id, beforeId: beforeId)
-		try map.moveLayer(withId: id, to: .below(beforeId))
+		if let beforeId {
+			try map.moveLayer(withId: id, to: .below(beforeId))
+		} else {
+			try map.moveLayer(withId: id, to: .default)
+		}
 	}
 	
 	// MARK: Layer Hosts
 	
+	/// Adds a MapsGL data source to the Mapbox map.
+	/// - Parameters:
+	///    - source: The source to add.
+	///    - onSourceAdded: A function to call when the source has been added to Mapbox.
 	public override func addToMap(source: some DataSource, onSourceAdded: (() -> Void)? = nil) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
@@ -93,7 +104,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 		}
 	}
 	
-	/// Adds a custom rendering layer to the map.
+	/// Adds a MapsGL layer to the Mapbox map.
 	/// - Parameters:
 	///   - layer: The layer to add.
 	///   - beforeId: Optional ID of the layer to insert beneath.
@@ -140,15 +151,26 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 						}
 						
 						guard self.map.sourceExists(withId: vectorTileLayer.source.id) else {
+							let sourceId = vectorTileLayer.source.id
+							// Queue this layer for adding once its source is added
+							var pendingLayers = self.pendingLayersBySource[sourceId] ?? []
+							pendingLayers.append((layer, positionAndSlot.position))
+							self.pendingLayersBySource[sourceId] = pendingLayers
+							
 							self.onSourceAdded.publisher
 								.filter { $0 == vectorTileLayer.source.id }
 								.first()
 								.sink { [weak self] _ in
-									do {
-										try self?.map.addLayer(layer, layerPosition: positionAndSlot.position)
-									} catch {
-										print("\(error)")
-									}
+									guard let self = self else { return }
+									let pending = self.pendingLayersBySource[sourceId] ?? []
+									for (pendingLayer, position) in pending {
+										do {
+											try self.map.addLayer(pendingLayer, layerPosition: position)
+										} catch {
+											print("\(error)")
+										}
+									} 
+									self.pendingLayersBySource.removeValue(forKey: sourceId)
 								}
 								.store(in: &self.mapboxCancellables)
 							return
