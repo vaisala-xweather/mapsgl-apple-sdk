@@ -4,6 +4,7 @@ import MapsGLMaps
 struct SidebarView : View {
 	@ObservedObject var dataModel: WeatherLayersModel
 	@Binding var isSidebarVisible: Bool
+    @State private var selectedCategory: WeatherLayersModel.Category = .all
 	
 	var sideBarWidth: CGFloat = 300
 	
@@ -31,26 +32,47 @@ struct SidebarView : View {
 			}
 	}
 	
-	var content: some View {
-		GeometryReader { geometry in
-			HStack(alignment: .top) {
-				ZStack(alignment: .top) {
-					Color.backgroundColor
-						.edgesIgnoringSafeArea(.all)
-					
-					VStack(alignment: .leading) {
-						self.title
-						self.list
-					}
-				}
-					.frame(width: self.sideBarWidth)
-					.offset(x: self.isSidebarVisible ? 0 : -(self.sideBarWidth + geometry.safeAreaInsets.leading))
-					.animation(.default, value: self.isSidebarVisible)
-				
-				Spacer()
-			}
-		}
-	}
+    var content: some View {
+        GeometryReader { geometry in
+            HStack(alignment: .top) {
+                ZStack(alignment: .top) {
+                    Color.backgroundColor
+                        .edgesIgnoringSafeArea(.all)
+                    
+                    VStack(alignment: .leading) {
+                        self.title
+
+                        HStack {
+                            Picker("Category", selection: $selectedCategory) {
+                                ForEach(WeatherLayersModel.Category.allCases) { category in
+                                    Text(category.title).tag(Optional(category))
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .tint(.white)
+                        }
+                        .foregroundColor(.white)
+                        .padding(.vertical, 4)
+                        .cornerRadius(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.cellDividerColor, lineWidth: 1)
+                        )
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 8)
+
+                        self.list
+                    }
+                }
+                    .frame(width: self.sideBarWidth)
+                    .offset(x: self.isSidebarVisible ? 0 : -(self.sideBarWidth + geometry.safeAreaInsets.leading))
+                    .animation(.default, value: self.isSidebarVisible)
+                
+                Spacer()
+            }
+        }
+    }
 	
 	var title: some View {
 		VStack(alignment: .leading) {
@@ -78,19 +100,19 @@ struct SidebarView : View {
 			}
 	}
 	
-	var list: some View {
-		ScrollView {
-			VStack(spacing: 0) {
-				ForEach(Array(WeatherLayersModel.Category.allCases)) { category in
-					CellGroup(
-						headerText: category.title,
-                        items: WeatherLayersModel.store.allLayersByCategory()[category]!,
-						selectedLayerCodes: $dataModel.selectedLayerCodes
-					)
-				}
-			}
-		}
-	}
+    var list: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                if let layers = WeatherLayersModel.store.allLayersByCategory()[selectedCategory] {
+                    CellGroup(
+                        headerText: selectedCategory.title,
+                        items: layers,
+                        selectedLayerCodes: $dataModel.selectedLayerCodes
+                    )
+                }
+            }
+        }
+    }
 }
 
 struct CellGroup : View {
@@ -98,12 +120,7 @@ struct CellGroup : View {
 	var items: [WeatherLayersModel.Layer]
 	@Binding var selectedLayerCodes: Set<WeatherLayersModel.Layer.ID>
 	
-	var body: some View {
-		self.header
-		
-		Divider()
-			.overlay(Color.cellDividerColor)
-		
+	var body: some View {		
 		List(self.items) { item in
 			CellListItem(text: item.title, selected: self.selectedLayerCodes.contains(item.id))
 				.onTapGesture {
