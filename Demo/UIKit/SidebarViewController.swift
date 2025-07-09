@@ -12,7 +12,9 @@ import MapsGLMaps
 fileprivate let logger = Logger(type: SidebarViewController.self)
 
 class SidebarViewController : UITableViewController {
+    var service: WeatherService!
 	weak var delegate: SidebarViewControllerDelegate!
+    private var needsLayerMetadata = true
 	
 	override func loadView() {
 		super.loadView()
@@ -37,15 +39,29 @@ class SidebarViewController : UITableViewController {
         tableView.tableHeaderView = headerView
 	}
 	
-	override func viewWillAppear(_ animated: Bool) {
-		for code in self.delegate.sidebarSelectedLayerCodes {
-            let layer = WeatherLayersModel.store.allLayersByCode()[code]!
-			let categoryIndex = WeatherLayersModel.Category.allCases.firstIndex(of: layer.category)!
-            let layerIndex = WeatherLayersModel.store.allLayersByCategory()[layer.category]!.firstIndex { $0.code == code }!
-			let indexPath = IndexPath(row: layerIndex + 1, section: categoryIndex)
-			self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-		}
-	}
+    override func viewWillAppear(_ animated: Bool) {
+        if needsLayerMetadata {
+            WeatherLayersModel.store.loadMetadata(service: self.service) {
+                self.needsLayerMetadata = false
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+        for code in self.delegate.sidebarSelectedLayerCodes {
+            guard let layer = WeatherLayersModel.store.allLayersByCode()[code] else { continue }
+
+            for category in layer.categories {
+                guard
+                    let section = WeatherLayersModel.Category.allCases.firstIndex(of: category),
+                    let row = WeatherLayersModel.store.allLayersByCategory()[category]?.firstIndex(where: { $0.code == code })
+                else { continue }
+
+                let indexPath = IndexPath(row: row + 1, section: section)
+                self.tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+            }
+        }
+    }
 	
 	private func category(forIndexPath indexPath: IndexPath) -> WeatherLayersModel.Category? {
 		guard WeatherLayersModel.Category.allCases.indices.contains(indexPath.section) else {

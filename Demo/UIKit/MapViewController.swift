@@ -226,9 +226,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
             .store(in: &_eventSubscriptions)
 
         // Once the map has completed initial load…
-        mapController.onLoad.observe { _ in
-            WeatherLayersModel.store.loadMetadata(service: self.mapController.service)
-            
+        mapController.onLoad.observe { _ in            
             // Start listening to Combine-provided change events of the `dataModel`'s selected layers.
             self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
                 // Remove any layers that are no longer selected.
@@ -314,6 +312,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 
         // Embed the SidebarViewController
         let sidebarVC = SidebarViewController()
+        sidebarVC.service = self.mapController.service
         sidebarVC.delegate = self
         addChild(sidebarVC)
         sidebarVC.view.translatesAutoresizingMaskIntoConstraints = false

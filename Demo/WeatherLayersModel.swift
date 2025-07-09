@@ -52,7 +52,7 @@ extension WeatherLayersModel {
             })
         }
         
-        func loadMetadata(service: WeatherService) {
+        func loadMetadata(service: WeatherService, callback: (() -> Void)? = nil) {
             isLoading = true
             Task.detached {
                 service.loadLayerMetadata() { [weak self] result in
@@ -89,6 +89,8 @@ extension WeatherLayersModel {
                                 return updated
                             }.sorted { $0.title.localizedCompare($1.title) == .orderedAscending }
                         }
+                        
+                        callback?()
                     case .failure(let error):
                         print("Failed to fetch layer metadata: ", error)
                     }
