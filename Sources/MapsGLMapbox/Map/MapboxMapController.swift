@@ -141,8 +141,8 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 					case .circle: mapboxLayer = try CircleLayer(jsonObject: styleJSON)
 					case .heatmap: mapboxLayer = try HeatmapLayer(jsonObject: styleJSON)
 					case .symbol: mapboxLayer = try SymbolLayer(jsonObject: styleJSON)
-					case .background, .fillExtrusion, .hillshade, .raster:
-						mapboxLayer = nil // Extend this later as needed
+					default:
+						mapboxLayer = nil
 					}
 					
 					if let layer = mapboxLayer {
@@ -269,7 +269,9 @@ extension MapboxMapController {
 		} else {
 			self.map.onStyleLoaded.observeNext { [weak self] _ in
 				guard self != nil else { return }
-				closure()
+				Task { @MainActor in
+					closure()
+				}
 			}.store(in: &mapboxCancellables)
 		}
 	}
