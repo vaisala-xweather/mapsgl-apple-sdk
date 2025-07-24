@@ -53,3 +53,9 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 		super.finishRendering()
 	}
 }
+
+extension FillLayer: @retroactive PlatformStyleLayer {}
+extension LineLayer: @retroactive PlatformStyleLayer {}
+extension CircleLayer: @retroactive PlatformStyleLayer {}
+extension SymbolLayer: @retroactive PlatformStyleLayer {}
+extension HeatmapLayer: @retroactive PlatformStyleLayer {}

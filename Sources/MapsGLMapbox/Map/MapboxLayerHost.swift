@@ -82,8 +82,8 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	}
 }
 
-extension FillLayer: PlatformStyleLayer {}
-extension LineLayer: PlatformStyleLayer {}
-extension CircleLayer: PlatformStyleLayer {}
-extension SymbolLayer: PlatformStyleLayer {}
-extension HeatmapLayer: PlatformStyleLayer {}
+extension FillLayer: @retroactive PlatformStyleLayer {}
+extension LineLayer: @retroactive PlatformStyleLayer {}
+extension CircleLayer: @retroactive PlatformStyleLayer {}
+extension SymbolLayer: @retroactive PlatformStyleLayer {}
+extension HeatmapLayer: @retroactive PlatformStyleLayer {}

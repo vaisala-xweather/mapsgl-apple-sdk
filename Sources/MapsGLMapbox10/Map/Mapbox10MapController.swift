@@ -81,8 +81,7 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap> {
 
 // MARK: Utility
 
-extension Mapbox10MapController
-{
+extension Mapbox10MapController {
 	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void) {
 		if self.map.isStyleLoaded {
 			closure()
@@ -91,6 +90,14 @@ extension Mapbox10MapController
 				guard self != nil else { return }
 				closure()
 			}.store(in: &_mapboxSubscriptions)
+		}
+	}
+}
+
+extension MapboxMaps.MapboxMap: @retroactive ImageRegisteringMap {
+	public func addImage(id: String, image: UIImage, sdf: Bool) throws {
+		Task { @MainActor in
+			try self.addImage(image, id: id, sdf: sdf)
 		}
 	}
 }
