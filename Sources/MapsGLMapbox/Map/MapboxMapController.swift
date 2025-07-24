@@ -277,7 +277,7 @@ extension MapboxMapController {
 	}
 }
 
-extension MapboxMaps.MapboxMap: ImageRegisteringMap {
+extension MapboxMaps.MapboxMap: @retroactive ImageRegisteringMap {
 	public func addImage(id: String, image: UIImage, sdf: Bool) throws {
 		Task { @MainActor in
 			try self.addImage(image, id: id, sdf: sdf)
