@@ -5,7 +5,16 @@
 //  Created by Slipp Douglas Thompson on 3/1/24.
 //
 
+import MapsGLMaps
 import MapboxMaps
+import UIKit
+
+enum PropertyKind: Int {
+	case undefined = 0
+	case constant = 1
+	case expression = 2
+	case transition = 3
+}
 
 extension MapboxMaps.StyleManager
 {
@@ -21,5 +30,18 @@ extension MapboxMaps.StyleManager
 		self.allLayerIdentifiers.last { candidateLayer in
 			candidateLayer.type == type && candidateLayer.id.contains(regex)
 		}
+	}
+	
+	public func layerStyleColorValue(id: String, property: String) -> MapsGLMaps.StyleValue<UIColor>? {
+		guard layerExists(withId: id) else { return nil }
+		
+		let propertyValue = layerProperty(for: id, property: property)
+		
+		// MBMStylePropertyValueKind: 0=undefined, 1=constant, 2=expression, 3=transition
+		if let rawExpression = propertyValue.value as? [Any], propertyValue.kind == .expression {
+			return StyleValue.expression(Expression(rawExpression))
+		}
+		
+		return nil
 	}
 }

@@ -46,6 +46,11 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	///   - account: The associated Xweather account.
 	public override init(map: MapboxMaps.MapboxMap, window: UIWindow? = nil, account: XweatherAccount) {
 		super.init(map: map, window: window, account: account)
+		
+		self.map.onStyleLoaded.observe { [weak self] loaded in
+			guard let self = self else { return }
+			self.updateMaskLayersForMap()
+		}.store(in: &mapboxCancellables)
 	}
 	
 	// MARK: MapController
@@ -61,6 +66,38 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			try map.moveLayer(withId: id, to: .below(beforeId))
 		} else {
 			try map.moveLayer(withId: id, to: .default)
+		}
+	}
+	
+	override public func beforeIdForMaskLayers() -> String? {
+		// Layers can't be referenced by id when using Mapbox's "Standard" styles, so return nil here as mask layers will be 
+		// automatically inserted into the .bottom slot in `addToMap`.
+		if let styleURI = self.map.styleURI, styleURI.rawValue.contains("mapbox/standard") {
+			return nil
+		} else if self.map.layerExists(withId: "hillshade") {
+			return "hillshade"
+		}
+		return "land-structure-polygon"
+	}
+	
+	override public func updateMaskLayersForMap() {
+		do {
+			try self.masks.forEach { (kind, layer) in
+				var layerId: String? 
+				switch kind {
+				case .land:
+					layerId = "land"
+				default:
+					break
+				}
+				
+				if let layerId = layerId {
+					let propertyValue = self.map.layerProperty(for: layerId, property: "background-color")
+					try self.map.setLayerProperty(for: layer.id, property: "fill-color", value: propertyValue.value)
+				}
+			}
+		} catch {
+			Logger.map.error(error.localizedDescription)
 		}
 	}
 	
