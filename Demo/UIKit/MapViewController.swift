@@ -234,8 +234,10 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                 if !layerCodesToRemove.isEmpty {
                     self._logger.debug("Removing layers: \(layerCodesToRemove)")
                     
-                    for code in layerCodesToRemove {
-                        self.mapController.removeWeatherLayer(for: code)
+                    Task { @MainActor in
+                        for code in layerCodesToRemove {
+                            self.mapController.removeWeatherLayer(for: code)
+                        }
                     }
                 }
                 
@@ -244,13 +246,15 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                 if !layerCodesToAdd.isEmpty {
                     self._logger.debug("Adding layers: \(layerCodesToAdd)")
                     
-                    let roadLayerId = self.mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
-                    for code in layerCodesToAdd {
-                        do {
-                            let layer = WeatherLayersModel.store.allLayersByCode()[code]!
-                            try self.mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
-                        } catch {
-                            self._logger.error("Failed to add weather layer: \(error)")
+                    Task { @MainActor in
+                        let roadLayerId = self.mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
+                        for code in layerCodesToAdd {
+                            do {
+                                let layer = WeatherLayersModel.store.allLayersByCode()[code]!
+                                try self.mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
+                            } catch {
+                                self._logger.error("Failed to add weather layer: \(error)")
+                            }
                         }
                     }
                 }

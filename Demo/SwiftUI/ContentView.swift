@@ -127,7 +127,6 @@ struct ContentView : View {
             set: { newValue in
                 timelinePosition = newValue
                 coordinator.mapController.timeline.goTo(position: newValue)
-                print("Scrubbed to: \(newValue)")
             }
         )
         let isPlayingBinding = Binding<Bool>(
