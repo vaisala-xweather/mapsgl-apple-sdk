@@ -14,6 +14,11 @@ import MapsGLCore
 import MapsGLMaps
 @_spi(Experimental) import MapboxMaps // SPI Experimental req'd for `MapboxMaps.CustomLayer`
 
+/// Protocol that can be implemented to allow deciding which slot to insert Mapbox layers into when using the "Standard" styles
+public protocol MapboxLayerSlotProviding {
+	func slot(for layer: MapboxMaps.Layer, on map: MapboxMaps.MapboxMap) -> MapboxMaps.Slot?
+}
+
 /// A map controller implementation using the MapboxMaps SDK.
 ///
 /// `MapboxMapController` integrates MapsGL rendering layers with a `MapboxMaps.MapboxMap`
@@ -25,7 +30,21 @@ import MapsGLMaps
 ///
 /// The controller ensures proper layer synchronization and defers operations
 /// until the style is fully loaded to avoid premature access errors.
-public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {	
+public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
+	public struct SlotProvider: MapboxLayerSlotProviding {
+		public typealias Resolver = (_ layer: MapboxMaps.Layer, _ map: MapboxMaps.MapboxMap) -> MapboxMaps.Slot?
+		private let resolver: Resolver
+		
+		public init(_ resolver: @escaping Resolver) { self.resolver = resolver }
+		
+		public func slot(for layer: MapboxMaps.Layer, on map: MapboxMaps.MapboxMap) -> MapboxMaps.Slot? {
+			resolver(layer, map)
+		}
+	}
+	
+	/// Returns which slot to insert Mapbox layers into when using the "Standard" Mapbox styles
+	public var slotProvider: MapboxLayerSlotProviding?
+	
 	private var isStyleLoaded: Bool = false
 	private var mapboxCancellables: Set<AnyCancellable> = []
 	
@@ -152,12 +171,6 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			guard !self.map.layerExists(withId: layer.id) else { return }
 			
 			do {
-				let positionAndSlot: (position: MapboxMaps.LayerPosition, slot: MapboxMaps.Slot?) = if let beforeId {
-					( .below(beforeId), nil )
-				} else {
-					( .default, .top )
-				}
-				
 				switch layer {
 				case let vectorTileLayer as MapsGLMaps.VectorTileLayer:	
 					var style = vectorTileLayer.paint.asStyleJSON(id: vectorTileLayer.id, source: vectorTileLayer.source.id, sourceLayer: vectorTileLayer.sourceLayer)
@@ -165,6 +178,12 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 					
 					let styleJSON = style.asStyleJSONObject()
 					var mapboxLayer: Layer?
+					var layerSlot: MapboxMaps.Slot?
+					
+					// Automatically add MapsGL mask layers into the .bottom slot. This can be overriden using the `slotProvider`.
+					if layer.id.hasPrefix("mask::") {
+						layerSlot = .bottom
+					}
 					
 					#if DEBUG
 					if let jsonData = try? JSONSerialization.data(withJSONObject: styleJSON, options: .prettyPrinted),
@@ -183,10 +202,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 						mapboxLayer = nil
 					}
 					
-					if let layer = mapboxLayer {
-						if let layer = layer as? PlatformStyleLayer {
-							vectorTileLayer.platformLayer = layer
-						}
+					if var layer = mapboxLayer {
+						let positionAndSlot = layerPositionAndSlot(beforeId: beforeId, slot: slotProvider?.slot(for: layer, on: map) ?? layerSlot)
+						layer.slot = positionAndSlot.slot
 						
 						guard self.map.sourceExists(withId: vectorTileLayer.source.id) else {
 							let sourceId = vectorTileLayer.source.id
@@ -242,22 +260,25 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	
 	private func addCustomLayer(layer: some MapsGLMetalLayer, beforeId: String?) {
 		guard !containsLayerHost(forId: layer.id) else { return }
-		
-		let positionAndSlot: (position: MapboxMaps.LayerPosition, slot: MapboxMaps.Slot?) = if let beforeId {
-			( .below(beforeId), nil )
-		} else {
-			( .default, .top )
-		}
-		
 		do {
 			// Create the `MapboxLayerHost` (with the `MapsGLLayer`), and add to the superclass `MapController`.
 			let layerHost = try MapboxLayerHost(map: self.map, layer: layer)
 			try addLayerHost(layerHost)
 			
-			let mapboxCustomLayer = MapboxMaps.CustomLayer(id: layer.id, renderer: layerHost, slot: positionAndSlot.slot)
+			let positionAndSlot = layerPositionAndSlot(beforeId: beforeId)
+			var mapboxCustomLayer = MapboxMaps.CustomLayer(id: layer.id, renderer: layerHost, slot: positionAndSlot.slot)
+			mapboxCustomLayer.slot = slotProvider?.slot(for: mapboxCustomLayer, on: map)
 			try self.map.addPersistentLayer(mapboxCustomLayer, layerPosition: positionAndSlot.position)
 		} catch {
 			
+		}
+	}
+	
+	private func layerPositionAndSlot(beforeId: String?, slot: MapboxMaps.Slot? = nil) -> (position: MapboxMaps.LayerPosition, slot: MapboxMaps.Slot?) {
+		if let beforeId {
+			 return ( .below(beforeId), slot )
+		} else {
+			return ( .default, slot )
 		}
 	}
 	
