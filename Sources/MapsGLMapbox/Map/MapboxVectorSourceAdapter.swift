@@ -17,7 +17,7 @@ public struct MapboxVectorSourceAdapter {
 		do {
 			try await source.fetchMetadata()
 		} catch {
-			print("Failed to fetch metadata for vector tile source: \(error)")
+			Logger.map.error("Failed to fetch metadata for vector tile source: \(error)")
 		}
 		
 		return CustomGeometrySource(

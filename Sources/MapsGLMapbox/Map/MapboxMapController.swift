@@ -189,10 +189,22 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 						
 						guard self.map.sourceExists(withId: vectorTileLayer.source.id) else {
 							let sourceId = vectorTileLayer.source.id
+							
 							// Queue this layer for adding once its source is added
 							var pendingLayers = self.pendingLayersBySource[sourceId] ?? []
 							pendingLayers.append((layer, positionAndSlot.position))
 							self.pendingLayersBySource[sourceId] = pendingLayers
+							
+							// Add a temporary dummy layer so other layers that need to reference it even while it's awaiting 
+							// the data source to become ready can still do so. Then remove the dummy layer and insert the actual
+							// one in the event handler.
+							var dummyLayer = BackgroundLayer(id: layer.id)
+							dummyLayer.slot = positionAndSlot.slot
+							try self.map.addPersistentLayer(dummyLayer, layerPosition: positionAndSlot.position)
+							
+							if let layer = layer as? PlatformStyleLayer {
+								vectorTileLayer.platformLayer = layer
+							}
 							
 							self.onSourceAdded.publisher
 								.filter { $0 == vectorTileLayer.source.id }
@@ -202,9 +214,12 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 									let pending = self.pendingLayersBySource[sourceId] ?? []
 									for (pendingLayer, position) in pending {
 										do {
-											try self.map.addLayer(pendingLayer, layerPosition: position)
+											if self.map.layerExists(withId: pendingLayer.id) {
+												try self.map.removeLayer(withId: pendingLayer.id)
+											}
+											try self.map.addPersistentLayer(pendingLayer, layerPosition: position)
 										} catch {
-											print("\(error)")
+											Logger.map.error("\(error)")
 										}
 									} 
 									self.pendingLayersBySource.removeValue(forKey: sourceId)
@@ -212,8 +227,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 								.store(in: &self.mapboxCancellables)
 							return
 						}
-						try self.map.addLayer(layer, layerPosition: positionAndSlot.position)
-						
+						try self.map.addPersistentLayer(layer, layerPosition: positionAndSlot.position)
 					}					
 				case let metalLayer as any MapsGLMetalLayer:
 					addCustomLayer(layer: metalLayer, beforeId: beforeId)
@@ -240,7 +254,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			try addLayerHost(layerHost)
 			
 			let mapboxCustomLayer = MapboxMaps.CustomLayer(id: layer.id, renderer: layerHost, slot: positionAndSlot.slot)
-			try self.map.addLayer(mapboxCustomLayer, layerPosition: positionAndSlot.position)
+			try self.map.addPersistentLayer(mapboxCustomLayer, layerPosition: positionAndSlot.position)
 		} catch {
 			
 		}
