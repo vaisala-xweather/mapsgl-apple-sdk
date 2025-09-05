@@ -26,9 +26,10 @@ import MapsGLMaps
 /// The controller ensures proper layer synchronization and defers operations
 /// until the style is fully loaded to avoid premature access errors.
 public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {	
+	private var isStyleLoaded: Bool = false
 	private var mapboxCancellables: Set<AnyCancellable> = []
 	
-	// Stores layers waiting for their source to be added once initial metadata loads
+	/// Stores layers waiting for their source to be added once initial metadata loads
 	private var pendingLayersBySource: [String: [(layer: Layer, position: LayerPosition)]] = [:]
 	
 	/// Creates a `MapboxMapController` from a `MapboxMaps.MapView`.
@@ -158,7 +159,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				}
 				
 				switch layer {
-				case let vectorTileLayer as MapsGLMaps.VectorTileLayer:					
+				case let vectorTileLayer as MapsGLMaps.VectorTileLayer:	
 					var style = vectorTileLayer.paint.asStyleJSON(id: vectorTileLayer.id, source: vectorTileLayer.source.id, sourceLayer: vectorTileLayer.sourceLayer)
 					style.filter = vectorTileLayer.filter
 					
@@ -313,13 +314,14 @@ extension MapboxMapController {
 	/// Executes the given closure once the map's style has fully loaded.
 	/// - Parameter closure: The block to run once the style is ready.
 	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void) {
-		if self.map.isStyleLoaded {
+		if self.isStyleLoaded {
 			Task { @MainActor in
 				closure()
 			}
 		} else {
 			self.map.onStyleLoaded.observeNext { [weak self] _ in
 				guard self != nil else { return }
+				self?.isStyleLoaded = true
 				Task { @MainActor in
 					closure()
 				}
