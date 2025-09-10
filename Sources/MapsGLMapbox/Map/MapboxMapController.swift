@@ -71,6 +71,15 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			guard let self = self else { return }
 			self.updateMaskLayersForMap()
 		}.store(in: &mapboxCancellables)
+		
+		self.isStyleLoaded = self.map.isStyleLoaded
+		initialize()
+	}
+	
+	public override func initialize() {
+		doEnsuringStyleLoaded {
+			super.initialize()
+		}
 	}
 	
 	// MARK: MapController

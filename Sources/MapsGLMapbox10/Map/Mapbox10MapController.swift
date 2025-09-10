@@ -15,14 +15,24 @@ import MapsGLMaps
 import MapboxMaps
 
 public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap> {
-	private var _mapboxSubscriptions: Set<AnyCancellable> = []
+	private var isStyleLoaded: Bool = false
+	private var mapboxCancellables: Set<AnyCancellable> = []
 	
 	public convenience init(map: MapboxMaps.MapView, account: XweatherAccount) {
 		self.init(map: map.mapboxMap, window: map.window, account: account)
 	}
-	
+
 	public override init(map: MapboxMaps.MapboxMap, window: UIWindow? = nil, account: XweatherAccount) {
 		super.init(map: map, window: window, account: account)
+		
+		self.isStyleLoaded = self.map.isStyleLoaded		
+		initialize()
+	}
+
+	public override func initialize() {
+		doEnsuringStyleLoaded {
+			super.initialize()
+		}
 	}
 	
 	public override func addToMap(layer: some MapsGLLayer, beforeId: String?) {
@@ -83,13 +93,18 @@ public final class Mapbox10MapController : MapController<MapboxMaps.MapboxMap> {
 
 extension Mapbox10MapController {
 	private func doEnsuringStyleLoaded(_ closure: @escaping () -> Void) {
-		if self.map.isStyleLoaded {
-			closure()
+		if self.isStyleLoaded {
+			Task { @MainActor in
+				closure()
+			}
 		} else {
 			self.map.onNext(event: .styleLoaded) { [weak self] _ in
 				guard self != nil else { return }
-				closure()
-			}.store(in: &_mapboxSubscriptions)
+				self?.isStyleLoaded = true
+				Task { @MainActor in
+					closure()
+				}
+			}.store(in: &mapboxCancellables)
 		}
 	}
 }
