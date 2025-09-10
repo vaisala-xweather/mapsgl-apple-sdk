@@ -8,8 +8,7 @@
 import MapsGLMaps
 import MapboxMaps
 
-extension MapBounds where Space == LatitudeLongitude
-{
+extension MapBounds where Space == LatitudeLongitude {
 	public init(_ coordinateBounds: MapboxMaps.CoordinateBounds) {
 		self.init(southWest: coordinateBounds.southwest, northEast: coordinateBounds.northeast)
 	}

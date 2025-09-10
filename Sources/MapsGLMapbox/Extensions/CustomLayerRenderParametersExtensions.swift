@@ -8,8 +8,7 @@
 import MapboxMaps
 import Spatial
 
-extension MapboxMaps.CustomLayerRenderParameters
-{
+extension MapboxMaps.CustomLayerRenderParameters {
 	var projectionMatrixSIMDFloat4x4Value: simd_float4x4 {
 		let sequentialProjectionMatrixValues = self.projectionMatrix.map(\.floatValue)
 		return simd_float4x4(

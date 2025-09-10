@@ -16,8 +16,7 @@ enum PropertyKind: Int {
 	case transition = 3
 }
 
-extension MapboxMaps.StyleManager
-{
+extension MapboxMaps.StyleManager {
 	/// Find the first layer which has an `id` matching the given `Regex`, and is of the given `LayerType`.
 	public func firstLayer(matching regex: Regex<Substring>, type: MapboxMaps.LayerType = .line) -> MapboxMaps.LayerInfo? {
 		self.allLayerIdentifiers.first { candidateLayer in

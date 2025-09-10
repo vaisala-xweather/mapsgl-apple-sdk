@@ -9,10 +9,21 @@ import MapboxMaps
 import MapsGLMaps
 import OSLog
 
+/// A lightweight bridge that exposes a MapsGL `VectorTileSource` as a Mapbox
+/// `CustomGeometrySource`, wiring up async tile fetch/cancel handlers.
 public struct MapboxVectorSourceAdapter {
+	/// The underlying MapsGL vector tile source to fetch tiles from.
 	let source: VectorTileSource
+	/// The target Mapbox map; held `unowned` because the controller owns both.
 	unowned let map: MapboxMaps.MapboxMap
 
+	/// Builds a `CustomGeometrySource` that fetches vector tiles from `source`.
+	///
+	/// - Fetches `source` metadata once (errors are logged, not thrown).
+	/// - Creates async `fetchTileFunction` / `cancelTileFunction` closures:
+	///   - `fetchTileFunction` requests a tile, then posts features to Mapbox on the MainActor.
+	///   - `cancelTileFunction` aborts an in-flight request for the given tile.
+	/// - Returns: A configured `CustomGeometrySource` ready to be added to the style.
 	func makeSource() async -> CustomGeometrySource {
 		do {
 			try await source.fetchMetadata()
@@ -42,6 +53,14 @@ public struct MapboxVectorSourceAdapter {
 		)
 	}
 
+	/// Invalidates a specific tile, asking Mapbox to refetch from this adapter.
+	///
+	/// - Parameters:
+	///   - x: XYZ tile coordinate X.
+	///   - y: XYZ tile coordinate Y.
+	///   - z: Zoom level.
+	///
+	/// This method hops to the MainActor to call Mapbox’s invalidation API.
 	func invalidate(x: Int, y: Int, z: Int) {
 		Task { @MainActor in
 			do {
