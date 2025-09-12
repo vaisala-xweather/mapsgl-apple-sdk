@@ -6,11 +6,11 @@ import PackageDescription
 
 
 let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
-let version: Version = "1.2.3"
+let version: Version = "1.2.4"
 let xcframeworkChecksums = (
-	core: "f647dc62a4c5f065821addf50e97ef94588ef6c67219b34f325bad4eb32ba9fd",
-	renderer: "1a8dff5328243d675ac20ddb7a3645096c8bb00f2696303a6014edcc4e375ab0",
-	maps: "1559a50aab526c7830a7d009437e59e2c8c04151b204eb96f8c3d0d6631dce5d"
+	core: "6296b5eb19d2a70312448f6940b3e0a9b18a0c9c0d6cf9621b99a853b4544244",
+	renderer: "4d6c3c8c4f2c43f6749f3ba8e71c1a6c52c3bc4f3f47fbaa72f8c82ca9ffb227",
+	maps: "a864c998b22e6a682ce9aeace65ac1093f1fa5d7752f07439c93b184690e1d74"
 )
 
 
@@ -26,6 +26,7 @@ let package = Package(
 	],
 	dependencies: [
 		.package(url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "11.0.0"),
+        .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
 	],
 	targets: [
 		.binaryTarget(name: "MapsGLCore",
@@ -49,6 +50,7 @@ let package = Package(
 				"MapsGLCore",
 				"MapsGLRenderer",
 				"MapsGLMaps",
+                .product(name: "Turf", package: "turf-swift")
 			]
 		),
 		.binaryTarget(name: "MapsGLMaps",
