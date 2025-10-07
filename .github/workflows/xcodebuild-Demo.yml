@@ -27,6 +27,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+      with:
+        swift-version: "6.2"
       
     - name: Setup Tokens
       run: |
