@@ -427,13 +427,28 @@ extension MapboxMapController {
 				closure()
 			}
 		} else {
-			self.map.onStyleLoaded.observeNext { [weak self] _ in
-				guard self != nil else { return }
+			self.map.onStyleLoaded.observe { [weak self] _ in
+                guard self != nil,
+                      self?.isStyleLoaded == false else { return }
 				self?.isStyleLoaded = true
 				Task { @MainActor in
 					closure()
 				}
 			}.store(in: &mapboxCancellables)
+            
+            // map.isStyleLoaded is `false` if custom data sources or layer resources are being loaded, which prevents
+            // this internal `isStyleLoaded` flag from ever being set to true if the MapsGL map controller is instantiated
+            // immedately after custom data sources/layers are added to the Mapbox map. So we also listen for the next
+            // map idle signal to ensure this internal flag is properly assigned.
+            self.map.onMapIdle.observeNext { [weak self] _ in
+                guard self != nil,
+                      self?.map.isStyleLoaded == true,
+                      self?.isStyleLoaded == false else { return }
+                self?.isStyleLoaded = true
+                Task { @MainActor in
+                    closure()
+                }
+            }.store(in: &mapboxCancellables)
 		}
 	}
 	
