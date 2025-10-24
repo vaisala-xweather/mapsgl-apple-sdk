@@ -87,3 +87,49 @@ extension LineLayer: @retroactive PlatformStyleLayer {}
 extension CircleLayer: @retroactive PlatformStyleLayer {}
 extension SymbolLayer: @retroactive PlatformStyleLayer {}
 extension HeatmapLayer: @retroactive PlatformStyleLayer {}
+
+/// A non-rendering CustomLayerHost that forwards Mapbox render parameters to a client.
+internal final class MapboxViewportHost: NSObject, MapboxMaps.CustomLayerHost {
+	internal let id: String = "mapsgl-viewport-host"
+	private let map: MapboxMap
+	private var observingLayers: [any LayerProtocol] = []
+
+	init(map: MapboxMaps.MapboxMap) {
+		self.map = map
+	}
+	
+	func register(layer: any LayerProtocol) {
+		observingLayers.append(layer)
+	}
+	
+	func unregister(layer: any LayerProtocol) {
+		observingLayers.removeAll { $0 as AnyObject === layer as AnyObject }
+	}
+
+	// MARK: - CustomLayerHost
+
+	func renderingWillStart(_ metalDevice: MTLDevice,
+							colorPixelFormat: UInt,
+							depthStencilPixelFormat: UInt) {
+		// Intentionally no-op: this layer never encodes draw calls.
+	}
+
+	func prerender(_ parameters: CustomLayerRenderParameters,
+				   mtlCommandBuffer: any MTLCommandBuffer) -> CustomLayerRenderConfiguration {
+		// Forward parameters every frame before any drawing
+		observingLayers.forEach { 
+			$0.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: map)
+		}
+		return .init()
+	}
+
+	func render(_ parameters: CustomLayerRenderParameters,
+				mtlCommandBuffer: any MTLCommandBuffer,
+				mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
+		// No drawing.
+	}
+
+	func renderingWillEnd() {
+		// No-op.
+	}
+}

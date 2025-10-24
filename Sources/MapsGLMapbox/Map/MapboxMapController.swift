@@ -179,6 +179,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				// Remove the `MapboxMaps.CustomLayer` from the `MapboxMaps.MapboxMap`.
 				if self.map.layerExists(withId: layer.id) {
 					try self.map.removeLayer(withId: layer.id)
+					viewportHost?.unregister(layer: layer)
 				}
 				placementByLayerId.removeValue(forKey: layer.id)
 				
@@ -226,6 +227,24 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				Logger.map.error("Failed to update placement for layer `\(id)`: \(error.localizedDescription)")
 			}
 		}
+	}
+	
+	// MARK: Viewport Sync
+	
+	private var viewportHost: MapboxViewportHost?
+	
+	// Create a tiny host that never renders—just forwards parameters.
+	private func installViewportSyncLayer() throws {
+		let host = MapboxViewportHost(map: self.map)
+		self.viewportHost = host
+		try self.map.addCustomLayer(withId: host.id, layerHost: host, layerPosition: nil)
+	}
+
+	private func removeViewportSyncLayerIfNeeded() {
+		if let host = viewportHost, self.map.layerExists(withId: host.id) {
+			try? self.map.removeLayer(withId: host.id)
+		}
+		viewportHost = nil
 	}
 	
 	// MARK: MapsGL Layer Bridge
@@ -276,6 +295,11 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 		let resolvedPlacement = placement.resolved(for: self.map)
 		mapboxLayer.slot = placement.slot
 		placementByLayerId[mapboxLayer.id] = placement
+		
+		if viewportHost == nil {
+			try installViewportSyncLayer()
+		}
+		viewportHost?.register(layer: layer)
 		
 		guard self.map.sourceExists(withId: layer.source.id) else {
 			let sourceId = layer.source.id
