@@ -62,8 +62,28 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			self.updateManagedLayersForStyle()
 		}.store(in: &mapboxCancellables)
 		
+		self.map.onCameraChanged.observe { [weak self] _ in
+			self?.forwardMapMove()
+		}.store(in: &mapboxCancellables)
+		
+		// Interactions
+		self.map.addInteraction(TapInteraction { [weak self] context in
+			self?.forwardMapTap(to: context.point, coordinate: context.coordinate)
+			return false
+		})
+		
 		self.isStyleLoaded = self.map.isStyleLoaded
 		initialize()
+	}
+	
+	// MARK: Coordinate Conversions
+	
+	override public func point(for coordinate: CLLocationCoordinate2D) -> CGPoint {
+		return map.point(for: coordinate)
+	}
+	
+	override public func coordinate(for point: CGPoint) -> CLLocationCoordinate2D {
+		return map.coordinate(for: point)
 	}
 	
 	// MARK: MapController
@@ -269,6 +289,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	private func addMapsGLVectorLayer(layer: MapsGLMaps.VectorTileLayer, beforeId: String?) throws {
 		var style = layer.paint.asStyleJSON(id: layer.id, source: layer.source.id, sourceLayer: layer.sourceLayer)
 		style.filter = layer.filter
+		layer.featureQuery = self
 		
 		let styleJSON = style.asStyleJSONObject()
 		var mapboxLayer: Layer?
@@ -439,6 +460,67 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			}
 		}
 		return placement
+	}
+}
+
+// MARK: Feature Querying
+
+extension MapboxMapController: RenderedFeatureQuerying {
+	public func queryFeatures(in geometry: MapsGLMaps.QueryGeometry, layerIds: [String]?) async throws -> [MapsGLMaps.QueriedFeature] {
+		let queryGeometry: RenderedQueryGeometryConvertible
+		switch geometry {
+		case .coordinate(let coordinate):
+			queryGeometry = map.point(for: coordinate)
+		case .point(let point):
+			queryGeometry = point
+		case .rect(let rect):
+			queryGeometry = rect
+		}
+		
+		let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
+		let results = try await queryRenderedFeaturesAsync(with: queryGeometry, options: options)
+		
+		// Must convert each Mapbox queried feature result to a MapsGL `QueriedFeature`.
+		return results.map { result in
+			var json: [String: Any] = [:]
+			var featureId: String? = nil
+			var featureProperties: [String: Any] = [:]
+			
+			do {
+				let jsonData = try JSONEncoder().encode(result.queriedFeature.feature)
+				if let jsonObject = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any] {
+					json = jsonObject
+				}
+			} catch {
+				//
+			}
+			
+			if let id = json["id"] as? String {
+				featureId = id
+			}
+			if let data = json["properties"] as? [String: Any] {
+				featureProperties = data
+			}
+			
+			return MapsGLMaps.QueriedFeature(
+				id: featureId,
+				source: result.queriedFeature.source,
+				sourceLayer: result.queriedFeature.sourceLayer,
+				properties: featureProperties
+			)
+		}
+	}
+	
+	@MainActor
+	private func queryRenderedFeaturesAsync(
+		with geometry: RenderedQueryGeometryConvertible,
+		options: RenderedQueryOptions
+	) async throws -> [QueriedRenderedFeature] {
+		try await withCheckedThrowingContinuation { continuation in
+			map.queryRenderedFeatures(with: geometry, options: options) { result in
+				continuation.resume(with: result)
+			}
+		}
 	}
 }
 

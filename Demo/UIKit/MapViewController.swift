@@ -191,6 +191,8 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
             map: mapView,
             account: XweatherAccount(id: AccessKeys.shared.xweatherClientID, secret: AccessKeys.shared.xweatherClientSecret)
         )
+        
+        mapController.addDataInspectorControl(constrainedTo: mapView)
 
         // loading indicators
         mapController.onLoadStart

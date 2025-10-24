@@ -34,6 +34,6 @@ extension MapsGLMaps.Viewport {
 		self.pitch = .init(value: cameraState.pitch, unit: .radians)
 		self.fovY = mapboxParameters.fieldOfViewSpatialValue
 		self.bounds = MapBounds<LatitudeLongitude>(coordinateBoundsUnwrapped).converted(to: UnitMercator())
-		self.screenSize = CGSize(width: mapboxParameters.width, height: mapboxParameters.height)
+		self.size = CGSize(width: mapboxParameters.width, height: mapboxParameters.height)
 	}
 }

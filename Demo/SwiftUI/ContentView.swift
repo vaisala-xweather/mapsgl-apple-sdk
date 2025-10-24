@@ -83,6 +83,7 @@ struct ContentView : View {
                         setUpMap(map: map, camera: proxy.camera)
                     }
             }
+            .dataInspectorOverlay(mapControllerProvider: { coordinator.mapController })
             .ignoresSafeArea()
 
             layersButton
