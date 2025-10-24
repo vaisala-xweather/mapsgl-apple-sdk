@@ -308,6 +308,8 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			// the data source to become ready can still do so. Then remove the dummy layer and insert the actual
 			// one in the event handler.
 			var dummyLayer = BackgroundLayer(id: mapboxLayer.id)
+			dummyLayer.backgroundColor = .constant(StyleColor(.clear))
+			dummyLayer.backgroundOpacity = .constant(0.0)
 			dummyLayer.slot = resolvedPlacement.slot
 			try self.map.addPersistentLayer(dummyLayer, layerPosition: resolvedPlacement.position)
 			
