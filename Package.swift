@@ -6,11 +6,11 @@ import PackageDescription
 
 
 let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
-let version: Version = "1.2.5"
+let version: Version = "1.3.0"
 let xcframeworkChecksums = (
-	core: "38445dda41f20d69895778c77416645f34803c06970e993e699cec077c00f3fe",
-	renderer: "1e65b67da432878a1be6bd3e1d8e2cd040922e8e45e21a25d80dc7870bc95ecb",
-	maps: "d29c258c9210ae702f14f66b0db0726ebb869ed13cc4a284ccd1c9de3abb5361"
+	core: "4a9817431494879edc09d3b3d5a155258ae3693c9625a135bc97ec13142512d0",
+	renderer: "d9fdf1da6d300b729ca8dcc44fb77092494e3aeeacb19e8cd780caacbaa4d4d7",
+	maps: "7502af04cfea6488dc3db2bc07b45f19493724494c9aca291f0f148925f735a0"
 )
 
 

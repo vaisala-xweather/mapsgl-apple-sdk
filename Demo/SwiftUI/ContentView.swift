@@ -18,7 +18,6 @@ fileprivate let currentLocationZoom: Double = 4.0
 	fileprivate var maximumFPS: Float { Float(UIScreen.main.maximumFramesPerSecond) }
 #endif // iOS, macCatalyst, tvOS
 
-
 struct ContentView : View {
 	private let _logger = Logger(type: Self.self)
 	
@@ -84,6 +83,7 @@ struct ContentView : View {
                         setUpMap(map: map, camera: proxy.camera)
                     }
             }
+            .dataInspectorOverlay(mapControllerProvider: { coordinator.mapController })
             .ignoresSafeArea()
 
             layersButton
@@ -194,74 +194,74 @@ struct ContentView : View {
 	}
 	
 	private func setUpMap(map: MapboxMap, camera: CameraAnimationsManager?) {
-			coordinator.camera = camera
-			
-			try! map.setProjection(.init(name: .mercator)) // Set 2D map projection
-			
-			// Set up the MapsGL ``MapboxMapController``, which will handling adding/removing MapsGL weather layers to the ``MapboxMaps.MapView``.
-			let mapController = MapboxMapController(
-				map: map,
-				window: UIWindow?.none,
-				account: XweatherAccount(id: AccessKeys.shared.xweatherClientID, secret: AccessKeys.shared.xweatherClientSecret)
-			)
-			coordinator.mapController = mapController
+        coordinator.camera = camera
         
-            // Set up event observers for when MapsGL data is loading
-            mapController.onLoadStart.observe {
-                $isLoading.wrappedValue = true
-            }.store(in: &coordinator.eventSubscriptions)
-            
-            mapController.onLoadComplete.observe {
-                $isLoading.wrappedValue = false
-            }.store(in: &coordinator.eventSubscriptions)
+        try! map.setProjection(.init(name: .mercator)) // Set 2D map projection
         
-            // Set up timeline range and event observers
-            let timeline = mapController.timeline
-            timeline.startDate = $startDate.wrappedValue
-            timeline.endDate = $endDate.wrappedValue
-            $currentDate.wrappedValue = timeline.currentDate
+        // Set up the MapsGL ``MapboxMapController``, which will handling adding/removing MapsGL weather layers to the ``MapboxMaps.MapView``.
+        let mapController = MapboxMapController(
+            map: map,
+            window: UIWindow?.none,
+            account: XweatherAccount(id: AccessKeys.shared.xweatherClientID, secret: AccessKeys.shared.xweatherClientSecret)
+        )
+        coordinator.mapController = mapController
+    
+        // Set up event observers for when MapsGL data is loading
+        mapController.onLoadStart.observe {
+            $isLoading.wrappedValue = true
+        }.store(in: &coordinator.eventSubscriptions)
+        
+        mapController.onLoadComplete.observe {
+            $isLoading.wrappedValue = false
+        }.store(in: &coordinator.eventSubscriptions)
+    
+        // Set up timeline range and event observers
+        let timeline = mapController.timeline
+        timeline.startDate = $startDate.wrappedValue
+        timeline.endDate = $endDate.wrappedValue
+        $currentDate.wrappedValue = timeline.currentDate
+        $timelinePosition.wrappedValue = timeline.position
+    
+        timeline.onAdvance.publisher.receive(on: DispatchQueue.main).sink { progress in
             $timelinePosition.wrappedValue = timeline.position
+            $currentDate.wrappedValue = timeline.currentDate
+        }.store(in: &coordinator.eventSubscriptions)
         
-            timeline.onAdvance.publisher.receive(on: DispatchQueue.main).sink { progress in
-                $timelinePosition.wrappedValue = timeline.position
-                $currentDate.wrappedValue = timeline.currentDate
-            }.store(in: &coordinator.eventSubscriptions)
-			
-			// Once the map has completed initial load…
-            mapController.onLoad.observe { _ in
-                WeatherLayersModel.store.loadMetadata(service: coordinator.mapController.service)
-				// Start listening to Combine-provided change events of the `dataModel`'s selected layers.
-				self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
-					// Remove any layers that are no longer selected.
-					let layerCodesToRemove = coordinator.activeLayerCodes.subtracting(selectedLayerCodes)
-					if !layerCodesToRemove.isEmpty {
-						_logger.debug("Removing layers: \(layerCodesToRemove)")
-						for code in layerCodesToRemove {
-							mapController.removeWeatherLayer(for: code)
-						}
-					}
-					
-					// Construct the configuration for and add any layers that are newly selected.
-					let layerCodesToAdd = selectedLayerCodes.subtracting(coordinator.activeLayerCodes)
-					if !layerCodesToAdd.isEmpty {
-						_logger.debug("Adding layers: \(layerCodesToAdd)")
-						
-						let roadLayerId = mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
-						for code in layerCodesToAdd {
-							do {
-                                if let layer = WeatherLayersModel.store.allLayersByCode()[code] {
-                                    try mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
-                                }
-							} catch {
-								_logger.error("Failed to add weather layer: \(error)")
-							}
-						}
-					}
-					
-					coordinator.activeLayerCodes = selectedLayerCodes
-				}
-				.store(in: &coordinator.eventSubscriptions)
-			}.store(in: &coordinator.eventSubscriptions)
+        // Once the map has completed initial load…
+        mapController.onLoad.observe { _ in
+            WeatherLayersModel.store.loadMetadata(service: coordinator.mapController.service)
+            // Start listening to Combine-provided change events of the `dataModel`'s selected layers.
+            self.dataModel.$selectedLayerCodes.sink { selectedLayerCodes in
+                // Remove any layers that are no longer selected.
+                let layerCodesToRemove = coordinator.activeLayerCodes.subtracting(selectedLayerCodes)
+                if !layerCodesToRemove.isEmpty {
+                    _logger.debug("Removing layers: \(layerCodesToRemove)")
+                    for code in layerCodesToRemove {
+                        mapController.removeWeatherLayer(for: code)
+                    }
+                }
+                
+                // Construct the configuration for and add any layers that are newly selected.
+                let layerCodesToAdd = selectedLayerCodes.subtracting(coordinator.activeLayerCodes)
+                if !layerCodesToAdd.isEmpty {
+                    _logger.debug("Adding layers: \(layerCodesToAdd)")
+                    
+                    let roadLayerId = mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
+                    for code in layerCodesToAdd {
+                        do {
+                            if let layer = WeatherLayersModel.store.allLayersByCode()[code] {
+                                try mapController.addWeatherLayer(for: layer.code, beforeId: roadLayerId)
+                            }
+                        } catch {
+                            _logger.error("Failed to add weather layer: \(error)")
+                        }
+                    }
+                }
+                
+                coordinator.activeLayerCodes = selectedLayerCodes
+            }
+            .store(in: &coordinator.eventSubscriptions)
+        }.store(in: &coordinator.eventSubscriptions)
 	}
 	
 	var layersButton: some View {
