@@ -157,16 +157,20 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	/// - Parameters:
 	///   - layer: The MapsGL layer.
 	///   - beforeId: Optional id to place the layer **below**.
-	public override func addToMap(layer: any MapsGLLayer, beforeId: String?) {
+	public override func addToMap(layer: any MapsGLLayer, beforeId: String?, onLayerAdded: (() -> Void)? = nil) {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			guard !self.map.layerExists(withId: layer.id) else { return }
 			do {
 				switch layer {
 				case let vectorLayer as MapsGLMaps.VectorTileLayer:	
-					try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId)				
+					try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
+						onLayerAdded?()
+					}				
 				case let metalLayer as any MapsGLMetalLayer:
-					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
+					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId) {
+						onLayerAdded?()
+					}
 				default: break
 				}
 			} catch {
@@ -270,7 +274,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	// MARK: MapsGL Layer Bridge
 	
 	/// Bridges a `MapsGLMetalLayer` into a `MapboxMaps.CustomLayer` and inserts it with resolved placement.
-	private func addMapsGLMetalLayer(layer: some MapsGLMetalLayer, beforeId: String?) throws {
+	private func addMapsGLMetalLayer(layer: some MapsGLMetalLayer, beforeId: String?, onLayerAdded: (() -> Void)? = nil) throws {
 		guard !containsLayerHost(forId: layer.id) else { return }
 		
 		// Create the `MapboxLayerHost` (with the `MapsGLLayer`), and add to the superclass `MapController`.
@@ -283,10 +287,11 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 		mapboxCustomLayer.slot = resolvedPlacement.slot
 		try self.map.addPersistentLayer(mapboxCustomLayer, layerPosition: resolvedPlacement.position)
 		placementByLayerId[mapboxCustomLayer.id] = resolvedPlacement
+		onLayerAdded?()
 	}
 	
 	/// Bridges a `VectorTileLayer` into a concrete Mapbox style layer and inserts it with resolved placement.
-	private func addMapsGLVectorLayer(layer: MapsGLMaps.VectorTileLayer, beforeId: String?) throws {
+	private func addMapsGLVectorLayer(layer: MapsGLMaps.VectorTileLayer, beforeId: String?, onLayerAdded: (() -> Void)? = nil) throws {
 		var style = layer.paint.asStyleJSON(id: layer.id, source: layer.source.id, sourceLayer: layer.sourceLayer)
 		style.filter = layer.filter
 		layer.featureQuery = self
@@ -355,6 +360,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 								try self.map.removeLayer(withId: pendingLayer.id)
 							}
 							try self.map.addPersistentLayer(pendingLayer, layerPosition: pendingPlacement.position)
+							onLayerAdded?()
 						} catch {
 							Logger.map.error("\(error)")
 						}
@@ -365,6 +371,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			return
 		}
 		try self.map.addPersistentLayer(mapboxLayer, layerPosition: resolvedPlacement.position)
+		onLayerAdded?()
 	}
 	
 	// MARK: Layer Placement
@@ -475,6 +482,8 @@ extension MapboxMapController: RenderedFeatureQuerying {
 			queryGeometry = point
 		case .rect(let rect):
 			queryGeometry = rect
+		@unknown default:
+			fatalError("Unknown geometry case")
 		}
 		
 		let options = RenderedQueryOptions(layerIds: layerIds, filter: nil)
