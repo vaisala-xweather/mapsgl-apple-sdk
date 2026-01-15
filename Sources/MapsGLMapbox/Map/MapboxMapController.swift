@@ -92,10 +92,17 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	///
 	/// This calls `super.initialize()` within `doEnsuringStyleLoaded` to ensure that
 	/// style-dependent work is deferred until the style has finished loading.
-	public override func initialize() {
-		doEnsuringStyleLoaded {
-			super.initialize()
+	public override func initialize() {		
+		doEnsuringStyleLoaded { [weak self] in
+			guard let self else { return }
+			self.superInit()
 		}
+	}
+	
+	private func superInit() {
+		// Pulled into a local function due to:
+		// 'Using 'super' in a closure where 'self' is explicitly captured is not yet supported'
+		super.initialize()
 	}
 	
 	/// Moves a map layer beneath another layer by ID.

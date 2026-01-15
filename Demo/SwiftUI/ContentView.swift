@@ -45,7 +45,7 @@ struct ContentView : View {
     // detect iPad vs iPhone (or regular vs compact width)
     @Environment(\.horizontalSizeClass) private var hSizeClass
 	
-	class Coordinator {
+	class Coordinator: ObservableObject {
 		/// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the `MapboxMaps.MapView`.
 		var mapController: MapboxMapController!
 		
@@ -60,8 +60,17 @@ struct ContentView : View {
 		var camera: MapboxMaps.CameraAnimationsManager?
 		
 		let colorScheme: ColorScheme = (UITraitCollection.current.userInterfaceStyle == .dark) ? .dark : .light
+		
+		/// Preload source animation data while the animated timeline is paused.
+		@Published var isPreloadEnabled: Bool = false {
+			didSet {
+				mapController.animationOptions.shouldPreloadData = self.isPreloadEnabled
+			}
+		}
 	}
-	private let coordinator = Coordinator()
+	
+	@StateObject
+	private var coordinator = Coordinator()
     
     @ViewBuilder
     private var mapContent: some View {
@@ -150,7 +159,8 @@ struct ContentView : View {
             currentDate: $currentDate,
             selectedSpeed: speedFactorBinding,
             isPlaying: isPlayingBinding,
-            isLoading: $isLoading
+            isLoading: $isLoading,
+            isPreloadEnabled: $coordinator.isPreloadEnabled
         )
         
 		ZStack {
