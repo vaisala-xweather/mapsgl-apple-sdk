@@ -15,6 +15,8 @@ struct TimelineView: View {
     @Binding var selectedSpeed: Double
     @Binding var isPlaying: Bool
     @Binding var isLoading: Bool
+    @Binding var isPreloadEnabled: Bool
+	
     @State private var showSettings = false
 
     var body: some View {
@@ -64,12 +66,19 @@ struct TimelineView: View {
         }
         .padding(.vertical, 8)
         .popover(isPresented: $showSettings, attachmentAnchor: .point(.center), arrowEdge: .bottom) {
-            SettingsView(
-                startDate: $startDate,
-                endDate: $endDate,
-                selectedSpeed: $selectedSpeed
+            let settingsView = SettingsView(
+			    startDate: $startDate,
+			    endDate: $endDate,
+			    selectedSpeed: $selectedSpeed,
+			    isPreloadEnabled: $isPreloadEnabled
             )
             .presentationDetents([.medium])
+            if #available(iOS 16.4, *) {
+			    settingsView
+			        .presentationBackground(Color.backgroundColor)
+            } else {
+			    settingsView
+            }
         }
     }
 
@@ -92,6 +101,7 @@ struct SettingsView: View {
     @Binding var startDate: Date
     @Binding var endDate: Date
     @Binding var selectedSpeed: Double
+    @Binding var isPreloadEnabled: Bool
     @Environment(\.presentationMode) private var presentationMode
 
     var body: some View {
@@ -194,6 +204,16 @@ struct SettingsView: View {
                     }
                 }
                 .padding(.horizontal)
+				
+				HStack {
+					Image(systemName: "network")
+					Text("Network")
+						.font(.body).fontWeight(.semibold)
+				}
+				.padding(.horizontal)
+				
+				Toggle("Preload Animated Data", isOn: $isPreloadEnabled)
+					.padding(.horizontal)
                 
                 Spacer()
             }
@@ -243,6 +263,7 @@ struct Timeline_Previews: PreviewProvider {
     @State static var pos = 0.3
     @State static var playing = false
     @State static var loading = true
+	@State static var preload = false
     
     static var previews: some View {
         TimelineView(
@@ -252,7 +273,8 @@ struct Timeline_Previews: PreviewProvider {
             currentDate: .constant(Date()),
             selectedSpeed: .constant(1.0),
             isPlaying: $playing,
-            isLoading: $loading
+            isLoading: $loading,
+			isPreloadEnabled: $preload
         )
             .previewLayout(.sizeThatFits)
             .padding()

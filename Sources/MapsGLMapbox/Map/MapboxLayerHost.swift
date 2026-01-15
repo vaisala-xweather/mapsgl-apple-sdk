@@ -17,6 +17,7 @@ import MapboxMaps
 /// It implements the required `CustomLayerHost` methods to control rendering lifecycle,
 /// including setup, prerendering, and final rendering steps.
 public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost where Layer : MetalLayerProtocol {
+	
 	/// The Mapbox map associated with the custom layer.
 	var map: MapboxMap
 	
