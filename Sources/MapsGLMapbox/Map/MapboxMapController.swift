@@ -66,6 +66,11 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			self?.forwardMapMove()
 		}.store(in: &mapboxCancellables)
 		
+		self.map.onMapIdle.observe { [weak self] _ in
+			self?.forwardMapMoveEnd()
+		}
+		.store(in: &mapboxCancellables)
+		
 		// Interactions
 		self.map.addInteraction(TapInteraction { [weak self] context in
 			self?.forwardMapTap(to: context.point, coordinate: context.coordinate)
