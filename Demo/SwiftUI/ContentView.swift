@@ -23,6 +23,7 @@ struct ContentView : View {
 	
 	@ObservedObject var dataModel: WeatherLayersModel
 	@State private var isSidebarVisible = (UIDevice.current.userInterfaceIdiom == .phone) ? false : true
+    @State private var isLegendShown = false
     
     @State private var timelinePosition: Double = 0
     @State private var startDate = Calendar.current.date(byAdding: .day, value: -1, to: .now)!
@@ -94,14 +95,25 @@ struct ContentView : View {
             }
             .dataInspectorOverlay(mapControllerProvider: { coordinator.mapController })
             .ignoresSafeArea()
-
-            layersButton
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                .padding(.top, 30)
-
-            currentLocationButton
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                .padding(.top, 30)
+			
+            HStack(alignment: .top, spacing: 0) {
+                VStack(spacing: 0) {
+                    layersButton
+                        .padding(.top, 30)
+                        .padding(.horizontal, 12)
+                    legendButton
+                        .padding(.top, 8)
+                        .padding(.horizontal, 12)
+                    Spacer()
+                }
+                Spacer()
+                VStack(spacing: 0) {
+                    currentLocationButton
+                        .padding(.top, 30)
+                        .padding(.horizontal, 12)
+                    Spacer()
+                }
+            }
 
             SidebarView(dataModel: dataModel,
                         isSidebarVisible: $isSidebarVisible)
@@ -168,24 +180,46 @@ struct ContentView : View {
                 // iPad
                 ZStack {
                     mapContent
-                    timeline
-                        .frame(maxWidth: 360)
-                        .padding(8)
-                        .background(.ultraThinMaterial)
-                        .background(Color.backgroundColor)
-                        .environment(\.colorScheme, .dark)
-                        .cornerRadius(12)
-                        .shadow(radius: 4)
-                        .padding([.bottom, .trailing], 16)
-                        .frame(maxWidth: .infinity,
-                               maxHeight: .infinity,
-                               alignment: .bottomTrailing)     // pin to bottom-right
-                        .zIndex(1)
+                    HStack {
+                        Spacer()
+                        VStack(alignment: .trailing) {
+                            Spacer()
+                            if isLegendShown {
+                                LegendControlView(mapControllerProvider: { coordinator.mapController })
+                                    .frame(maxWidth: 360)
+                                    .padding([.bottom, .trailing], 24)
+                            }
+                            timeline
+                                .frame(maxWidth: 360)
+                                .padding(8)
+                                .background(.ultraThinMaterial)
+                                .background(Color.backgroundColor)
+                                .environment(\.colorScheme, .dark)
+                                .cornerRadius(12)
+                                .shadow(radius: 4)
+                                .padding([.bottom, .trailing], 16)
+                                .zIndex(1)
+                        }
+                    }
                 }
             } else {
                 // iPhone
                 VStack(spacing: 0) {
-                    mapContent
+                    ZStack {
+                        mapContent
+                        if isLegendShown {
+                            HStack {
+                                Spacer()
+                                VStack {
+                                    Spacer()
+                                    LegendControlView(mapControllerProvider: { coordinator.mapController })
+                                        .frame(maxWidth: 320)
+                                        .padding(.horizontal)
+                                        .padding(.bottom, 34)
+                                }
+                            }
+                        }
+                    }
                     timeline
                         .padding(.bottom, 0)
                         .background(Color.backgroundColor)
@@ -279,7 +313,6 @@ struct ContentView : View {
             self.isSidebarVisible.toggle()
         })
         .shadow(color: .shadowColor, radius: 8, y: +2)
-        .padding(.all, 12)
 	}
 	
 	var currentLocationButton: some View {
@@ -291,8 +324,14 @@ struct ContentView : View {
             }
         })
         .shadow(color: .shadowColor, radius: 8, y: +2)
-        .padding(.all, 12)
 	}
+    
+    var legendButton: some View {
+        CircularIconButton(systemName: "list.bullet.rectangle", action: {
+            self.isLegendShown.toggle()
+        })
+        .shadow(color: .shadowColor, radius: 8, y: +2)
+    }
 }
 
 #Preview {

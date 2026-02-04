@@ -19,7 +19,7 @@ import MapboxMaps
 public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomLayerHost where Layer : MetalLayerProtocol {
 	
 	/// The Mapbox map associated with the custom layer.
-	var map: MapboxMap
+	weak var map: MapboxMap?
 	
 	/// Creates a new layer host bound to a Mapbox map and a MapsGL-compatible layer.
 	/// - Parameters:
@@ -54,7 +54,9 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	///   - mtlCommandBuffer: The Metal command buffer used for rendering.
 	/// - Returns: A custom layer render configuration.
 	public func prerender(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer) -> MapboxMaps.CustomLayerRenderConfiguration {
-		self.layer.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: self.map)
+		guard let map else { return .init() }
+		
+		self.layer.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: map)
 		
 		super.prerender(
 			mtlCommandBuffer: mtlCommandBuffer,

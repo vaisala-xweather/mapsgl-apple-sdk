@@ -37,7 +37,8 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
     
     private let layersButton = CircleIconButtonView()
     private let currentLocationButton = CircleIconButtonView()
-	
+    private let legendButton = CircleIconButtonView()
+    
 //    private func circularIconButton(image: UIImage) -> UIButton {
 //        let button = UIButton(type: .system)
 //        button.translatesAutoresizingMaskIntoConstraints = false
@@ -61,6 +62,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
         setupMapView()
         setupMapController()
         setupTimelineView()
+		setupLegend()
         setupSidebar()
         
         // add overlay buttons
@@ -68,6 +70,11 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
         layersButton.tintColor = .white
         layersButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(layersButton)
+		
+        legendButton.setImage(UIImage(systemName: "list.bullet.rectangle"), for: .normal)
+        legendButton.tintColor = .white
+        legendButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(legendButton)
         
         currentLocationButton.setImage(UIImage(named: "MapsGL.Location"), for: .normal)
         currentLocationButton.tintColor = .white
@@ -81,6 +88,10 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
             layersButton.heightAnchor.constraint(equalToConstant: 44),
             layersButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
             layersButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
+            legendButton.widthAnchor.constraint(equalToConstant: 44),
+            legendButton.heightAnchor.constraint(equalToConstant: 44),
+            legendButton.topAnchor.constraint(equalTo: layersButton.bottomAnchor, constant: 8),
+            legendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
             currentLocationButton.widthAnchor.constraint(equalToConstant: 44),
             currentLocationButton.heightAnchor.constraint(equalToConstant: 44),
             currentLocationButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
@@ -88,6 +99,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
         ])
 		
         layersButton.addTarget(self, action: #selector(didTapLayersButton), for: .touchUpInside)
+        legendButton.addTarget(self, action: #selector(didTapLegendButton), for: .touchUpInside)
         currentLocationButton.addTarget(self, action: #selector(didTapCurrentLocationButton), for: .touchUpInside)
         
         // Observe app becoming active to update timeline dates
@@ -96,6 +108,10 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
     
     @objc private func didTapLayersButton() {
         isSidebarVisible.toggle()
+    }
+	
+    @objc private func didTapLegendButton() {
+        isLegendShown.toggle()
     }
     
     @objc private func didTapCurrentLocationButton() {
@@ -295,6 +311,21 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
         updateLayoutForCurrentSizeClass()
     }
 	
+    private func setupLegend() {
+        // Set up legend control view
+        let legendControl = LegendControl()
+        let legendControlView = legendControl.view
+        legendControlView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(legendControlView)
+        NSLayoutConstraint.activate([
+            legendControlView.widthAnchor.constraint(equalToConstant: 320),
+            legendControlView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
+            legendControlView.bottomAnchor.constraint(equalTo: timelineView.topAnchor, constant: -24),
+        ])
+        mapController.add(legendControl: legendControl)
+        legendControl.isHidden = !isLegendShown
+    }
+	
 	// MARK: Sidebar View
 	
     var sidebarView: UIView!
@@ -307,6 +338,12 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 				case (true, false): hideSidebar()
 				default: return
 			}
+		}
+	}
+	
+	public var isLegendShown = false {
+		didSet {
+            mapController.legendControl?.isHidden = !isLegendShown
 		}
 	}
     
@@ -391,6 +428,10 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 	
 	public func toggleIsSidebarVisible() {
 		self.isSidebarVisible = !(self.isSidebarVisible)
+	}
+	
+	public func toggleIsLegendShown() {
+		self.isLegendShown = !(self.isLegendShown)
 	}
 	
 	// MARK: Current Location
