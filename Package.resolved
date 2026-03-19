@@ -1,30 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "mapbox-common-ios",
+      "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mapbox/mapbox-common-ios.git",
+      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
       "state" : {
-        "revision" : "480f648b20b87a3a55f30bb6d76d6dc7d8412ec4",
-        "version" : "24.9.0"
-      }
-    },
-    {
-      "identity" : "mapbox-core-maps-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mapbox/mapbox-core-maps-ios.git",
-      "state" : {
-        "revision" : "af17fef6d11338c64b296d9374ce0c3479695532",
-        "version" : "11.9.2"
-      }
-    },
-    {
-      "identity" : "mapbox-maps-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mapbox/mapbox-maps-ios.git",
-      "state" : {
-        "revision" : "4793b133def738fef8d2ed0bd7c0b240640a8f40",
-        "version" : "11.9.1"
+        "revision" : "5d121591b60e837413391814ed88deca2aa7c1d8",
+        "version" : "6.24.0"
       }
     },
     {

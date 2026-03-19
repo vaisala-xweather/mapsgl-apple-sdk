@@ -10,6 +10,7 @@ import MapsGLCore
 import MapsGLMaps
 import MapsGLRenderer
 import MapboxMaps
+import OSLog
 
 /// A custom layer host that integrates a `MapsGLMetalLayer` with Mapbox’s `CustomLayerHost`.
 ///
@@ -20,6 +21,7 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	
 	/// The Mapbox map associated with the custom layer.
 	weak var map: MapboxMap?
+	weak var mtlDevice: MTLDevice?
 	
 	/// Creates a new layer host bound to a Mapbox map and a MapsGL-compatible layer.
 	/// - Parameters:
@@ -40,6 +42,7 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	///   - colorPixelFormatRawValue: The raw value of the color pixel format.
 	///   - depthStencilPixelFormatRawValue: The raw value of the depth-stencil pixel format.
 	public func renderingWillStart(_ metalDevice: MTLDevice, colorPixelFormat colorPixelFormatRawValue: UInt, depthStencilPixelFormat depthStencilPixelFormatRawValue: UInt) {
+		self.mtlDevice = metalDevice
 		super.beginRendering(
 			metalDevice: metalDevice,
 			colorPixelFormat: MTLPixelFormat(rawValue: colorPixelFormatRawValue)!,
@@ -54,14 +57,16 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	///   - mtlCommandBuffer: The Metal command buffer used for rendering.
 	/// - Returns: A custom layer render configuration.
 	public func prerender(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer) -> MapboxMaps.CustomLayerRenderConfiguration {
-		guard let map else { return .init() }
+		guard let map, let mtlDevice else { return .init() }
 		
 		self.layer.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: map)
-		
-		super.prerender(
-			mtlCommandBuffer: mtlCommandBuffer,
-			renderTargetSize: .init(width: parameters.width, height: parameters.height)
-		)
+		do {
+			let renderTargetSize = CGSize(width: parameters.width, height: parameters.height)
+			let metalContext = try MetalRenderContext.create(mtlDevice: mtlDevice, commandBuffer: mtlCommandBuffer, renderPassDescriptor: nil, size: renderTargetSize)
+			super.prerender(metalContext: metalContext)
+		} catch {
+			Logger.map.error("Failed to create MetalRenderContext: \(error)")
+		}
 		
 		return .init()
 	}
@@ -72,10 +77,14 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	///   - mtlCommandBuffer: The Metal command buffer.
 	///   - mtlRenderPassDescriptor: The Metal render pass descriptor.
 	public func render(_ parameters: MapboxMaps.CustomLayerRenderParameters, mtlCommandBuffer: any MTLCommandBuffer, mtlRenderPassDescriptor: MTLRenderPassDescriptor) {
-		super.render(
-			mtlCommandBuffer: mtlCommandBuffer, mtlRenderPassDescriptor: mtlRenderPassDescriptor,
-			renderTargetSize: .init(width: parameters.width, height: parameters.height)
-		)
+		guard let mtlDevice else { return }
+		do {
+			let renderTargetSize = CGSize(width: parameters.width, height: parameters.height)
+			let metalContext = try MetalRenderContext.create(mtlDevice: mtlDevice, commandBuffer: mtlCommandBuffer, renderPassDescriptor: mtlRenderPassDescriptor, size: renderTargetSize)
+			super.render(metalContext: metalContext)
+		} catch {
+			Logger.map.error("Failed to create MetalRenderContext: \(error)")
+		}
 	}
 	
 	/// Called when rendering is finished.
@@ -85,16 +94,16 @@ public final class MapboxLayerHost<Layer> : LayerHost<Layer>, MapboxMaps.CustomL
 	}
 }
 
-extension FillLayer: @retroactive PlatformStyleLayer {}
-extension LineLayer: @retroactive PlatformStyleLayer {}
-extension CircleLayer: @retroactive PlatformStyleLayer {}
-extension SymbolLayer: @retroactive PlatformStyleLayer {}
-extension HeatmapLayer: @retroactive PlatformStyleLayer {}
+extension FillLayer: PlatformStyleLayer {}
+extension LineLayer: PlatformStyleLayer {}
+extension CircleLayer: PlatformStyleLayer {}
+extension SymbolLayer: PlatformStyleLayer {}
+extension HeatmapLayer: PlatformStyleLayer {}
 
 /// A non-rendering CustomLayerHost that forwards Mapbox render parameters to a client.
 internal final class MapboxViewportHost: NSObject, MapboxMaps.CustomLayerHost {
 	internal let id: String = "mapsgl-viewport-host"
-	private let map: MapboxMap
+	weak var map: MapboxMap?
 	private var observingLayers: [any LayerProtocol] = []
 
 	init(map: MapboxMaps.MapboxMap) {
@@ -119,6 +128,7 @@ internal final class MapboxViewportHost: NSObject, MapboxMaps.CustomLayerHost {
 
 	func prerender(_ parameters: CustomLayerRenderParameters,
 				   mtlCommandBuffer: any MTLCommandBuffer) -> CustomLayerRenderConfiguration {
+		guard let map else { return .init() }
 		// Forward parameters every frame before any drawing
 		observingLayers.forEach { 
 			$0.viewport.updateFrom(mapboxParameters: parameters, mapboxMap: map)

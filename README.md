@@ -33,35 +33,31 @@ The MapsGL Apple SDK includes a demo application that showcases the capabilities
 - Xcode 15 or later
 - An Apple Developer account
 - An iOS 16+ device (or Xcode's iOS Simulator)
-- An Xweather account— We offer a [free developer account](https://www.aerisweather.com/signup/developer/) for you to give our weather API a test drive.
+- An Xweather account. We offer a [free developer account](https://www.aerisweather.com/signup/developer/) for you to give our weather API a test drive.
 - A Mapbox account
 
 ### Steps to Run
 
-1. Log into your Xweather account, and from [your account's Apps page](https://account.aerisweather.com/account/apps), create a new application for the MapsGL Demo app.  Make note of application's *Xweather MapsGL ID* and *Secret*; you'll need them in step 5.
-
-2. The Demo application relies on Mapbox, so you'll need to log into or create a Mapbox account and follow the initial setup portion of [Mapbox Maps SDK for iOS's Installation instructions](https://docs.mapbox.com/ios/maps/guides/install/):
-	- Follow the “Configure credentials” instructions to get a *Mapbox public access token* and a *secret access token*.
-	- Follow the “Configure your secret token” instructions using your *Mapbox secret access token* in order to be able to download the Mapbox SDK (via Swift Package Manager in the Demo app).
-	- Make note of your *Mapbox public access token*; you'll need it in step 5.
-
-3. Clone the repository to your local machine:  
-	```
-	git clone https://github.com/vaisala-xweather/mapsgl-apple-sdk.git
-	```
-
+1. Log into your Xweather account, and from [your account's Apps page](https://account.aerisweather.com/account/apps), create a new application for the MapsGL Demo app. Make note of the application's Xweather MapsGL ID and secret; you'll need them in step 5.
+2. The Demo application relies on Mapbox, so you'll need to log into or create a Mapbox account and follow the initial setup portion of [Mapbox Maps SDK for iOS's installation instructions](https://docs.mapbox.com/ios/maps/guides/install/):
+   - Follow the "Configure credentials" instructions to get a Mapbox public access token and a secret access token.
+   - Follow the "Configure your secret token" instructions using your Mapbox secret access token in order to be able to download the Mapbox SDK via Swift Package Manager in the Demo app.
+   - Make note of your Mapbox public access token; you'll need it in step 5.
+3. Clone the repository to your local machine:
+   ```
+   git clone https://github.com/vaisala-xweather/mapsgl-apple-sdk.git
+   ```
 4. Open `Demo.xcodeproj` in Xcode.
-
 5. Before running the demo, you will need to configure the access keys for MapsGL and Mapbox.
-	  - Build the Demo scheme once (Product menu ‣ Build) to auto-create a fresh `AccessKeys.plist` file, then click on `AccessKeys.plist` in the Project Navigator in the left and fill in the `MapboxAccessToken`, `XweatherClientID`, and `XweatherClientSecret` with your keys noted above.
-
-6. Select your target device or simulator at the top of the Xcode window, and press the Build & Run button (▶).
+   - Build the Demo scheme once to auto-create a fresh `AccessKeys.plist` file, then fill in `MapboxAccessToken`, `XweatherClientID`, and `XweatherClientSecret`.
+6. Select your target device or simulator, then build and run.
 
 ### Exploring the Demo
 
-The demo app demonstrates a variety of raster and encoded MapsGL layers rendered on a Mapbox map.  Layers can be further customized by modifying the demo app's SwiftUI view model in `WeatherLayersModel.swift`, and Mapbox can be customized in `RepresentedMapboxMapView.swift` (which is also point at which MapsGL integrates with Mapbox via MapsGL's `MapboxMapController`).  Experiment, customize, and see how MapsGL can be used in your app.
+The demo app demonstrates a variety of raster and encoded MapsGL layers rendered on a Mapbox map. Layers can be further customized by modifying the demo app's SwiftUI view model in `WeatherLayersModel.swift`.
 
 ## Troubleshooting
+
 If you encounter any issues while running the demo application, ensure that:
 
 - Your Xcode and iOS versions meet the prerequisites.

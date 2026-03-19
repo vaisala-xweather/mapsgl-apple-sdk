@@ -21,9 +21,8 @@ on:
 
 jobs:
   build:
-    
     runs-on: macos-26
-    
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
@@ -33,26 +32,26 @@ jobs:
 
     - name: Confirm Swift version
       run: swift --version
-      
+
     - name: Setup Tokens
       run: |
         echo "machine api.mapbox.com login mapbox password ${{ secrets.MAPBOX_SECRET_TOKEN }}" >> ~/.netrc
         chmod 0600 ~/.netrc
-        
+
         pushd ./Demo
         cp ./AccessKeys-Sample.plist ./AccessKeys.plist
         defaults write "$(realpath ./AccessKeys.plist)" 'MapboxAccessToken' -string "${{ secrets.MAPBOX_ACCESS_TOKEN }}"
         defaults write "$(realpath ./AccessKeys.plist)" 'XweatherClientID' -string "${{ secrets.XWEATHER_CLIENT_ID }}"
         defaults write "$(realpath ./AccessKeys.plist)" 'XweatherClientSecret' -string "${{ secrets.XWEATHER_CLIENT_SECRET }}"
         popd
-      
+
     - name: Build SwiftUI
       run: |
         xcodebuild build \
           -project ./Demo.xcodeproj \
           -scheme 'Demo - SwiftUI' \
           -destination 'generic/platform=iOS Simulator'
-      
+
     - name: Build UIKit
       run: |
         xcodebuild build \

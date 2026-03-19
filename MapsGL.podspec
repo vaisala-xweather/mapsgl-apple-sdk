@@ -1,8 +1,8 @@
 Pod::Spec.new do |spec|
   repository_path = 'vaisala-xweather/mapsgl-apple-sdk'
-  
+
   spec.name         = "MapsGL"
-  spec.version      = "1.5.0"
+  spec.version      = "1.6.0-beta.1"
   spec.summary      = "MapsGL is an easy-to-use, highly customizable Swift SDK for visualizing both weather and custom data, powered by Metal."
   spec.description  = <<-DESC
 MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It enables the integration of MapsGL's rich mapping features into iOS applications, providing a seamless and interactive user experience.
@@ -17,29 +17,29 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
   spec.swift_versions = [ '5' ]
   spec.source       = {
     http: "https://github.com/#{repository_path}/releases/download/v#{spec.version.to_s}/MapsGL.zip",
-    sha256: "01933421fd8560133da782d0eaec9e2116d7d765292840d523ae0a43b486e0ef",
+    sha256: "30a5fc8af11f52dd941c7e6f398fdbc6a8967f0ecca125b4153499a0fcc3b5d5",
     flatten: true
   }
   spec.default_subspecs = 'Core', 'Renderer', 'Maps', 'Mapbox'
-  
+
   spec.subspec 'Core' do |subspec|
     subspec.vendored_frameworks = 'MapsGLCore.xcframework'
     subspec.frameworks = 'Foundation', 'CoreLocation', 'OSLog', 'UIKit'
   end
-  
+
   spec.subspec 'Renderer' do |subspec|
     subspec.vendored_frameworks = 'MapsGLRenderer.xcframework'
     subspec.frameworks = 'Foundation', 'CoreGraphics', 'Metal', 'MetalKit', 'OSLog', 'SwiftUI'
     subspec.dependency 'MapsGL/Core'
   end
-  
+
   spec.subspec 'Maps' do |subspec|
     subspec.vendored_frameworks = 'MapsGLMaps.xcframework'
     subspec.frameworks = 'Foundation', 'Combine', 'CoreGraphics', 'CoreLocation', 'ImageIO', 'Metal', 'OSLog', 'UIKit', 'UniformTypeIdentifiers'
     subspec.dependency 'MapsGL/Core'
     subspec.dependency 'MapsGL/Renderer'
   end
-  
+
   spec.subspec 'Mapbox' do |subspec|
     subspec.source_files = 'MapsGLMapbox/**/*'
     subspec.frameworks = 'Foundation', 'Combine', 'CoreLocation', 'Metal', 'OSLog'
@@ -47,4 +47,10 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
     subspec.dependency 'MapboxMaps', '~> 11.0'
   end
 
+  spec.subspec 'MapLibre' do |subspec|
+    subspec.source_files = 'MapsGLMapLibre/**/*'
+    subspec.frameworks = 'Foundation', 'Combine', 'CoreLocation', 'Metal', 'OSLog'
+    subspec.dependency 'MapsGL/Maps'
+    subspec.dependency 'MapLibre'
+  end
 end

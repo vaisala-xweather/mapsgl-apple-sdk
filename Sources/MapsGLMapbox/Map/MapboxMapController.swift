@@ -623,7 +623,7 @@ extension MapboxMapController {
 	}
 }
 
-extension MapboxMaps.MapboxMap: @retroactive ImageRegisteringMap {
+extension MapboxMaps.MapboxMap: ImageRegisteringMap {
 	/// Registers an image for use in the style (e.g., `symbol` icons). Runs on the main actor.
 	public func addImage(id: String, image: UIImage, sdf: Bool) throws {
 		Task { @MainActor in
