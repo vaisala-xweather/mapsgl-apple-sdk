@@ -30,7 +30,10 @@ jobs:
 
     - name: Select Current Xcode 26
       run: |
-        XCODE_26_PATH="$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -n 1)"
+        XCODE_26_PATH="$(find /Applications -maxdepth 1 -type d -name 'Xcode_26*.app' ! -name '*beta*' | sort -V | tail -n 1)"
+        if [ -z "$XCODE_26_PATH" ]; then
+          XCODE_26_PATH="$(find /Applications -maxdepth 1 -type d -name 'Xcode_26*.app' | sort -V | tail -n 1)"
+        fi
         if [ -z "$XCODE_26_PATH" ]; then
           echo "No Xcode 26.x installation found under /Applications."
           ls -1 /Applications | grep '^Xcode' || true
