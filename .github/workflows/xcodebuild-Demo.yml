@@ -59,30 +59,14 @@ jobs:
       
     - name: Build SwiftUI
       run: |
-        DESTINATIONS="$(xcodebuild -showdestinations -project ./Demo.xcodeproj -scheme 'Demo - SwiftUI' 2>&1)"
-        IOS_SIMULATOR_ID="$(printf '%s\n' "$DESTINATIONS" | awk '/platform:iOS Simulator/ { if (match($0, /id:[^, }]+/)) print substr($0, RSTART + 3, RLENGTH - 3) }' | head -n 1)"
-        if [ -z "$IOS_SIMULATOR_ID" ]; then
-          echo "No iOS Simulator destination found for Demo - SwiftUI."
-          echo "$DESTINATIONS"
-          exit 1
-        fi
-
         xcodebuild build \
           -project ./Demo.xcodeproj \
           -scheme 'Demo - SwiftUI' \
-          -destination "id=$IOS_SIMULATOR_ID"
+          -destination 'generic/platform=iOS Simulator'
       
     - name: Build UIKit
       run: |
-        DESTINATIONS="$(xcodebuild -showdestinations -project ./Demo.xcodeproj -scheme 'Demo - UIKit' 2>&1)"
-        IOS_SIMULATOR_ID="$(printf '%s\n' "$DESTINATIONS" | awk '/platform:iOS Simulator/ { if (match($0, /id:[^, }]+/)) print substr($0, RSTART + 3, RLENGTH - 3) }' | head -n 1)"
-        if [ -z "$IOS_SIMULATOR_ID" ]; then
-          echo "No iOS Simulator destination found for Demo - UIKit."
-          echo "$DESTINATIONS"
-          exit 1
-        fi
-
         xcodebuild build \
           -project ./Demo.xcodeproj \
           -scheme 'Demo - UIKit' \
-          -destination "id=$IOS_SIMULATOR_ID"
+          -destination 'generic/platform=iOS Simulator'
