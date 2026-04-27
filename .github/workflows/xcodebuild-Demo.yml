@@ -48,14 +48,26 @@ jobs:
       
     - name: Build SwiftUI
       run: |
+        IOS_SIMULATOR_ID="$(xcodebuild -showdestinations -project ./Demo.xcodeproj -scheme 'Demo - SwiftUI' | sed -n 's/.*platform:iOS Simulator, id:\([^,]*\),.*/\1/p' | head -n 1)"
+        if [ -z "$IOS_SIMULATOR_ID" ]; then
+          echo "No iOS Simulator destination found for Demo - SwiftUI."
+          exit 1
+        fi
+
         xcodebuild build \
           -project ./Demo.xcodeproj \
           -scheme 'Demo - SwiftUI' \
-          -destination 'generic/platform=iOS Simulator'
+          -destination "id=$IOS_SIMULATOR_ID"
       
     - name: Build UIKit
       run: |
+        IOS_SIMULATOR_ID="$(xcodebuild -showdestinations -project ./Demo.xcodeproj -scheme 'Demo - UIKit' | sed -n 's/.*platform:iOS Simulator, id:\([^,]*\),.*/\1/p' | head -n 1)"
+        if [ -z "$IOS_SIMULATOR_ID" ]; then
+          echo "No iOS Simulator destination found for Demo - UIKit."
+          exit 1
+        fi
+
         xcodebuild build \
           -project ./Demo.xcodeproj \
           -scheme 'Demo - UIKit' \
-          -destination 'generic/platform=iOS Simulator'
+          -destination "id=$IOS_SIMULATOR_ID"
