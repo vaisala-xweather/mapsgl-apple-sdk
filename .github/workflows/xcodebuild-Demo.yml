@@ -21,14 +21,26 @@ on:
 
 jobs:
   build:
+    
     runs-on: macos-26
-
+    
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Select Xcode 26 (Swift 6.2)
-      run: sudo xcode-select -s /Applications/Xcode_26.0.app
+    - name: Select Current Xcode 26
+      run: |
+        XCODE_26_PATH="$(find /Applications -maxdepth 1 -type d -name 'Xcode_26*.app' ! -name '*beta*' | sort -V | tail -n 1)"
+        if [ -z "$XCODE_26_PATH" ]; then
+          XCODE_26_PATH="$(find /Applications -maxdepth 1 -type d -name 'Xcode_26*.app' | sort -V | tail -n 1)"
+        fi
+        if [ -z "$XCODE_26_PATH" ]; then
+          echo "No Xcode 26.x installation found under /Applications."
+          ls -1 /Applications | grep '^Xcode' || true
+          exit 1
+        fi
+        sudo xcode-select -s "$XCODE_26_PATH"
+        xcodebuild -version
 
     - name: Confirm Swift version
       run: swift --version
@@ -37,21 +49,21 @@ jobs:
       run: |
         echo "machine api.mapbox.com login mapbox password ${{ secrets.MAPBOX_SECRET_TOKEN }}" >> ~/.netrc
         chmod 0600 ~/.netrc
-
+        
         pushd ./Demo
         cp ./AccessKeys-Sample.plist ./AccessKeys.plist
         defaults write "$(realpath ./AccessKeys.plist)" 'MapboxAccessToken' -string "${{ secrets.MAPBOX_ACCESS_TOKEN }}"
         defaults write "$(realpath ./AccessKeys.plist)" 'XweatherClientID' -string "${{ secrets.XWEATHER_CLIENT_ID }}"
         defaults write "$(realpath ./AccessKeys.plist)" 'XweatherClientSecret' -string "${{ secrets.XWEATHER_CLIENT_SECRET }}"
         popd
-
+      
     - name: Build SwiftUI
       run: |
         xcodebuild build \
           -project ./Demo.xcodeproj \
           -scheme 'Demo - SwiftUI' \
           -destination 'generic/platform=iOS Simulator'
-
+      
     - name: Build UIKit
       run: |
         xcodebuild build \
