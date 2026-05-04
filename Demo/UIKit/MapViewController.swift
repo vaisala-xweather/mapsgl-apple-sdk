@@ -8,9 +8,7 @@
 import Combine
 import UIKit
 import OSLog
-import MapboxMaps
 import MapsGLMaps
-import MapsGLMapbox
 
 fileprivate let initialZoom: Double = 2.75
 fileprivate let currentLocationZoom: Double = 4.0
@@ -116,7 +114,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
     
     @objc private func didTapCurrentLocationButton() {
         Self.locationFinder.findCurrentLocation { location in
-            self.mapView.camera.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
+            DemoMapProvider.fly(mapView: self.mapView, to: location.coordinate, zoom: currentLocationZoom)
         } failure: { error in
             print("Failed to get current location: \(error)")
         }
@@ -167,32 +165,16 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
     
     // MARK: Map View
     
-    private var mapView: MapboxMaps.MapView!
-    
-    /// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the ``MapboxMaps.MapView``.
-    private var mapController: MapboxMapController!
+    private var mapView: DemoUIKitMapView!
+
+    /// MapsGL's controller that manages adding/removing MapsGL weather layers to/from the map view.
+    private var mapController: DemoMapController!
     
     private func setupMapView() {
-        let options = MapInitOptions(
-            cameraOptions: CameraOptions(
-                center: .geographicCenterOfContiguousUSA,
-                zoom: initialZoom
-            ),
-            styleURI: .streets
-        )
-        mapView = MapView(frame: .zero, mapInitOptions: options)
-        view.addSubview(mapView)
-        
-        mapView.mapboxMap.styleURI = (self.traitCollection.userInterfaceStyle == .dark) ? .dark : .light
-        try! mapView.mapboxMap.setProjection(.init(name: .mercator)) // Set 2D map projection
-        mapView.mapboxMap.setCamera(to: .init(center: .geographicCenterOfContiguousUSA, zoom: initialZoom))
+        mapView = DemoMapProvider.makeUIKitMapView(traitCollection: self.traitCollection, initialZoom: initialZoom)
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        
-        #if os(iOS) || targetEnvironment(macCatalyst) || os(tvOS)
-            let maximumFPS = Float(UIScreen.main.maximumFramesPerSecond)
-            mapView.preferredFrameRateRange = .init(minimum: maximumFPS * 2 / 3, maximum: maximumFPS, preferred: maximumFPS)
-        #endif // iOS, macCatalyst, tvOS
-        
+        view.addSubview(mapView)
+
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: view.topAnchor),
             mapView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -202,11 +184,8 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
     }
     
     private func setupMapController() {
-        // Set up the MapsGL ``MapboxMapController``, which will handling adding/removing MapsGL weather layers to the ``MapboxMaps.MapView``.
-        mapController = MapboxMapController(
-            map: mapView,
-            account: XweatherAccount(id: AccessKeys.shared.xweatherClientID, secret: AccessKeys.shared.xweatherClientSecret)
-        )
+        // Set up the MapsGL map controller, which handles adding/removing weather layers.
+        mapController = DemoMapProvider.makeMapController(for: mapView)
         
         mapController.addDataInspectorControl(constrainedTo: mapView)
 
@@ -265,7 +244,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
                     self._logger.debug("Adding layers: \(layerCodesToAdd)")
                     
                     Task { @MainActor in
-                        let roadLayerId = self.mapController.map.firstLayer(matching: /^(?:tunnel|road|bridge)-/)?.id
+                        let roadLayerId = self.defaultWeatherLayerInsertBeforeId()
                         for code in layerCodesToAdd {
                             do {
                                 let layer = WeatherLayersModel.store.allLayersByCode()[code]!
@@ -281,6 +260,10 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
             }
             .store(in: &self._eventSubscriptions)
         }.store(in: &_eventSubscriptions)
+    }
+
+    private func defaultWeatherLayerInsertBeforeId() -> String? {
+        DemoMapProvider.defaultWeatherLayerInsertBeforeId(for: mapController)
     }
     
     // MARK: Timeline View
@@ -440,7 +423,7 @@ class MapViewController : UIViewController, SidebarViewControllerDelegate {
 	
 	public func flyToCurrentLocation() {
 		Self.locationFinder.findCurrentLocation { location in
-			self.mapView.camera.fly(to: .init(center: location.coordinate, zoom: currentLocationZoom))
+            DemoMapProvider.fly(mapView: self.mapView, to: location.coordinate, zoom: currentLocationZoom)
 		} failure: { error in
 			let alert = UIAlertController(title: error.errorDescription, message: nil, preferredStyle: .alert)
 			alert.addAction(.init(title: "OK", style: .default))
