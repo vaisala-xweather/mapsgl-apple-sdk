@@ -6,9 +6,6 @@
 //
 
 import SwiftUI
-import MapboxMaps
-
-
 
 @main
 struct DemoApp : App
@@ -18,7 +15,7 @@ struct DemoApp : App
 	)
 	
 	init() {
-		MapboxOptions.accessToken = AccessKeys.shared.mapboxAccessToken
+		DemoMapProvider.configureSDK()
 	}
 	
 	var body: some Scene {

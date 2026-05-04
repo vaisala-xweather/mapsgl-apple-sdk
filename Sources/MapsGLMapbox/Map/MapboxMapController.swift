@@ -173,15 +173,22 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			guard !self.map.layerExists(withId: layer.id) else { return }
+			let handleLayerAdded = { [weak self] in
+				guard let self = self else { return }
+				onLayerAdded?()
+				if layer.id.hasPrefix("mask::") {
+					self.updateMaskLayersForMap()
+				}
+			}
 			do {
 				switch layer {
 				case let vectorLayer as MapsGLMaps.VectorTileLayer:	
 					try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
-						onLayerAdded?()
+						handleLayerAdded()
 					}				
 				case let metalLayer as any MapsGLMetalLayer:
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId) {
-						onLayerAdded?()
+						handleLayerAdded()
 					}
 				default: break
 				}
@@ -231,27 +238,14 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	public override func didRequestRedraw() {
 		map.triggerRepaint()
 	}
+
+	public override func updateMaskLayersForMap() {
+		syncMaskLayerColors()
+	}
 	
 	/// Syncs mask and managed layers with the current style, re-applying cached placements as needed.
 	private func updateManagedLayersForStyle() {
-		do {
-			try self.masks.forEach { (kind, layer) in
-				var layerId: String? 
-				switch kind {
-				case .land:
-					layerId = "land"
-				default:
-					break
-				}
-								
-				if let layerId = layerId, self.map.layerExists(withId: layerId) {
-					let propertyValue = self.map.layerProperty(for: layerId, property: "background-color")
-					try self.map.setLayerProperty(for: layer.id, property: "fill-color", value: propertyValue.value)
-				}
-			}
-		} catch {
-			Logger.map.error("Failed to update mask layers: \(error.localizedDescription)")
-		}
+		syncMaskLayerColors()
 		
 		placementByLayerId.keys.forEach { id in
 			guard self.map.layerExists(withId: id) else { return }
@@ -263,6 +257,40 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				Logger.map.error("Failed to update placement for layer `\(id)`: \(error.localizedDescription)")
 			}
 		}
+	}
+
+	private func syncMaskLayerColors() {
+		do {
+			try self.masks.forEach { (kind, layer) in
+				guard let sourceLayerId = styleLayerId(for: kind),
+					  self.map.layerExists(withId: sourceLayerId),
+					  let colorValue = colorValueForMaskSourceLayer(withId: sourceLayerId) else {
+					return
+				}
+				try self.map.setLayerProperty(for: layer.id, property: "fill-color", value: colorValue)
+			}
+		} catch {
+			Logger.map.error("Failed to update mask layers: \(error.localizedDescription)")
+		}
+	}
+
+	private func styleLayerId(for kind: MaskLayerKind) -> String? {
+		switch kind {
+		case .land:
+			return "land"
+		default:
+			return nil
+		}
+	}
+
+	private func colorValueForMaskSourceLayer(withId layerId: String) -> Any? {
+		for property in ["fill-color", "background-color"] {
+			let propertyValue = self.map.layerProperty(for: layerId, property: property).value
+			if !(propertyValue is NSNull) {
+				return propertyValue
+			}
+		}
+		return nil
 	}
 	
 	// MARK: Viewport Sync
@@ -623,7 +651,7 @@ extension MapboxMapController {
 	}
 }
 
-extension MapboxMaps.MapboxMap: @retroactive ImageRegisteringMap {
+extension MapboxMaps.MapboxMap: ImageRegisteringMap {
 	/// Registers an image for use in the style (e.g., `symbol` icons). Runs on the main actor.
 	public func addImage(id: String, image: UIImage, sdf: Bool) throws {
 		Task { @MainActor in

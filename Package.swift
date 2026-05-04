@@ -3,66 +3,67 @@
 
 import PackageDescription
 
-
-
 let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
-let version: Version = "1.5.1"
+let version: Version = "1.6.0"
 let xcframeworkChecksums = (
-	core: "94fbd9b4bfad28a690ba185c28b67e923c633d2bde02fd9100c2ac4f30a660f2",
-	renderer: "88732d454a659db366db5db2c8f1c1f95dcd3913f1a141699de8e3955550fa95",
-	maps: "6444ef09de3c59328180d05d42bc4b31b317cac643ec509dfac5945f6759512b"
+    core: "1cbd89e327073c2f29437cde901484517319151fe88d9a43551696760c9306f6",
+    renderer: "ed4a6de638ad1b5ff4a1c2899921460b054b2b860c4a4a49d9ca06ec51e67018",
+    maps: "a0f53f5f396e84ae30f4e8dedac6b0f42dd9acb6edc659c0bfe95dcdec8f6b28"
 )
 
-
 let package = Package(
-	name: "MapsGL",
-	platforms: [ .iOS(.v16), .macCatalyst(.v16), .visionOS(.v1) ],
-	products: [
-		.library(name: "MapsGL", targets: [
-			"MapsGLRendererWrapper",
-			"MapsGLMapsWrapper",
-			"MapsGLMapbox",
-		]),
-	],
-	dependencies: [
-		.package(url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "11.0.0"),
+    name: "MapsGL",
+    platforms: [ .iOS(.v16), .macCatalyst(.v16), .visionOS(.v1) ],
+    products: [
+        .library(name: "MapsGL", targets: [
+            "MapsGLRendererWrapper",
+            "MapsGLMapsWrapper",
+            "MapsGLMapLibre",
+        ]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/maplibre/maplibre-gl-native-distribution", from: "6.18.0"),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
-	],
-	targets: [
-		.binaryTarget(name: "MapsGLCore",
-			url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLCore.xcframework.zip",
-			checksum: xcframeworkChecksums.core
-		),
-		
-		.target(name: "MapsGLRendererWrapper",
-			dependencies: [
-				"MapsGLCore",
-				"MapsGLRenderer",
-			]
-		),
-		.binaryTarget(name: "MapsGLRenderer",
-			url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLRenderer.xcframework.zip",
-			checksum: xcframeworkChecksums.renderer
-		),
-		
-		.target(name: "MapsGLMapsWrapper",
-			dependencies: [
-				"MapsGLCore",
-				"MapsGLRenderer",
-				"MapsGLMaps",
-                .product(name: "Turf", package: "turf-swift")
-			]
-		),
-		.binaryTarget(name: "MapsGLMaps",
-			url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLMaps.xcframework.zip",
-			checksum: xcframeworkChecksums.maps
-		),
-		
-		.target(name: "MapsGLMapbox",
-			dependencies: [
-				"MapsGLMaps",
-				.product(name: "MapboxMaps", package: "mapbox-maps-ios"),
-			]
-		),
-	]
+    ],
+    targets: [
+        .binaryTarget(name: "MapsGLCore",
+            url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLCore.xcframework.zip",
+            checksum: xcframeworkChecksums.core
+        ),
+
+        .target(name: "MapsGLRendererWrapper",
+            dependencies: [
+                "MapsGLCore",
+                "MapsGLRenderer",
+            ]
+        ),
+        .binaryTarget(name: "MapsGLRenderer",
+            url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLRenderer.xcframework.zip",
+            checksum: xcframeworkChecksums.renderer
+        ),
+
+        .target(name: "MapsGLMapsWrapper",
+            dependencies: [
+                "MapsGLCore",
+                "MapsGLRenderer",
+                "MapsGLMaps",
+                .product(name: "Turf", package: "turf-swift"),
+            ]
+        ),
+        .binaryTarget(name: "MapsGLMaps",
+            url: "https://cdn.aerisapi.com/sdk/ios/mapsgl/releases/\(version)/MapsGLMaps.xcframework.zip",
+            checksum: xcframeworkChecksums.maps
+        ),
+
+        .target(name: "MapsGLMapLibre",
+            dependencies: [
+                "MapsGLMaps",
+                .product(name: "MapLibre", package: "maplibre-gl-native-distribution"),
+            ],
+            path: "Sources/MapsGLMapLibre",
+            swiftSettings: [
+                .define("MLN_RENDER_BACKEND_METAL"),
+            ]
+        ),
+    ]
 )
