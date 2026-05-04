@@ -38,6 +38,7 @@ MapsGL Apple SDK is a powerful mapping library designed for iOS developers. It e
     subspec.frameworks = 'Foundation', 'Combine', 'CoreGraphics', 'CoreLocation', 'ImageIO', 'Metal', 'OSLog', 'UIKit', 'UniformTypeIdentifiers'
     subspec.dependency 'MapsGL/Core'
     subspec.dependency 'MapsGL/Renderer'
+    subspec.dependency 'Turf', '~> 4.0'
   end
 
   spec.subspec 'Mapbox' do |subspec|
