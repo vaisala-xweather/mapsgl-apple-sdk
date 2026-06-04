@@ -44,10 +44,12 @@
 		2BC6AEF62DC2A4EF000BF3D9 /* CircleIconButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEB12DC2A4EF000BF3D9 /* CircleIconButtonView.swift */; };
 		2BC6AEF82DC2A4EF000BF3D9 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEBE2DC2A4EF000BF3D9 /* AccessKeys.swift */; };
 		2BC6AEFA2DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA32DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift */; };
+		2BC6AEFE2DC2A669000BF3D9 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
 		2EAA11012F00100100112233 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
 		2EAA11022F00100100112233 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
-		2BC6AEFE2DC2A669000BF3D9 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
 		2EAA11052F00100100112233 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
+		503DE6BA2FD1E62E0024A843 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 2D1A00162EF8805C00112233 /* MapboxMaps */; };
+		503DE6BB2FD1E62E0024A843 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 2D1A00162EF8805C00112233 /* MapboxMaps */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -113,9 +115,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				503DE6BA2FD1E62E0024A843 /* MapboxMaps in Frameworks */,
 				2EAA11012F00100100112233 /* MapsGL in Frameworks */,
 				2BC6AEFE2DC2A669000BF3D9 /* MapsGL in Frameworks */,
-				2D1A00182EF8805C00112233 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,9 +125,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				503DE6BB2FD1E62E0024A843 /* MapboxMaps in Frameworks */,
 				2EAA11022F00100100112233 /* MapsGL in Frameworks */,
 				2EAA11052F00100100112233 /* MapsGL in Frameworks */,
-				2D1A00192EF8805C00112233 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,38 +773,35 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
-		2EAA10012F00100100112233 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
-			requirement = {
-				branch = release/1.6.0;
-				kind = branch;
-			};
-		};
 		2D1A00152EF8805C00112233 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.0.0;
+				kind = exactVersion;
+				version = "11.25.0-rc.1";
+			};
+		};
+		2EAA10012F00100100112233 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
+			requirement = {
+				branch = "release/1.6.0-mapbox-rc-fix.1";
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2EAA10022F00100100112233 /* MapsGL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2EAA10012F00100100112233 /* XCRemoteSwiftPackageReference "MapsGL" */;
-			productName = MapsGL;
-		};
 		2D1A00162EF8805C00112233 /* MapboxMaps */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2D1A00152EF8805C00112233 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
 			productName = MapboxMaps;
+		};
+		2EAA10022F00100100112233 /* MapsGL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2EAA10012F00100100112233 /* XCRemoteSwiftPackageReference "mapsgl-apple-sdk" */;
+			productName = MapsGL;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
