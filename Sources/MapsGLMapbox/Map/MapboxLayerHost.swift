@@ -111,6 +111,7 @@ internal final class MapboxViewportHost: NSObject, MapboxMaps.CustomLayerHost {
 	}
 	
 	func register(layer: any LayerProtocol) {
+		guard observingLayers.contains(where: { $0 as AnyObject === layer as AnyObject }) == false else { return }
 		observingLayers.append(layer)
 	}
 	

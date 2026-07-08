@@ -40,6 +40,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	
 	/// Stores layers waiting for their source to be added once initial metadata loads
 	private var pendingLayersBySource: [String: [(layer: Layer, placement: Placement)]] = [:]
+	private var vectorSourceAdapters: [String: MapboxVectorSourceAdapter] = [:]
 	
 	/// Creates a `MapboxMapController` from a `MapboxMaps.MapView`.
 	/// - Parameters:
@@ -142,9 +143,10 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				switch source {
 				case let source as MapsGLMaps.VectorTileSource:
 					let adapter = MapboxVectorSourceAdapter(source: source, map: self.map)
+					self.vectorSourceAdapters[source.id] = adapter
 					Task { @MainActor in
 						let customSource = await adapter.makeSource()
-						source.setInvalidateFunction(adapter.invalidate)					
+						source.setInvalidateFunction { [weak adapter] x, y, z in adapter?.invalidate(x: x, y: y, z: z) }
 						try self.map.addSource(customSource)
 						onSourceAdded?()
 					}
@@ -174,22 +176,19 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 			guard let self = self else { return }
 			guard !self.map.layerExists(withId: layer.id) else { return }
 			let handleLayerAdded = { [weak self] in
-				guard let self = self else { return }
 				onLayerAdded?()
-				if layer.id.hasPrefix("mask::") {
-					self.updateMaskLayersForMap()
-				}
 			}
 			do {
 				switch layer {
-				case let vectorLayer as MapsGLMaps.VectorTileLayer:	
-					try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
-						handleLayerAdded()
-					}				
 				case let metalLayer as any MapsGLMetalLayer:
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId) {
 						handleLayerAdded()
 					}
+				case let vectorLayer as MapsGLMaps.VectorTileLayer:	
+					try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
+						handleLayerAdded()
+					}
+					
 				default: break
 				}
 			} catch {
@@ -201,6 +200,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	/// Removes a previously added data source from the style.
 	/// - Parameter source: The data source to remove.
 	public override func removeFromMap(source: any DataSource) {
+		vectorSourceAdapters.removeValue(forKey: source.id)
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self else { return }
 			do {
@@ -224,6 +224,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 					try self.map.removeLayer(withId: layer.id)
 					viewportHost?.unregister(layer: layer)
 				}
+				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
+					vectorLayer.platformLayer = nil
+				}
 				placementByLayerId.removeValue(forKey: layer.id)
 				
 				// Remove the `MapboxLayerHost` from the superclass `MapController`.
@@ -238,15 +241,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	public override func didRequestRedraw() {
 		map.triggerRepaint()
 	}
-
-	public override func updateMaskLayersForMap() {
-		syncMaskLayerColors()
-	}
 	
 	/// Syncs mask and managed layers with the current style, re-applying cached placements as needed.
 	private func updateManagedLayersForStyle() {
-		syncMaskLayerColors()
-		
 		placementByLayerId.keys.forEach { id in
 			guard self.map.layerExists(withId: id) else { return }
 			do {
@@ -257,40 +254,6 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				Logger.map.error("Failed to update placement for layer `\(id)`: \(error.localizedDescription)")
 			}
 		}
-	}
-
-	private func syncMaskLayerColors() {
-		do {
-			try self.masks.forEach { (kind, layer) in
-				guard let sourceLayerId = styleLayerId(for: kind),
-					  self.map.layerExists(withId: sourceLayerId),
-					  let colorValue = colorValueForMaskSourceLayer(withId: sourceLayerId) else {
-					return
-				}
-				try self.map.setLayerProperty(for: layer.id, property: "fill-color", value: colorValue)
-			}
-		} catch {
-			Logger.map.error("Failed to update mask layers: \(error.localizedDescription)")
-		}
-	}
-
-	private func styleLayerId(for kind: MaskLayerKind) -> String? {
-		switch kind {
-		case .land:
-			return "land"
-		default:
-			return nil
-		}
-	}
-
-	private func colorValueForMaskSourceLayer(withId layerId: String) -> Any? {
-		for property in ["fill-color", "background-color"] {
-			let propertyValue = self.map.layerProperty(for: layerId, property: property).value
-			if !(propertyValue is NSNull) {
-				return propertyValue
-			}
-		}
-		return nil
 	}
 	
 	// MARK: Viewport Sync
@@ -409,6 +372,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				}
 				.store(in: &self.mapboxCancellables)
 			return
+		}
+		if let platformLayer = mapboxLayer as? PlatformStyleLayer {
+			layer.platformLayer = platformLayer
 		}
 		try self.map.addPersistentLayer(mapboxLayer, layerPosition: resolvedPlacement.position)
 		onLayerAdded?()
