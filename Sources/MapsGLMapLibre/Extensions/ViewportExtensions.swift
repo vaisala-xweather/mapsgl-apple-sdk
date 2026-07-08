@@ -45,6 +45,7 @@ extension MapsGLMaps.Viewport {
 		self.fovY = Angle2D(radians: Measurement(value: maplibreContext.fieldOfView, unit: UnitAngle.degrees).converted(to: .radians).value)
 		self.bounds = coordinateBounds.converted(to: UnitMercator())
 		self.size = CGSize(width: maplibreContext.size.width, height: maplibreContext.size.height)
+		self.alignBoundsToCenterWorldCopy()
 	}
 		
 	private static func unwrapLongitude(_ longitude: Double, around referenceLongitude: Double) -> Double {

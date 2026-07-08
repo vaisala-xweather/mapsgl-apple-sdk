@@ -4,11 +4,11 @@
 import PackageDescription
 
 let repositoryPath = "vaisala-xweather/mapsgl-apple-sdk"
-let version: Version = "1.6.0"
+let version: Version = "1.6.1"
 let xcframeworkChecksums = (
-    core: "1cbd89e327073c2f29437cde901484517319151fe88d9a43551696760c9306f6",
-    renderer: "ed4a6de638ad1b5ff4a1c2899921460b054b2b860c4a4a49d9ca06ec51e67018",
-    maps: "a0f53f5f396e84ae30f4e8dedac6b0f42dd9acb6edc659c0bfe95dcdec8f6b28"
+    core: "b11f2691a0d99a2926134cbf366d942815c43b805ce34ccd5b655adb36c0d3c9",
+    renderer: "c356ecf2f8af39bbe6185b9e7175e193f0f1c3c609f87191c1059cdcfda57bb6",
+    maps: "48d8f5edbd3f2c1e0879201928a481ce2fe4bda9a817c0a77370733a66fd07c2"
 )
 
 let package = Package(
@@ -22,7 +22,7 @@ let package = Package(
         ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", from: "11.0.0"),
+        .package(url: "https://github.com/mapbox/mapbox-maps-ios.git", "11.0.0-0"..<"12.0.0"),
         .package(url: "https://github.com/mapbox/turf-swift.git", exact: "4.0.0"),
     ],
     targets: [

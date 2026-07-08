@@ -35,5 +35,6 @@ extension MapsGLMaps.Viewport {
 		self.fovY = mapboxParameters.fieldOfViewSpatialValue
 		self.bounds = MapBounds<LatitudeLongitude>(coordinateBoundsUnwrapped).converted(to: UnitMercator())
 		self.size = CGSize(width: mapboxParameters.width, height: mapboxParameters.height)
+		self.alignBoundsToCenterWorldCopy()
 	}
 }

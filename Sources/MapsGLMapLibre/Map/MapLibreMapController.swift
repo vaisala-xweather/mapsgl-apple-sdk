@@ -55,6 +55,7 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 	private var pendingStyleActions: [() -> Void] = []
 	private var pendingLayersBySource: [String: [(layer: MapsGLMaps.VectorTileLayer, beforeId: String?, onLayerAdded: (() -> Void)? )]] = [:]
 	private var pendingSourceSubscriptions: Set<String> = []
+	private var vectorSourceAdapters: [String: MapLibreVectorSourceAdapter] = [:]
 	private var placementByLayerId: [String: LayerPlacement] = [:]
 	private var viewportHost: MapLibreViewportHost?
 	private let mapDelegateProxy: MapLibreMapDelegateProxy
@@ -145,7 +146,8 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 				case let vectorSource as VectorTileSource:
 					let adapter = MapLibreVectorSourceAdapter(source: vectorSource)
 					let customSource = await adapter.makeSource()
-					vectorSource.setInvalidateFunction(adapter.invalidate)
+					self.vectorSourceAdapters[vectorSource.id] = adapter
+					vectorSource.setInvalidateFunction { [weak adapter] x, y, z in adapter?.invalidate(x: x, y: y, z: z) }
 					style.addSource(customSource)
 					onSourceAdded?()
 				case let geoSource as GeoJSONSource:
@@ -160,6 +162,7 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 	}
 	
 	public override func removeFromMap(source: any DataSource) {
+		vectorSourceAdapters.removeValue(forKey: source.id)
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self, let style = self.map.style else { return }
 			guard let styleSource = style.source(withIdentifier: source.id) else { return }
@@ -179,18 +182,15 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 					self.ensureLayer(beforeId, isAbove: layer.id, in: style)
 				}
 				onLayerAdded?()
-				if layer.id.hasPrefix("mask::") {
-					self.updateMaskLayersForMap()
-				}
 			}
 			
 			do {
 				switch layer {
-				case let vectorLayer as MapsGLMaps.VectorTileLayer:
-					self.addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: handleLayerAdded)
 				case let metalLayer as any MapsGLMetalLayer:
 					try self.addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
 					handleLayerAdded()
+				case let vectorLayer as MapsGLMaps.VectorTileLayer:
+					self.addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: handleLayerAdded)
 				default:
 					break
 				}
@@ -242,22 +242,6 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		return "building"
 	}
 
-	public override func updateMaskLayersForMap() {
-		guard let style = map.style else { return }
-		do {
-			try self.masks.forEach { (kind, layer) in
-				guard let sourceLayer = styleLayer(for: kind, in: style),
-					  let maskLayer = style.layer(withIdentifier: layer.id) as? MLNFillStyleLayer,
-					  let fillExpression = fillExpression(for: sourceLayer) else {
-					return
-				}
-				maskLayer.fillColor = fillExpression
-			}
-		} catch {
-			Logger.map.error("Failed to update mask layers: \(error.localizedDescription)")
-		}
-	}
-	
 	private func performBaseInitialize() {
 		super.initialize()
 	}
@@ -320,12 +304,12 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 			style.removeLayer(existingLayer)
 		}
 		removeFillStrokeLayerIfNeeded(for: layer.id, style: style)
-		
-		insertLayer(styleLayer, beforeId: beforeId, style: style)
-		insertFillStrokeLayerIfNeeded(from: styleJSON, source: source, above: styleLayer, style: style)
+
 		if let platformLayer = styleLayer as? any PlatformStyleLayer {
 			layer.platformLayer = platformLayer
 		}
+		insertLayer(styleLayer, beforeId: beforeId, style: style)
+		insertFillStrokeLayerIfNeeded(from: styleJSON, source: source, above: styleLayer, style: style)
 		onLayerAdded?()
 	}
 
@@ -474,24 +458,20 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 			guard style.layer(withIdentifier: layer.id) == nil else { continue }
 			do {
 				switch layer {
-				case let vectorLayer as MapsGLMaps.VectorTileLayer:
-					addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: nil)
 				case let metalLayer as any MapsGLMetalLayer:
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
+				case let vectorLayer as MapsGLMaps.VectorTileLayer:
+					addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: nil)
 				default:
 					break
 				}
 				if let beforeId, beforeId.hasPrefix("mask::") {
 					ensureLayer(beforeId, isAbove: layer.id, in: style)
 				}
-				if layer.id.hasPrefix("mask::") {
-					updateMaskLayersForMap()
-				}
 			} catch {
 				Logger.map.fault("Failed to restore layer during style reload: \(error.localizedDescription)")
 			}
 		}
-		updateMaskLayersForMap()
 	}
 
 	private func managedLayersInPlacementOrder() -> [any MapsGLLayer] {
@@ -525,7 +505,8 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		case let vectorSource as VectorTileSource:
 			let adapter = MapLibreVectorSourceAdapter(source: vectorSource)
 			let customSource = await adapter.makeSource()
-			vectorSource.setInvalidateFunction(adapter.invalidate)
+			vectorSourceAdapters[vectorSource.id] = adapter
+			vectorSource.setInvalidateFunction { [weak adapter] x, y, z in adapter?.invalidate(x: x, y: y, z: z) }
 			style.addSource(customSource)
 		case let geoSource as GeoJSONSource:
 			guard let shapeSource = makeShapeSource(from: geoSource) else { return }
@@ -542,36 +523,6 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		style.insertLayer(layer, above: sibling)
 	}
 
-	private func styleLayer(for kind: MaskLayerKind, in style: MapLibre.MLNStyle) -> MapLibre.MLNStyleLayer? {
-		let candidateIDs: [String]
-		switch kind {
-		case .land:
-			// CARTO MapLibre basemaps (for example `dark-matter-gl-style`) use a `background`
-			// layer for the base land color rather than a `land` fill layer.
-			candidateIDs = ["land", "background", "landcover", "landuse"]
-		case .water:
-			candidateIDs = ["water", "background"]
-		case .none:
-			return nil
-		}
-
-		for id in candidateIDs {
-			if let layer = style.layer(withIdentifier: id) {
-				return layer
-			}
-		}
-		return nil
-	}
-
-	private func fillExpression(for layer: MapLibre.MLNStyleLayer) -> NSExpression? {
-		if let fillLayer = layer as? MLNFillStyleLayer {
-			return fillLayer.fillColor
-		}
-		if let backgroundLayer = layer as? MLNBackgroundStyleLayer {
-			return backgroundLayer.backgroundColor
-		}
-		return nil
-	}
 
 	private func insertPendingVectorLayerPlaceholder(
 		for layer: MapsGLMaps.VectorTileLayer,

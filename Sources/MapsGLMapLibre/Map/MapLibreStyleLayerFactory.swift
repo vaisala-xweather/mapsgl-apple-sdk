@@ -33,6 +33,7 @@ struct MapLibreStyleLayerFactory {
 			lineLayer.lineWidth = makeExpression(style.lineWidth)
 			lineLayer.lineCap = makeExpression(style.lineCap)
 			lineLayer.lineJoin = makeExpression(style.lineJoin)
+			lineLayer.lineMiterLimit = makeExpression(style.lineMiterLimit)
 			layer = lineLayer
 		case .circle:
 			let circleLayer = MapLibre.MLNCircleStyleLayer(identifier: style.id, source: source)

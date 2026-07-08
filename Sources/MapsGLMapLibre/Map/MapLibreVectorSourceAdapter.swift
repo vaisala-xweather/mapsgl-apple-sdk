@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 import MapLibre
 import MapsGLMaps
 import OSLog
@@ -86,10 +87,13 @@ extension MapLibreVectorSourceAdapter: MLNComputedShapeSourceDataSource {
 		return result
 	}
 	
-	private func convert(features: [Turf.Feature]) -> [MLNShape & MLNFeature] {
+	func convert(features: [Turf.Feature]) -> [MLNShape & MLNFeature] {
 		guard !features.isEmpty else { return [] }
 		
-		let collection = Turf.FeatureCollection(features: features)
+		let compatibleFeatures = features.compactMap(mapLibreCompatibleFeature)
+		guard !compatibleFeatures.isEmpty else { return [] }
+
+		let collection = Turf.FeatureCollection(features: compatibleFeatures)
 		guard let encoded = try? encoder.encode(collection) else {
 			return []
 		}
@@ -102,5 +106,38 @@ extension MapLibreVectorSourceAdapter: MLNComputedShapeSourceDataSource {
 		}
 		
 		return []
+	}
+
+	private func mapLibreCompatibleFeature(_ feature: Turf.Feature) -> Turf.Feature? {
+		var feature = feature
+		guard let geometry = feature.geometry else { return nil }
+
+		switch geometry {
+		case .polygon(let polygon):
+			// MapLibre rejects unclosed polygon rings when parsing GeoJSON for computed sources.
+			feature.geometry = .polygon(
+				Polygon(polygon.coordinates.map(closedRing))
+			)
+		case .multiPolygon(let multiPolygon):
+			feature.geometry = .multiPolygon(
+				MultiPolygon(
+					multiPolygon.coordinates.map { polygon in
+						polygon.map(closedRing)
+					}
+				)
+			)
+		default:
+			break
+		}
+
+		return feature
+	}
+
+	private func closedRing(_ ring: [CLLocationCoordinate2D]) -> [CLLocationCoordinate2D] {
+		guard let first = ring.first, let last = ring.last else { return ring }
+		if first.latitude == last.latitude, first.longitude == last.longitude {
+			return ring
+		}
+		return ring + [first]
 	}
 }

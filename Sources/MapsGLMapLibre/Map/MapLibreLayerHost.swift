@@ -6,6 +6,7 @@
 //
 
 import Metal
+import QuartzCore
 import MapsGLCore
 import MapsGLMaps
 import MapsGLRenderer
@@ -142,12 +143,12 @@ public final class MapLibreLayerHost<Layer> : LayerHost<Layer> where Layer : Met
 	public func prerender(_ parameters: MapLibre.MLNStyleLayerDrawingContext, metalContext: MetalRenderContext) {
 		guard let map else { return }
 		self.layer.viewport.updateFrom(maplibreContext: parameters, map: map)
-		
+
 		let context = metalContext
-		context.renderTargetSize = .init(width: parameters.size.width, height: parameters.size.height)
+		context.renderTargetSize = renderTargetSize(for: parameters, map: map)
 		super.prerender(metalContext: context)
 	}
-	
+
 	/// Executes the final rendering commands for the layer.
 	/// - Parameters:
 	///   - parameters: The render parameters provided by Mapbox.
@@ -155,8 +156,21 @@ public final class MapLibreLayerHost<Layer> : LayerHost<Layer> where Layer : Met
 	///   - mtlRenderPassDescriptor: The Metal render pass descriptor.
 	public func render(_ parameters: MapLibre.MLNStyleLayerDrawingContext, metalContext: MetalRenderContext) {
 		let context = metalContext
-		context.renderTargetSize = .init(width: parameters.size.width, height: parameters.size.height)
+		if let map { context.renderTargetSize = renderTargetSize(for: parameters, map: map) }
 		super.render(metalContext: context)
+	}
+
+	/// Returns the render target size in points, derived from the drawable when possible.
+	///
+	/// `CAMetalLayer.drawableSize` is the authoritative pixel count; dividing by `contentScaleFactor`
+	/// gives exact point values that round-trip through `LayerHost.prerender()`'s `rounded()` multiply
+	/// without floating-point drift. Falls back to `parameters.size` when the metal layer isn't accessible.
+	private func renderTargetSize(for parameters: MLNStyleLayerDrawingContext, map: MLNMapView) -> CGSize {
+		let scale = map.contentScaleFactor
+		guard scale > 0, let metalLayer = map.layer as? CAMetalLayer else {
+			return CGSize(width: parameters.size.width, height: parameters.size.height)
+		}
+		return CGSize(width: metalLayer.drawableSize.width / scale, height: metalLayer.drawableSize.height / scale)
 	}
 	
 	/// Called when rendering is finished.

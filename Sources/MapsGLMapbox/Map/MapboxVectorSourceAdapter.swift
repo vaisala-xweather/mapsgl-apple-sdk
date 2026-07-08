@@ -11,11 +11,16 @@ import OSLog
 
 /// A lightweight bridge that exposes a MapsGL `VectorTileSource` as a Mapbox
 /// `CustomGeometrySource`, wiring up async tile fetch/cancel handlers.
-public struct MapboxVectorSourceAdapter {
+public final class MapboxVectorSourceAdapter {
 	/// The underlying MapsGL vector tile source to fetch tiles from.
 	let source: VectorTileSource
 	/// The target Mapbox map; held `unowned` because the controller owns both.
 	unowned let map: MapboxMaps.MapboxMap
+
+	init(source: VectorTileSource, map: MapboxMaps.MapboxMap) {
+		self.source = source
+		self.map = map
+	}
 
 	/// Builds a `CustomGeometrySource` that fetches vector tiles from `source`.
 	///
@@ -30,21 +35,22 @@ public struct MapboxVectorSourceAdapter {
 		} catch {
 			Logger.map.error("Failed to fetch metadata for vector tile source: \(error)")
 		}
-		
+
 		return CustomGeometrySource(
 			id: source.id,
 			options: CustomGeometrySourceOptions(
-				fetchTileFunction: { tileID in
+				fetchTileFunction: { [weak self] tileID in
+					guard let self else { return }
 					Task {
-						if let data = try await source.requestTile(x: Int(tileID.x), y: Int(tileID.y), z: Int(tileID.z)) {
+						if let data = try await self.source.requestTile(x: Int(tileID.x), y: Int(tileID.y), z: Int(tileID.z)) {
 							try await MainActor.run {
-								try map.setCustomGeometrySourceTileData(forSourceId: source.id, tileId: tileID, features: data.features)
+								try self.map.setCustomGeometrySourceTileData(forSourceId: self.source.id, tileId: tileID, features: data.features)
 							}
 						}
 					}
 				},
-				cancelTileFunction: { tileID in
-					source.abortTile(x: Int(tileID.x), y: Int(tileID.y), z: Int(tileID.z))
+				cancelTileFunction: { [weak self] tileID in
+					self?.source.abortTile(x: Int(tileID.x), y: Int(tileID.y), z: Int(tileID.z))
 				},
 				minZoom: UInt8(source.zoomRange.lowerBound),
 				maxZoom: UInt8(source.zoomRange.upperBound),
@@ -54,13 +60,6 @@ public struct MapboxVectorSourceAdapter {
 	}
 
 	/// Invalidates a specific tile, asking Mapbox to refetch from this adapter.
-	///
-	/// - Parameters:
-	///   - x: XYZ tile coordinate X.
-	///   - y: XYZ tile coordinate Y.
-	///   - z: Zoom level.
-	///
-	/// This method hops to the MainActor to call Mapbox’s invalidation API.
 	func invalidate(x: Int, y: Int, z: Int) {
 		Task { @MainActor in
 			do {
