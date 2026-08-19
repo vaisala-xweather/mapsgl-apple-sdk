@@ -185,14 +185,19 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 			}
 			
 			do {
-				switch layer {
-				case let metalLayer as any MapsGLMetalLayer:
+				// Route by capability, not by type (see `isMetalHosted`): a
+				// `VectorTileLayer` is Metal-hosted when it has a render backend,
+				// otherwise it takes the styled-passthrough `else` branch.
+				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
+					if vectorLayer.rendersWithMetalBackend {
+						try self.addMapsGLMetalLayer(layer: vectorLayer, beforeId: beforeId)
+						handleLayerAdded()
+					} else {
+						self.addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: handleLayerAdded)
+					}
+				} else if let metalLayer = layer as? any MapsGLMetalLayer {
 					try self.addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
 					handleLayerAdded()
-				case let vectorLayer as MapsGLMaps.VectorTileLayer:
-					self.addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: handleLayerAdded)
-				default:
-					break
 				}
 			} catch {
 				Logger.map.fault("Failed to add layer to map: \(error.localizedDescription)")
@@ -200,8 +205,16 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		}
 	}
 	
+	/// Whether a layer is hosted by a custom Metal `LayerHost` (vs. a native
+	/// MapLibre style layer). A `VectorTileLayer` is Metal-hosted only when it
+	/// has a render backend; all other `MapsGLMetalLayer`s always are.
+	private func isMetalHosted(_ layer: any MapsGLLayer) -> Bool {
+		if let vector = layer as? MapsGLMaps.VectorTileLayer { return vector.rendersWithMetalBackend }
+		return layer is any MapsGLMetalLayer
+	}
+
 	public override func removeFromMap(layer: any MapsGLLayer) {
-		if layer is any MapsGLMetalLayer {
+		if isMetalHosted(layer) {
 			try? self.removeLayerHost(id: layer.id)
 		}
 		viewportHost?.unregister(layer: layer)
@@ -457,13 +470,14 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 			guard let style = map.style else { continue }
 			guard style.layer(withIdentifier: layer.id) == nil else { continue }
 			do {
-				switch layer {
-				case let metalLayer as any MapsGLMetalLayer:
+				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
+					if vectorLayer.rendersWithMetalBackend {
+						try addMapsGLMetalLayer(layer: vectorLayer, beforeId: beforeId)
+					} else {
+						addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: nil)
+					}
+				} else if let metalLayer = layer as? any MapsGLMetalLayer {
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
-				case let vectorLayer as MapsGLMaps.VectorTileLayer:
-					addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: nil)
-				default:
-					break
 				}
 				if let beforeId, beforeId.hasPrefix("mask::") {
 					ensureLayer(beforeId, isAbove: layer.id, in: style)
