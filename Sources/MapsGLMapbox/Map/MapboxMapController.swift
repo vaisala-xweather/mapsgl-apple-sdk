@@ -179,17 +179,23 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				onLayerAdded?()
 			}
 			do {
-				switch layer {
-				case let metalLayer as any MapsGLMetalLayer:
+				// Route by capability, not by type: the Metal-vs-styled decision
+				// is driven by whether a `VectorTileLayer` has a render backend;
+				// without one it takes the styled-passthrough `else` branch.
+				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
+					if vectorLayer.rendersWithMetalBackend {
+						try addMapsGLMetalLayer(layer: vectorLayer, beforeId: beforeId) {
+							handleLayerAdded()
+						}
+					} else {
+						try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
+							handleLayerAdded()
+						}
+					}
+				} else if let metalLayer = layer as? any MapsGLMetalLayer {
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId) {
 						handleLayerAdded()
 					}
-				case let vectorLayer as MapsGLMaps.VectorTileLayer:	
-					try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
-						handleLayerAdded()
-					}
-					
-				default: break
 				}
 			} catch {
 				Logger.map.fault("Failed to add layer to map: \(error)")
@@ -223,6 +229,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				if self.map.layerExists(withId: layer.id) {
 					try self.map.removeLayer(withId: layer.id)
 					viewportHost?.unregister(layer: layer)
+					removeViewportSyncLayerIfNeeded()
 				}
 				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
 					vectorLayer.platformLayer = nil
@@ -268,7 +275,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	}
 
 	private func removeViewportSyncLayerIfNeeded() {
-		if let host = viewportHost, self.map.layerExists(withId: host.id) {
+		guard let host = viewportHost else { return }
+		if host.hasObservingLayers { return }
+		if self.map.layerExists(withId: host.id) {
 			try? self.map.removeLayer(withId: host.id)
 		}
 		viewportHost = nil
