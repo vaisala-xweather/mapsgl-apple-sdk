@@ -6,7 +6,7 @@
 //
 
 import Metal
-import QuartzCore
+import MetalKit
 import MapsGLCore
 import MapsGLMaps
 import MapsGLRenderer
@@ -83,6 +83,12 @@ public final class MapLibreMapsGLLayer<Layer> : MLNCustomStyleLayer where Layer 
 			renderPassDescriptor: nil,
 			size: .zero
 		)
+		// MapLibre renders into its own encoder and exposes no render pass descriptor, so give
+		// `LayerHost` the drawable's size directly. Without it the render target would be derived
+		// from `UIScreen.scale` — a whole number capped at 3, which is not the drawable's scale
+		// under a scaled point canvas or Display Zoom, leaving MapsGL's viewport a fraction of the
+		// size MapLibre is drawing at.
+		context?.authoritativePixelSize = backendResource.mtkView?.drawableSize
 		context?.renderEncoder = renderEncoder
 		context?.ownsRenderEncoder = false
 		return context
@@ -107,7 +113,7 @@ public final class MapLibreMapsGLLayer<Layer> : MLNCustomStyleLayer where Layer 
 public final class MapLibreLayerHost<Layer> : LayerHost<Layer> where Layer : MetalLayerProtocol {
 	/// The Mapbox map associated with the custom layer.
 	weak var map: MapLibre.MLNMapView?
-	
+
 	/// Creates a new layer host bound to a Mapbox map and a MapsGL-compatible layer.
 	/// - Parameters:
 	///   - map: The Mapbox map to attach to.
@@ -145,7 +151,7 @@ public final class MapLibreLayerHost<Layer> : LayerHost<Layer> where Layer : Met
 		self.layer.viewport.updateFrom(maplibreContext: parameters, map: map)
 
 		let context = metalContext
-		context.renderTargetSize = renderTargetSize(for: parameters, map: map)
+		context.renderTargetSize = renderTargetSize(for: parameters)
 		super.prerender(metalContext: context)
 	}
 
@@ -156,23 +162,19 @@ public final class MapLibreLayerHost<Layer> : LayerHost<Layer> where Layer : Met
 	///   - mtlRenderPassDescriptor: The Metal render pass descriptor.
 	public func render(_ parameters: MapLibre.MLNStyleLayerDrawingContext, metalContext: MetalRenderContext) {
 		let context = metalContext
-		if let map { context.renderTargetSize = renderTargetSize(for: parameters, map: map) }
+		if let map { context.renderTargetSize = renderTargetSize(for: parameters) }
 		super.render(metalContext: context)
 	}
 
-	/// Returns the render target size in points, derived from the drawable when possible.
+	/// The drawing pass's size in points, exactly as MapLibre reports it.
 	///
-	/// `CAMetalLayer.drawableSize` is the authoritative pixel count; dividing by `contentScaleFactor`
-	/// gives exact point values that round-trip through `LayerHost.prerender()`'s `rounded()` multiply
-	/// without floating-point drift. Falls back to `parameters.size` when the metal layer isn't accessible.
-	private func renderTargetSize(for parameters: MLNStyleLayerDrawingContext, map: MLNMapView) -> CGSize {
-		let scale = map.contentScaleFactor
-		guard scale > 0, let metalLayer = map.layer as? CAMetalLayer else {
-			return CGSize(width: parameters.size.width, height: parameters.size.height)
-		}
-		return CGSize(width: metalLayer.drawableSize.width / scale, height: metalLayer.drawableSize.height / scale)
+	/// The same value `Viewport.updateFrom(maplibreContext:map:)` assigns to `Viewport.size`, so
+	/// points mean one thing throughout: the projection, the render target, and the point→pixel
+	/// scale measured against the drawable all share this denominator.
+	private func renderTargetSize(for parameters: MLNStyleLayerDrawingContext) -> CGSize {
+		CGSize(width: parameters.size.width, height: parameters.size.height)
 	}
-	
+
 	/// Called when rendering is finished.
 	/// Performs cleanup of rendering resources.
 	public func renderingWillEnd() {

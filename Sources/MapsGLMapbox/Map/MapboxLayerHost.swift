@@ -119,6 +119,8 @@ internal final class MapboxViewportHost: NSObject, MapboxMaps.CustomLayerHost {
 		observingLayers.removeAll { $0 as AnyObject === layer as AnyObject }
 	}
 
+	var hasObservingLayers: Bool { !observingLayers.isEmpty }
+
 	// MARK: - CustomLayerHost
 
 	func renderingWillStart(_ metalDevice: MTLDevice,
