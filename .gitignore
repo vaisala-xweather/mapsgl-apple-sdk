@@ -93,5 +93,5 @@ iOSInjectionProject/
 
 
 # API Access Keys
-/Demo/AccessKeys.plist
+/Config/AccessKeys.plist
 .DS_Store

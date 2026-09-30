@@ -38,10 +38,6 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	private var isStyleLoaded: Bool = false
 	private var mapboxCancellables: Set<AnyCancellable> = []
 	
-	/// Stores layers waiting for their source to be added once initial metadata loads
-	private var pendingLayersBySource: [String: [(layer: Layer, placement: Placement)]] = [:]
-	private var vectorSourceAdapters: [String: MapboxVectorSourceAdapter] = [:]
-	
 	/// Creates a `MapboxMapController` from a `MapboxMaps.MapView`.
 	/// - Parameters:
 	///   - map: The map view instance.
@@ -118,53 +114,43 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 	/// - Throws: Errors thrown by Mapbox style mutation.
 	override public func moveLayer(id: String, beforeId: String?) throws {
 		try super.moveLayer(id: id, beforeId: beforeId)
+		guard map.layerExists(withId: id) else { return }
+
+		// MapsGL Metal layers are bridged as persistent Mapbox `CustomLayer`s. Mapbox's
+		// `moveLayer` on a persistent custom layer leaves the persistent custom-layer
+		// registry in a state that breaks a later re-add of another such layer (a
+		// removed-then-re-enabled data-query text layer fails to re-appear). Reposition
+		// these the same way they were first inserted — remove and re-add through the
+		// bridge — which is a clean insert and preserves the caller's placement (and
+		// slot, in slotted styles).
+		if let layer = getLayer(id: id), layer is any MapsGLMetalLayer {
+			removeFromMap(layer: layer)
+			addToMap(layer: layer, beforeId: beforeId) { [weak self] in
+				self?.invalidateLayerOrder()
+			}
+			return
+		}
+
 		if let beforeId {
 			try map.moveLayer(withId: id, to: .below(beforeId))
 		} else {
 			try map.moveLayer(withId: id, to: .default)
 		}
+		invalidateLayerOrder()
 	}
-	
+
+	/// The Mapbox style's layer identifiers in draw order, bottom-most first.
+	public override func styleLayerOrder() -> [String] {
+		map.allLayerIdentifiers.map(\.id)
+	}
+
 	// MARK: Adding/Removing MapsGL Resources
 	
-	/// Adds a MapsGL data source to the Mapbox style.
-	/// 
-	/// Vector and GeoJSON sources are bridged to their Mapbox equivalents.
-	/// - Parameters:
-	///    - source: The source to add.
-	///    - onSourceAdded: A function to call when the source has been added to Mapbox.
+	/// MapsGL sources are read by MapsGL's own renderers, never by the Mapbox
+	/// style, so there is nothing to bridge. Reports completion so callers
+	/// awaiting a source add still proceed.
 	public override func addToMap(source: some DataSource, onSourceAdded: (() -> Void)? = nil) {
-		doEnsuringStyleLoaded { [weak self] in
-			guard let self = self else { return }
-			do {
-				guard !self.map.sourceExists(withId: source.id) else { return }
-				
-				// Create the Mapbox data source
-				switch source {
-				case let source as MapsGLMaps.VectorTileSource:
-					let adapter = MapboxVectorSourceAdapter(source: source, map: self.map)
-					self.vectorSourceAdapters[source.id] = adapter
-					Task { @MainActor in
-						let customSource = await adapter.makeSource()
-						source.setInvalidateFunction { [weak adapter] x, y, z in adapter?.invalidate(x: x, y: y, z: z) }
-						try self.map.addSource(customSource)
-						onSourceAdded?()
-					}
-				case let source as MapsGLMaps.GeoJSONSource:
-					var mapboxSource = MapboxMaps.GeoJSONSource(id: source.id)
-					if let data = source.data {
-						mapboxSource.data = .featureCollection(data)
-					} else if let dataURL = source.makeDataURL() {
-						mapboxSource.data = .url(dataURL)
-					}
-					try self.map.addSource(mapboxSource)
-					onSourceAdded?()
-				default: break
-				}
-			} catch {
-				Logger.map.fault("Failed to add source to map: \(error)")
-			}
-		}
+		doEnsuringStyleLoaded { onSourceAdded?() }
 	}
 	
 	/// Adds a MapsGL layer to the Mapbox style, converting it to the appropriate Mapbox layer.
@@ -179,20 +165,7 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				onLayerAdded?()
 			}
 			do {
-				// Route by capability, not by type: the Metal-vs-styled decision
-				// is driven by whether a `VectorTileLayer` has a render backend;
-				// without one it takes the styled-passthrough `else` branch.
-				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
-					if vectorLayer.rendersWithMetalBackend {
-						try addMapsGLMetalLayer(layer: vectorLayer, beforeId: beforeId) {
-							handleLayerAdded()
-						}
-					} else {
-						try addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId) {
-							handleLayerAdded()
-						}
-					}
-				} else if let metalLayer = layer as? any MapsGLMetalLayer {
+				if let metalLayer = layer as? any MapsGLMetalLayer {
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId) {
 						handleLayerAdded()
 					}
@@ -203,21 +176,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 		}
 	}
 	
-	/// Removes a previously added data source from the style.
-	/// - Parameter source: The data source to remove.
-	public override func removeFromMap(source: any DataSource) {
-		vectorSourceAdapters.removeValue(forKey: source.id)
-		doEnsuringStyleLoaded { [weak self] in
-			guard let self = self else { return }
-			do {
-				if let source = source as? VectorTileSource, self.map.sourceExists(withId: source.id) {
-					try self.map.removeSource(withId: source.id)
-				}
-			} catch {
-				Logger.map.fault("Failed to remove source from map: \(error)")
-			}
-		}
-	}
+	/// No-op counterpart to ``addToMap(source:onSourceAdded:)`` — MapsGL sources
+	/// are never added to the Mapbox style.
+	public override func removeFromMap(source: any DataSource) {}
 	
 	/// Removes a previously added layer from the style and from the controller’s registry.
 	/// - Parameter layer: The layer to remove.
@@ -228,11 +189,6 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				// Remove the `MapboxMaps.CustomLayer` from the `MapboxMaps.MapboxMap`.
 				if self.map.layerExists(withId: layer.id) {
 					try self.map.removeLayer(withId: layer.id)
-					viewportHost?.unregister(layer: layer)
-					removeViewportSyncLayerIfNeeded()
-				}
-				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
-					vectorLayer.platformLayer = nil
 				}
 				placementByLayerId.removeValue(forKey: layer.id)
 				
@@ -261,26 +217,9 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 				Logger.map.error("Failed to update placement for layer `\(id)`: \(error.localizedDescription)")
 			}
 		}
-	}
-	
-	// MARK: Viewport Sync
-	
-	private var viewportHost: MapboxViewportHost?
-	
-	// Create a tiny host that never renders—just forwards parameters.
-	private func installViewportSyncLayer() throws {
-		let host = MapboxViewportHost(map: self.map)
-		self.viewportHost = host
-		try self.map.addCustomLayer(withId: host.id, layerHost: host, layerPosition: nil)
-	}
-
-	private func removeViewportSyncLayerIfNeeded() {
-		guard let host = viewportHost else { return }
-		if host.hasObservingLayers { return }
-		if self.map.layerExists(withId: host.id) {
-			try? self.map.removeLayer(withId: host.id)
-		}
-		viewportHost = nil
+		// A new style brings its own layers, and the re-applied placements above move
+		// MapsGL's within them.
+		invalidateLayerOrder()
 	}
 	
 	// MARK: MapsGL Layer Bridge
@@ -299,93 +238,6 @@ public final class MapboxMapController : MapController<MapboxMaps.MapboxMap> {
 		mapboxCustomLayer.slot = resolvedPlacement.slot
 		try self.map.addPersistentLayer(mapboxCustomLayer, layerPosition: resolvedPlacement.position)
 		placementByLayerId[mapboxCustomLayer.id] = resolvedPlacement
-		onLayerAdded?()
-	}
-	
-	/// Bridges a `VectorTileLayer` into a concrete Mapbox style layer and inserts it with resolved placement.
-	private func addMapsGLVectorLayer(layer: MapsGLMaps.VectorTileLayer, beforeId: String?, onLayerAdded: (() -> Void)? = nil) throws {
-		var style = layer.paint.asStyleJSON(id: layer.id, source: layer.source.id, sourceLayer: layer.sourceLayer)
-		style.filter = layer.filter
-		layer.featureQuery = self
-		
-		let styleJSON = style.asStyleJSONObject()
-		var mapboxLayer: Layer?
-		
-		#if DEBUG
-		if let jsonData = try? JSONSerialization.data(withJSONObject: styleJSON, options: .prettyPrinted),
-		   let jsonString = String(data: jsonData, encoding: .utf8) {
-			print("Style JSON for layer \(layer.id):\n\(jsonString)")
-		}
-		#endif
-		
-		switch style.type {
-		case .fill: mapboxLayer = try FillLayer(jsonObject: styleJSON)
-		case .line: mapboxLayer = try LineLayer(jsonObject: styleJSON)
-		case .circle: mapboxLayer = try CircleLayer(jsonObject: styleJSON)
-		case .heatmap: mapboxLayer = try HeatmapLayer(jsonObject: styleJSON)
-		case .symbol: mapboxLayer = try SymbolLayer(jsonObject: styleJSON)
-		default:
-			mapboxLayer = nil
-		}
-		
-		guard var mapboxLayer = mapboxLayer else { return }
-		let placement = PlacementResolver.make(for: mapboxLayer, in: self, provider: placementProvider, beforeId: beforeId)
-		let resolvedPlacement = placement.resolved(for: self.map)
-		mapboxLayer.slot = placement.slot
-		placementByLayerId[mapboxLayer.id] = placement
-		
-		if viewportHost == nil {
-			try installViewportSyncLayer()
-		}
-		viewportHost?.register(layer: layer)
-		
-		guard self.map.sourceExists(withId: layer.source.id) else {
-			let sourceId = layer.source.id
-			
-			// Add a temporary dummy layer so other layers that need to reference it even while it's awaiting 
-			// the data source to become ready can still do so. Then remove the dummy layer and insert the actual
-			// one in the event handler.
-			var dummyLayer = BackgroundLayer(id: mapboxLayer.id)
-			dummyLayer.backgroundColor = .constant(StyleColor(.clear))
-			dummyLayer.backgroundOpacity = .constant(0.0)
-			dummyLayer.slot = resolvedPlacement.slot
-			try self.map.addPersistentLayer(dummyLayer, layerPosition: resolvedPlacement.position)
-			
-			// Queue this layer for adding once its source is added
-			var pendingLayers = self.pendingLayersBySource[sourceId] ?? []
-			pendingLayers.append((mapboxLayer, resolvedPlacement))
-			self.pendingLayersBySource[sourceId] = pendingLayers
-			
-			if let platformLayer = mapboxLayer as? PlatformStyleLayer {
-				layer.platformLayer = platformLayer
-			}
-			
-			self.onSourceAdded.publisher
-				.filter { $0 == layer.source.id }
-				.first()
-				.sink { [weak self] _ in
-					guard let self = self else { return }
-					let pending = self.pendingLayersBySource[sourceId] ?? []
-					for (pendingLayer, pendingPlacement) in pending {
-						do {
-							if self.map.layerExists(withId: pendingLayer.id) {
-								try self.map.removeLayer(withId: pendingLayer.id)
-							}
-							try self.map.addPersistentLayer(pendingLayer, layerPosition: pendingPlacement.position)
-							onLayerAdded?()
-						} catch {
-							Logger.map.error("\(error)")
-						}
-					} 
-					self.pendingLayersBySource.removeValue(forKey: sourceId)
-				}
-				.store(in: &self.mapboxCancellables)
-			return
-		}
-		if let platformLayer = mapboxLayer as? PlatformStyleLayer {
-			layer.platformLayer = platformLayer
-		}
-		try self.map.addPersistentLayer(mapboxLayer, layerPosition: resolvedPlacement.position)
 		onLayerAdded?()
 	}
 	

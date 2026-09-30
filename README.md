@@ -34,7 +34,7 @@ The MapsGL Apple SDK includes a demo application that showcases the capabilities
 
 ### Prerequisites
 
-- Xcode 15 or later
+- Xcode 26 or later
 - An Apple Developer account
 - An iOS 16+ device (or Xcode's iOS Simulator)
 - An Xweather account. We offer a [free developer account](https://www.aerisweather.com/signup/developer/) for you to give our weather API a test drive.
@@ -53,19 +53,48 @@ The MapsGL Apple SDK includes a demo application that showcases the capabilities
    ```
 4. Open `Demo.xcodeproj` in Xcode.
 5. Before running the demo, you will need to configure the access keys for MapsGL and Mapbox.
-   - Build the Demo scheme once to auto-create a fresh `AccessKeys.plist` file, then fill in `MapboxAccessToken`, `XweatherClientID`, and `XweatherClientSecret`.
+   - Build the Demo scheme once to auto-create a fresh `Config/AccessKeys.plist` file, then fill in `MapboxAccessToken`, `XweatherClientID`, and `XweatherClientSecret`.
 6. Select your target device or simulator, then build and run.
 
 ### Exploring the Demo
 
-The demo app demonstrates a variety of raster and encoded MapsGL layers rendered on a Mapbox map. Layers can be further customized by modifying the demo app's SwiftUI view model in `WeatherLayersModel.swift`.
+The demo opens on a browser of focused examples, each one a single Swift file under
+`Demo/Examples/` that you can read start to finish and lift into your own app. They are
+grouped into:
+
+- **Explore** — the weather layer explorer: every layer the SDK ships, with timeline
+  playback, legends and the data inspector.
+- **Getting Started** — a minimal weather map, and the same map driven from UIKit.
+- **Styling Weather Layers** — color scales, draw ranges and particle settings on the
+  built-in layers, including purpose-built maps such as frost and freeze categories.
+- **Features & Filtering** — styling and filtering vector layers by each feature's own
+  properties, on alerts and lightning.
+- **Animation** — timeline playback, changing the animation range, and preloading frames.
+- **Legends, Units & Readouts** — the legend and data inspector controls, the units
+  values display in, and labelling your own points with sampled layer values.
+- **Your Own Data** — your own raster, vector and GeoJSON sources, and masking a layer
+  to land.
+
+Examples share a small scaffold in `Demo/Examples/Scaffold/` — `ExampleMapView` and its
+overlay chrome — so each example file stays about one API. The Mapbox
+specifics live behind `DemoMapProvider.swift`.
+
+To start on one example rather than the list — handy while you are editing it — pass
+its slug as a launch argument, either in the scheme's run arguments or with:
+
+```
+xcrun simctl launch booted com.xweather.MapsGLDemo -example custom-radar-colors
+```
+
+Every example is also published, with a screenshot, at
+[xweather.com/docs/mapsgl-apple-sdk/examples](https://www.xweather.com/docs/mapsgl-apple-sdk/examples).
 
 ## Troubleshooting
 
 If you encounter any issues while running the demo application, ensure that:
 
 - Your Xcode and iOS versions meet the prerequisites.
-- You have correctly configured the `AccessKeys.plist` with valid API keys.
+- You have correctly configured `Config/AccessKeys.plist` with valid API keys.
 - There are no build errors related to missing dependencies or configurations.
 
 For further assistance, please refer to the [documentation](http://www.xweather.com/docs/mapsgl-apple-sdk) or contact [support](https://www.xweather.com/support).

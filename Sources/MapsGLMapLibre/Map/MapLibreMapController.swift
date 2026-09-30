@@ -53,18 +53,8 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 	private weak var tapGestureRecognizer: UITapGestureRecognizer?
 	private var tapGestureTarget: MapLibreTapGestureTarget?
 	private var pendingStyleActions: [() -> Void] = []
-	private var pendingLayersBySource: [String: [(layer: MapsGLMaps.VectorTileLayer, beforeId: String?, onLayerAdded: (() -> Void)? )]] = [:]
-	private var pendingSourceSubscriptions: Set<String> = []
-	private var vectorSourceAdapters: [String: MapLibreVectorSourceAdapter] = [:]
 	private var placementByLayerId: [String: LayerPlacement] = [:]
-	private var viewportHost: MapLibreViewportHost?
 	private let mapDelegateProxy: MapLibreMapDelegateProxy
-	private let styleLayerFactory = MapLibreStyleLayerFactory()
-	private let geoJSONEncoder: JSONEncoder = {
-		let encoder = JSONEncoder()
-		encoder.dateEncodingStrategy = .millisecondsSince1970
-		return encoder
-	}()
 	
 	/// Creates a `MapboxMapController` from a `MapboxMaps.MapView`.
 	/// - Parameters:
@@ -123,52 +113,48 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 	
 	override public func moveLayer(id: String, beforeId: String?) throws {
 		try super.moveLayer(id: id, beforeId: beforeId)
+
+		// Metal-hosted layers are backed by a custom style layer (`MLNCustomStyleLayer`)
+		// plus a layer host. Re-inserting that custom style-layer object directly leaves
+		// the custom layer in a state that breaks a later re-add of another such layer (a
+		// removed-then-re-enabled data-query text layer fails to re-appear). Reposition
+		// these the same way they were first inserted — remove and re-add through the
+		// bridge, which rebuilds the custom layer cleanly.
+		if let layer = getLayer(id: id), layer is any MapsGLMetalLayer {
+			removeFromMap(layer: layer)
+			addToMap(layer: layer, beforeId: beforeId) { [weak self] in
+				self?.invalidateLayerOrder()
+			}
+			return
+		}
+
 		placementByLayerId[id] = .init(beforeId: beforeId)
 		doEnsuringStyleLoaded { [weak self] in
 			guard let self = self, let style = self.map.style else { return }
 			guard let targetLayer = style.layer(withIdentifier: id) else { return }
 			style.removeLayer(targetLayer)
 			self.insertLayer(targetLayer, beforeId: beforeId, style: style)
-			self.moveFillStrokeLayerIfNeeded(for: id, above: targetLayer, style: style)
+			self.invalidateLayerOrder()
 		}
+	}
+
+	/// The MapLibre style's layer identifiers in draw order, bottom-most first.
+	public override func styleLayerOrder() -> [String] {
+		map.style?.layers.map(\.identifier) ?? []
 	}
 	
 	// MARK: Adding/Removing MapsGL Resources
 	
+	/// MapsGL sources are read by MapsGL's own renderers, never by the MapLibre
+	/// style, so there is nothing to bridge. Reports completion so callers
+	/// awaiting a source add still proceed.
 	public override func addToMap(source: some DataSource, onSourceAdded: (() -> Void)? = nil) {
-		doEnsuringStyleLoaded { [weak self] in
-			guard let self = self else { return }
-			Task { @MainActor in
-				guard let style = self.map.style else { return }
-				guard style.source(withIdentifier: source.id) == nil else { return }
-				
-				switch source {
-				case let vectorSource as VectorTileSource:
-					let adapter = MapLibreVectorSourceAdapter(source: vectorSource)
-					let customSource = await adapter.makeSource()
-					self.vectorSourceAdapters[vectorSource.id] = adapter
-					vectorSource.setInvalidateFunction { [weak adapter] x, y, z in adapter?.invalidate(x: x, y: y, z: z) }
-					style.addSource(customSource)
-					onSourceAdded?()
-				case let geoSource as GeoJSONSource:
-					guard let shapeSource = self.makeShapeSource(from: geoSource) else { return }
-					style.addSource(shapeSource)
-					onSourceAdded?()
-				default:
-					break
-				}
-			}
-		}
+		doEnsuringStyleLoaded { onSourceAdded?() }
 	}
 	
-	public override func removeFromMap(source: any DataSource) {
-		vectorSourceAdapters.removeValue(forKey: source.id)
-		doEnsuringStyleLoaded { [weak self] in
-			guard let self = self, let style = self.map.style else { return }
-			guard let styleSource = style.source(withIdentifier: source.id) else { return }
-			style.removeSource(styleSource)
-		}
-	}
+	/// No-op counterpart to ``addToMap(source:onSourceAdded:)`` — MapsGL sources
+	/// are never added to the MapLibre style.
+	public override func removeFromMap(source: any DataSource) {}
 	
 	public override func addToMap(layer: any MapsGLLayer, beforeId: String?, onLayerAdded: (() -> Void)?) {
 		doEnsuringStyleLoaded { [weak self] in
@@ -185,17 +171,7 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 			}
 			
 			do {
-				// Route by capability, not by type (see `isMetalHosted`): a
-				// `VectorTileLayer` is Metal-hosted when it has a render backend,
-				// otherwise it takes the styled-passthrough `else` branch.
-				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
-					if vectorLayer.rendersWithMetalBackend {
-						try self.addMapsGLMetalLayer(layer: vectorLayer, beforeId: beforeId)
-						handleLayerAdded()
-					} else {
-						self.addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: handleLayerAdded)
-					}
-				} else if let metalLayer = layer as? any MapsGLMetalLayer {
+				if let metalLayer = layer as? any MapsGLMetalLayer {
 					try self.addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
 					handleLayerAdded()
 				}
@@ -205,35 +181,17 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		}
 	}
 	
-	/// Whether a layer is hosted by a custom Metal `LayerHost` (vs. a native
-	/// MapLibre style layer). A `VectorTileLayer` is Metal-hosted only when it
-	/// has a render backend; all other `MapsGLMetalLayer`s always are.
-	private func isMetalHosted(_ layer: any MapsGLLayer) -> Bool {
-		if let vector = layer as? MapsGLMaps.VectorTileLayer { return vector.rendersWithMetalBackend }
-		return layer is any MapsGLMetalLayer
-	}
-
 	public override func removeFromMap(layer: any MapsGLLayer) {
-		if isMetalHosted(layer) {
+		if layer is any MapsGLMetalLayer {
 			try? self.removeLayerHost(id: layer.id)
 		}
-		viewportHost?.unregister(layer: layer)
 		placementByLayerId.removeValue(forKey: layer.id)
 		
 		let removeAction: () -> Void = { [weak self] in
 			guard let self = self else { return }
-			self.removePendingLayer(withId: layer.id)
-			if let style = self.map.style {
-				if let styleLayer = style.layer(withIdentifier: layer.id) {
-					style.removeLayer(styleLayer)
-				}
-				self.removeFillStrokeLayerIfNeeded(for: layer.id, style: style)
+			if let style = self.map.style, let styleLayer = style.layer(withIdentifier: layer.id) {
+				style.removeLayer(styleLayer)
 			}
-			
-			if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
-				vectorLayer.platformLayer = nil
-			}
-			self.removeViewportSyncLayerIfNeeded()
 		}
 		
 		if isStyleLoaded, map.style != nil {
@@ -275,16 +233,6 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 	
 	// MARK: Private helpers
 	
-	private func makeShapeSource(from source: GeoJSONSource) -> MapLibre.MLNShapeSource? {
-		if let data = source.data, let encoded = try? geoJSONEncoder.encode(data),
-		   let shape = try? MapLibre.MLNShape(data: encoded, encoding: String.Encoding.utf8.rawValue) {
-			return MapLibre.MLNShapeSource(identifier: source.id, shape: shape, options: nil)
-		} else if let url = source.makeDataURL() {
-			return MapLibre.MLNShapeSource(identifier: source.id, url: url, options: nil)
-		}
-		return nil
-	}
-	
 	private func addMapsGLMetalLayer(layer: some MapsGLMetalLayer, beforeId: String?) throws {
 		guard let style = map.style else { return }
 		if containsLayerHost(forId: layer.id) {
@@ -296,64 +244,8 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		insertLayer(customLayer, beforeId: beforeId, style: style)
 	}
 	
-	private func addMapsGLVectorLayer(layer: MapsGLMaps.VectorTileLayer, beforeId: String?, onLayerAdded: (() -> Void)? = nil) {
-		guard let style = map.style else { return }
-		installViewportSyncLayerIfNeeded(style: style)
-		viewportHost?.register(layer: layer)
-
-		guard let source = style.source(withIdentifier: layer.source.id) else {
-			insertPendingVectorLayerPlaceholder(for: layer, beforeId: beforeId, style: style)
-			queueVectorLayer(layer, beforeId: beforeId, onLayerAdded: onLayerAdded)
-			return
-		}
-		
-		var styleJSON = layer.paint.asStyleJSON(id: layer.id, source: layer.source.id, sourceLayer: layer.sourceLayer)
-		styleJSON.filter = layer.filter
-		layer.featureQuery = self
-		
-		guard let styleLayer = styleLayerFactory.makeStyleLayer(from: styleJSON, source: source) else { return }
-		
-		if let existingLayer = style.layer(withIdentifier: layer.id) {
-			style.removeLayer(existingLayer)
-		}
-		removeFillStrokeLayerIfNeeded(for: layer.id, style: style)
-
-		if let platformLayer = styleLayer as? any PlatformStyleLayer {
-			layer.platformLayer = platformLayer
-		}
-		insertLayer(styleLayer, beforeId: beforeId, style: style)
-		insertFillStrokeLayerIfNeeded(from: styleJSON, source: source, above: styleLayer, style: style)
-		onLayerAdded?()
-	}
-
 	// MARK: Viewport Sync
 
-	private func installViewportSyncLayerIfNeeded(style: MapLibre.MLNStyle) {
-		let host: MapLibreViewportHost
-		if let existingHost = viewportHost {
-			host = existingHost
-		} else {
-			let newHost = MapLibreViewportHost(map: map)
-			viewportHost = newHost
-			host = newHost
-		}
-
-		guard style.layer(withIdentifier: host.id) == nil else { return }
-		let syncLayer = MapLibreViewportSyncLayer(host: host)
-		style.addLayer(syncLayer)
-	}
-
-	private func removeViewportSyncLayerIfNeeded() {
-		guard let host = viewportHost else { return }
-		if host.hasObservingLayers {
-			return
-		}
-		if let style = map.style, let syncLayer = style.layer(withIdentifier: host.id) {
-			style.removeLayer(syncLayer)
-		}
-		viewportHost = nil
-	}
-	
 	private func insertLayer(_ layer: MapLibre.MLNStyleLayer, beforeId: String?, style: MapLibre.MLNStyle) {
 		if let beforeId, let sibling = style.layer(withIdentifier: beforeId) {
 			style.insertLayer(layer, below: sibling)
@@ -364,72 +256,6 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 
 	private func insertLayer(_ layer: MapLibre.MLNStyleLayer, above sibling: MapLibre.MLNStyleLayer, style: MapLibre.MLNStyle) {
 		style.insertLayer(layer, above: sibling)
-	}
-
-	private func removeFillStrokeLayerIfNeeded(for layerID: String, style: MapLibre.MLNStyle) {
-		let fillStrokeLayerID = styleLayerFactory.fillStrokeLayerID(for: layerID)
-		if let fillStrokeLayer = style.layer(withIdentifier: fillStrokeLayerID) {
-			style.removeLayer(fillStrokeLayer)
-		}
-	}
-
-	private func moveFillStrokeLayerIfNeeded(for layerID: String, above fillLayer: MapLibre.MLNStyleLayer, style: MapLibre.MLNStyle) {
-		let fillStrokeLayerID = styleLayerFactory.fillStrokeLayerID(for: layerID)
-		if let fillStrokeLayer = style.layer(withIdentifier: fillStrokeLayerID) {
-			style.removeLayer(fillStrokeLayer)
-			style.insertLayer(fillStrokeLayer, above: fillLayer)
-		}
-	}
-
-	private func insertFillStrokeLayerIfNeeded(
-		from styleJSON: StyleJSON,
-		source: MapLibre.MLNSource,
-		above fillLayer: MapLibre.MLNStyleLayer,
-		style: MapLibre.MLNStyle
-	) {
-		// MapLibre fill outline styling does not reliably match the Mapbox behavior we support,
-		// so we render polygon outlines with a separate line layer positioned above the fill.
-		guard let fillStrokeLayer = styleLayerFactory.makeFillStrokeLayer(from: styleJSON, source: source) else { return }
-		insertLayer(fillStrokeLayer, above: fillLayer, style: style)
-	}
-	
-	private func queueVectorLayer(_ layer: MapsGLMaps.VectorTileLayer, beforeId: String?, onLayerAdded: (() -> Void)? = nil) {
-		let sourceId = layer.source.id
-		var pending = pendingLayersBySource[sourceId] ?? []
-		pending.append((layer, beforeId, onLayerAdded))
-		pendingLayersBySource[sourceId] = pending
-		
-		if pendingSourceSubscriptions.contains(sourceId) == false {
-			pendingSourceSubscriptions.insert(sourceId)
-			onSourceAdded.publisher
-				.filter { $0 == sourceId }
-				.first()
-				.sink { [weak self] _ in
-					guard let self else { return }
-					self.pendingSourceSubscriptions.remove(sourceId)
-					self.flushPendingLayers(for: sourceId)
-				}
-				.store(in: &cancellables)
-		}
-	}
-	
-	private func flushPendingLayers(for sourceId: String) {
-		guard let pending = pendingLayersBySource[sourceId] else { return }
-		pendingLayersBySource[sourceId] = nil
-		for entry in pending {
-			addMapsGLVectorLayer(layer: entry.layer, beforeId: entry.beforeId, onLayerAdded: entry.onLayerAdded)
-		}
-	}
-	
-	private func removePendingLayer(withId id: String) {
-		for (sourceId, entries) in pendingLayersBySource {
-			let remaining = entries.filter { $0.layer.id != id }
-			if remaining.isEmpty {
-				pendingLayersBySource.removeValue(forKey: sourceId)
-			} else {
-				pendingLayersBySource[sourceId] = remaining
-			}
-		}
 	}
 
 	private func handleStyleReady() {
@@ -461,22 +287,13 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 
 	@MainActor
 	private func updateManagedLayersForStyle() async {
-		for source in sources {
-			await syncManagedSourceToStyle(source)
-		}
 		let orderedLayers = managedLayersInPlacementOrder()
 		for layer in orderedLayers {
 			let beforeId = placementByLayerId[layer.id]?.beforeId
 			guard let style = map.style else { continue }
 			guard style.layer(withIdentifier: layer.id) == nil else { continue }
 			do {
-				if let vectorLayer = layer as? MapsGLMaps.VectorTileLayer {
-					if vectorLayer.rendersWithMetalBackend {
-						try addMapsGLMetalLayer(layer: vectorLayer, beforeId: beforeId)
-					} else {
-						addMapsGLVectorLayer(layer: vectorLayer, beforeId: beforeId, onLayerAdded: nil)
-					}
-				} else if let metalLayer = layer as? any MapsGLMetalLayer {
+				if let metalLayer = layer as? any MapsGLMetalLayer {
 					try addMapsGLMetalLayer(layer: metalLayer, beforeId: beforeId)
 				}
 				if let beforeId, beforeId.hasPrefix("mask::") {
@@ -510,46 +327,11 @@ public final class MapLibreMapController : MapController<MapLibre.MLNMapView> {
 		return orderedIDs.compactMap { layersByID[$0] }
 	}
 
-	@MainActor
-	private func syncManagedSourceToStyle(_ source: any DataSource) async {
-		guard let style = map.style else { return }
-		guard style.source(withIdentifier: source.id) == nil else { return }
-		
-		switch source {
-		case let vectorSource as VectorTileSource:
-			let adapter = MapLibreVectorSourceAdapter(source: vectorSource)
-			let customSource = await adapter.makeSource()
-			vectorSourceAdapters[vectorSource.id] = adapter
-			vectorSource.setInvalidateFunction { [weak adapter] x, y, z in adapter?.invalidate(x: x, y: y, z: z) }
-			style.addSource(customSource)
-		case let geoSource as GeoJSONSource:
-			guard let shapeSource = makeShapeSource(from: geoSource) else { return }
-			style.addSource(shapeSource)
-		default:
-			break
-		}
-	}
-
 	private func ensureLayer(_ layerID: String, isAbove siblingID: String, in style: MapLibre.MLNStyle) {
 		guard let layer = style.layer(withIdentifier: layerID),
 			  let sibling = style.layer(withIdentifier: siblingID) else { return }
 		style.removeLayer(layer)
 		style.insertLayer(layer, above: sibling)
-	}
-
-
-	private func insertPendingVectorLayerPlaceholder(
-		for layer: MapsGLMaps.VectorTileLayer,
-		beforeId: String?,
-		style: MapLibre.MLNStyle
-	) {
-		guard style.layer(withIdentifier: layer.id) == nil else { return }
-		let placeholder = MLNBackgroundStyleLayer(identifier: layer.id)
-		placeholder.backgroundOpacity = NSExpression(forConstantValue: NSNumber(value: 0.0))
-		#if canImport(UIKit)
-		placeholder.backgroundColor = NSExpression(forConstantValue: UIColor.clear)
-		#endif
-		insertLayer(placeholder, beforeId: beforeId, style: style)
 	}
 	
 	// MARK: Interactions

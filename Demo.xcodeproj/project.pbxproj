@@ -3,64 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B18B4EE2DC42A710056B9B5 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B18B4ED2DC42A6E0056B9B5 /* TimelineView.swift */; };
-		2B18B4F02DC42AAE0056B9B5 /* TimelineSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B18B4EF2DC42AA90056B9B5 /* TimelineSettingsViewController.swift */; };
-		2B18B4FC2DC43D6E0056B9B5 /* SidebarGroupHeaderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B18B4FB2DC43D620056B9B5 /* SidebarGroupHeaderTableViewCell.swift */; };
-		2B18B4FE2DC43ECE0056B9B5 /* SidebarItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B18B4FD2DC43EC50056B9B5 /* SidebarItemTableViewCell.swift */; };
-		2BC6AEC62DC2A4EF000BF3D9 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEAD2DC2A4EF000BF3D9 /* SidebarView.swift */; };
-		2BC6AEC72DC2A4EF000BF3D9 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA42DC2A4EF000BF3D9 /* ColorExtensions.swift */; };
-		2BC6AEC92DC2A4EF000BF3D9 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEAE2DC2A4EF000BF3D9 /* TimelineView.swift */; };
-		2BC6AECA2DC2A4EF000BF3D9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEAA2DC2A4EF000BF3D9 /* ContentView.swift */; };
-		2BC6AECC2DC2A4EF000BF3D9 /* WeatherLayersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC42DC2A4EF000BF3D9 /* WeatherLayersModel.swift */; };
-		2BC6AECD2DC2A4EF000BF3D9 /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA52DC2A4EF000BF3D9 /* FontExtensions.swift */; };
-		2BC6AECF2DC2A4EF000BF3D9 /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC22DC2A4EF000BF3D9 /* LocationFinder.swift */; };
-		2BC6AED02EF87A3A000BF3D9 /* DemoMapProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC52EF87A3A000BF3D9 /* DemoMapProvider.swift */; };
-		2BC6AED42DC2A4EF000BF3D9 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEBE2DC2A4EF000BF3D9 /* AccessKeys.swift */; };
-		2BC6AED52DC2A4EF000BF3D9 /* DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEAB2DC2A4EF000BF3D9 /* DemoApp.swift */; };
-		2BC6AED62DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA32DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift */; };
-		2BC6AED72DC2A4EF000BF3D9 /* CircularIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA92DC2A4EF000BF3D9 /* CircularIconButton.swift */; };
-		2BC6AEDA2DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC32DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy */; };
-		2BC6AEDC2DC2A4EF000BF3D9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA72DC2A4EF000BF3D9 /* Preview Assets.xcassets */; };
 		2BC6AEDD2DC2A4EF000BF3D9 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEBD2DC2A4EF000BF3D9 /* AccessKeys.plist */; };
-		2BC6AEDF2DC2A4EF000BF3D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC02DC2A4EF000BF3D9 /* Assets.xcassets */; };
-		2BC6AEE32DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC32DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy */; };
-		2BC6AEE52DC2A4EF000BF3D9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA72DC2A4EF000BF3D9 /* Preview Assets.xcassets */; };
-		2BC6AEE62DC2A4EF000BF3D9 /* AccessKeys.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEBD2DC2A4EF000BF3D9 /* AccessKeys.plist */; };
-		2BC6AEE72DC2A4EF000BF3D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEB42DC2A4EF000BF3D9 /* LaunchScreen.storyboard */; };
-		2BC6AEE82DC2A4EF000BF3D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC02DC2A4EF000BF3D9 /* Assets.xcassets */; };
-		2BC6AEEB2DC2A4EF000BF3D9 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA42DC2A4EF000BF3D9 /* ColorExtensions.swift */; };
-		2BC6AEEC2DC2A4EF000BF3D9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEB82DC2A4EF000BF3D9 /* SceneDelegate.swift */; };
-		2BC6AEEF2DC2A4EF000BF3D9 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEB72DC2A4EF000BF3D9 /* MapViewController.swift */; };
-		2BC6AEF02DC2A4EF000BF3D9 /* WeatherLayersModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC42DC2A4EF000BF3D9 /* WeatherLayersModel.swift */; };
-		2BC6AEF12DC2A4EF000BF3D9 /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA52DC2A4EF000BF3D9 /* FontExtensions.swift */; };
-		2BC6AEF22DC2A4EF000BF3D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEB02DC2A4EF000BF3D9 /* AppDelegate.swift */; };
-		2BC6AEF32DC2A4EF000BF3D9 /* LocationFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC22DC2A4EF000BF3D9 /* LocationFinder.swift */; };
-		2BC6AEF42EF87A3A000BF3D9 /* DemoMapProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEC52EF87A3A000BF3D9 /* DemoMapProvider.swift */; };
-		2BC6AEF52DC2A4EF000BF3D9 /* SidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEBB2DC2A4EF000BF3D9 /* SidebarViewController.swift */; };
-		2BC6AEF62DC2A4EF000BF3D9 /* CircleIconButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEB12DC2A4EF000BF3D9 /* CircleIconButtonView.swift */; };
-		2BC6AEF82DC2A4EF000BF3D9 /* AccessKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEBE2DC2A4EF000BF3D9 /* AccessKeys.swift */; };
-		2BC6AEFA2DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC6AEA32DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift */; };
 		2EAA11012F00100100112233 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
-		2EAA11022F00100100112233 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
 		2BC6AEFE2DC2A669000BF3D9 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
-		2EAA11052F00100100112233 /* MapsGL in Frameworks */ = {isa = PBXBuildFile; productRef = 2EAA10022F00100100112233 /* MapsGL */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		2B18B4F62DC438D60056B9B5 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		2BC6AF012DC2A6CA000BF3D9 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,39 +26,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2B18B4ED2DC42A6E0056B9B5 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		2B18B4EF2DC42AA90056B9B5 /* TimelineSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineSettingsViewController.swift; sourceTree = "<group>"; };
-		2B18B4FB2DC43D620056B9B5 /* SidebarGroupHeaderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarGroupHeaderTableViewCell.swift; sourceTree = "<group>"; };
-		2B18B4FD2DC43EC50056B9B5 /* SidebarItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarItemTableViewCell.swift; sourceTree = "<group>"; };
-		2BC6AEA32DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2DExtensions.swift; sourceTree = "<group>"; };
-		2BC6AEA42DC2A4EF000BF3D9 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
-		2BC6AEA52DC2A4EF000BF3D9 /* FontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtensions.swift; sourceTree = "<group>"; };
-		2BC6AEA72DC2A4EF000BF3D9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2BC6AEA92DC2A4EF000BF3D9 /* CircularIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularIconButton.swift; sourceTree = "<group>"; };
-		2BC6AEAA2DC2A4EF000BF3D9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		2BC6AEAB2DC2A4EF000BF3D9 /* DemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoApp.swift; sourceTree = "<group>"; };
 		2BC6AEAC2DC2A4EF000BF3D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2BC6AEAD2DC2A4EF000BF3D9 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
-		2BC6AEAE2DC2A4EF000BF3D9 /* TimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		2BC6AEB02DC2A4EF000BF3D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2BC6AEB12DC2A4EF000BF3D9 /* CircleIconButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleIconButtonView.swift; sourceTree = "<group>"; };
-		2BC6AEB22DC2A4EF000BF3D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2BC6AEB32DC2A4EF000BF3D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		2BC6AEB72DC2A4EF000BF3D9 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		2BC6AEB82DC2A4EF000BF3D9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		2BC6AEBB2DC2A4EF000BF3D9 /* SidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarViewController.swift; sourceTree = "<group>"; };
 		2BC6AEBD2DC2A4EF000BF3D9 /* AccessKeys.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AccessKeys.plist; sourceTree = "<group>"; };
-		2BC6AEBE2DC2A4EF000BF3D9 /* AccessKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessKeys.swift; sourceTree = "<group>"; };
 		2BC6AEBF2DC2A4EF000BF3D9 /* AccessKeys-Sample.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AccessKeys-Sample.plist"; sourceTree = "<group>"; };
-		2BC6AEC02DC2A4EF000BF3D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2BC6AEC12DC2A4EF000BF3D9 /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
-		2BC6AEC22DC2A4EF000BF3D9 /* LocationFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFinder.swift; sourceTree = "<group>"; };
-		2BC6AEC32DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		2BC6AEC42DC2A4EF000BF3D9 /* WeatherLayersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherLayersModel.swift; sourceTree = "<group>"; };
-		2BC6AEC52EF87A3A000BF3D9 /* DemoMapProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoMapProvider.swift; sourceTree = "<group>"; };
-		A625092C2B74553700E2D3AB /* Demo - SwiftUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo - SwiftUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		A69E7F6A2C3F3D5D00A06B81 /* Demo - UIKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Demo - UIKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A625092C2B74553700E2D3AB /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		2BC6AEC52DC2A4EF000BF3D9 /* Demo */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Demo;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A62509292B74553700E2D3AB /* Frameworks */ = {
@@ -115,17 +48,6 @@
 			files = (
 				2EAA11012F00100100112233 /* MapsGL in Frameworks */,
 				2BC6AEFE2DC2A669000BF3D9 /* MapsGL in Frameworks */,
-				2D1A00182EF8805C00112233 /* MapboxMaps in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A69E7F602C3F3D5D00A06B81 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2EAA11022F00100100112233 /* MapsGL in Frameworks */,
-				2EAA11052F00100100112233 /* MapsGL in Frameworks */,
-				2D1A00192EF8805C00112233 /* MapboxMaps in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,79 +61,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		2BC6AEA62DC2A4EF000BF3D9 /* Extensions */ = {
+		50C0F1610000000000000001 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				2BC6AEA32DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift */,
-				2BC6AEA42DC2A4EF000BF3D9 /* ColorExtensions.swift */,
-				2BC6AEA52DC2A4EF000BF3D9 /* FontExtensions.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		2BC6AEA82DC2A4EF000BF3D9 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				2BC6AEA72DC2A4EF000BF3D9 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		2BC6AEAF2DC2A4EF000BF3D9 /* SwiftUI */ = {
-			isa = PBXGroup;
-			children = (
-				2BC6AEA92DC2A4EF000BF3D9 /* CircularIconButton.swift */,
-				2BC6AEAA2DC2A4EF000BF3D9 /* ContentView.swift */,
-				2BC6AEAB2DC2A4EF000BF3D9 /* DemoApp.swift */,
-				2BC6AEAC2DC2A4EF000BF3D9 /* Info.plist */,
-				2BC6AEAD2DC2A4EF000BF3D9 /* SidebarView.swift */,
-				2BC6AEAE2DC2A4EF000BF3D9 /* TimelineView.swift */,
-			);
-			path = SwiftUI;
-			sourceTree = "<group>";
-		};
-		2BC6AEBC2DC2A4EF000BF3D9 /* UIKit */ = {
-			isa = PBXGroup;
-			children = (
-				2B18B4FD2DC43EC50056B9B5 /* SidebarItemTableViewCell.swift */,
-				2B18B4FB2DC43D620056B9B5 /* SidebarGroupHeaderTableViewCell.swift */,
-				2BC6AEB02DC2A4EF000BF3D9 /* AppDelegate.swift */,
-				2BC6AEB12DC2A4EF000BF3D9 /* CircleIconButtonView.swift */,
-				2BC6AEB22DC2A4EF000BF3D9 /* Info.plist */,
-				2BC6AEB42DC2A4EF000BF3D9 /* LaunchScreen.storyboard */,
-				2BC6AEB72DC2A4EF000BF3D9 /* MapViewController.swift */,
-				2BC6AEB82DC2A4EF000BF3D9 /* SceneDelegate.swift */,
-				2BC6AEBB2DC2A4EF000BF3D9 /* SidebarViewController.swift */,
-				2B18B4ED2DC42A6E0056B9B5 /* TimelineView.swift */,
-				2B18B4EF2DC42AA90056B9B5 /* TimelineSettingsViewController.swift */,
-			);
-			path = UIKit;
-			sourceTree = "<group>";
-		};
-		2BC6AEC52DC2A4EF000BF3D9 /* Demo */ = {
-			isa = PBXGroup;
-			children = (
-				2BC6AEA62DC2A4EF000BF3D9 /* Extensions */,
-				2BC6AEA82DC2A4EF000BF3D9 /* Preview Content */,
-				2BC6AEAF2DC2A4EF000BF3D9 /* SwiftUI */,
-				2BC6AEBC2DC2A4EF000BF3D9 /* UIKit */,
 				2BC6AEBD2DC2A4EF000BF3D9 /* AccessKeys.plist */,
-				2BC6AEBE2DC2A4EF000BF3D9 /* AccessKeys.swift */,
 				2BC6AEBF2DC2A4EF000BF3D9 /* AccessKeys-Sample.plist */,
-				2BC6AEC02DC2A4EF000BF3D9 /* Assets.xcassets */,
 				2BC6AEC12DC2A4EF000BF3D9 /* Demo.entitlements */,
-				2BC6AEC22DC2A4EF000BF3D9 /* LocationFinder.swift */,
-				2BC6AEC52EF87A3A000BF3D9 /* DemoMapProvider.swift */,
-				2BC6AEC32DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy */,
-				2BC6AEC42DC2A4EF000BF3D9 /* WeatherLayersModel.swift */,
+				2BC6AEAC2DC2A4EF000BF3D9 /* Info.plist */,
 			);
-			path = Demo;
+			path = Config;
 			sourceTree = "<group>";
 		};
 		A62509232B74553700E2D3AB = {
 			isa = PBXGroup;
 			children = (
 				2BC6AEC52DC2A4EF000BF3D9 /* Demo */,
+				50C0F1610000000000000001 /* Config */,
 				2B18B4F12DC4353D0056B9B5 /* Frameworks */,
 				A625092D2B74553700E2D3AB /* Products */,
 			);
@@ -220,8 +85,7 @@
 		A625092D2B74553700E2D3AB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A625092C2B74553700E2D3AB /* Demo - SwiftUI.app */,
-				A69E7F6A2C3F3D5D00A06B81 /* Demo - UIKit.app */,
+				A625092C2B74553700E2D3AB /* Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -229,9 +93,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A625092B2B74553700E2D3AB /* Demo - SwiftUI */ = {
+		A625092B2B74553700E2D3AB /* Demo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A625093B2B74553D00E2D3AB /* Build configuration list for PBXNativeTarget "Demo - SwiftUI" */;
+			buildConfigurationList = A625093B2B74553D00E2D3AB /* Build configuration list for PBXNativeTarget "Demo" */;
 			buildPhases = (
 				A6E538102B7B19B5007EE086 /* Create AccessKeys.plist */,
 				A62509282B74553700E2D3AB /* Sources */,
@@ -243,36 +107,16 @@
 			);
 			dependencies = (
 			);
-			name = "Demo - SwiftUI";
+			fileSystemSynchronizedGroups = (
+				2BC6AEC52DC2A4EF000BF3D9 /* Demo */,
+			);
+			name = Demo;
 			packageProductDependencies = (
 				2EAA10022F00100100112233 /* MapsGL */,
 				2D1A00162EF8805C00112233 /* MapboxMaps */,
 			);
 			productName = Demo;
-			productReference = A625092C2B74553700E2D3AB /* Demo - SwiftUI.app */;
-			productType = "com.apple.product-type.application";
-		};
-		A69E7F532C3F3D5D00A06B81 /* Demo - UIKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A69E7F672C3F3D5D00A06B81 /* Build configuration list for PBXNativeTarget "Demo - UIKit" */;
-			buildPhases = (
-				A69E7F562C3F3D5D00A06B81 /* Create AccessKeys.plist */,
-				A69E7F572C3F3D5D00A06B81 /* Sources */,
-				A69E7F602C3F3D5D00A06B81 /* Frameworks */,
-				A69E7F622C3F3D5D00A06B81 /* Resources */,
-				2B18B4F62DC438D60056B9B5 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Demo - UIKit";
-			packageProductDependencies = (
-				2EAA10022F00100100112233 /* MapsGL */,
-				2D1A00162EF8805C00112233 /* MapboxMaps */,
-			);
-			productName = Demo;
-			productReference = A69E7F6A2C3F3D5D00A06B81 /* Demo - UIKit.app */;
+			productReference = A625092C2B74553700E2D3AB /* Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -284,6 +128,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1530;
+				preferredProjectObjectVersion = 77;
 				TargetAttributes = {
 					A625092B2B74553700E2D3AB = {
 						CreatedOnToolsVersion = 15.3;
@@ -291,7 +136,6 @@
 				};
 			};
 			buildConfigurationList = A62509272B74553700E2D3AB /* Build configuration list for PBXProject "Demo" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -307,8 +151,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A625092B2B74553700E2D3AB /* Demo - SwiftUI */,
-				A69E7F532C3F3D5D00A06B81 /* Demo - UIKit */,
+				A625092B2B74553700E2D3AB /* Demo */,
 			);
 		};
 /* End PBXProject section */
@@ -318,48 +161,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BC6AEDA2DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy in Resources */,
-				2BC6AEDC2DC2A4EF000BF3D9 /* Preview Assets.xcassets in Resources */,
 				2BC6AEDD2DC2A4EF000BF3D9 /* AccessKeys.plist in Resources */,
-				2BC6AEDF2DC2A4EF000BF3D9 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A69E7F622C3F3D5D00A06B81 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2BC6AEE32DC2A4EF000BF3D9 /* PrivacyInfo.xcprivacy in Resources */,
-				2BC6AEE52DC2A4EF000BF3D9 /* Preview Assets.xcassets in Resources */,
-				2BC6AEE62DC2A4EF000BF3D9 /* AccessKeys.plist in Resources */,
-				2BC6AEE72DC2A4EF000BF3D9 /* LaunchScreen.storyboard in Resources */,
-				2BC6AEE82DC2A4EF000BF3D9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		A69E7F562C3F3D5D00A06B81 /* Create AccessKeys.plist */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Demo/AccessKeys-Sample.plist",
-			);
-			name = "Create AccessKeys.plist";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SRCROOT)/Demo/AccessKeys.plist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "CONFIG_FILE_BASE_NAME=\"AccessKeys\"\n\nCONFIG_FILE_NAME=${CONFIG_FILE_BASE_NAME}.plist\nSAMPLE_CONFIG_FILE_NAME=${CONFIG_FILE_BASE_NAME}-Sample.plist\n\nCONFIG_FILE_PATH=$SRCROOT/Demo/$CONFIG_FILE_NAME\nSAMPLE_CONFIG_FILE_PATH=$SRCROOT/Demo/$SAMPLE_CONFIG_FILE_NAME\n\nif [ -f \"$CONFIG_FILE_PATH\" ]; then\n  echo \"$CONFIG_FILE_PATH exists.\"\nelse\n  echo \"$CONFIG_FILE_PATH does not exist, copying sample\"\n  cp -v \"${SAMPLE_CONFIG_FILE_PATH}\" \"${CONFIG_FILE_PATH}\"\nfi\n";
-		};
 		A6E538102B7B19B5007EE086 /* Create AccessKeys.plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -368,17 +176,17 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Demo/AccessKeys-Sample.plist",
+				"$(SRCROOT)/Config/AccessKeys-Sample.plist",
 			);
 			name = "Create AccessKeys.plist";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/Demo/AccessKeys.plist",
+				"$(SRCROOT)/Config/AccessKeys.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "CONFIG_FILE_BASE_NAME=\"AccessKeys\"\n\nCONFIG_FILE_NAME=${CONFIG_FILE_BASE_NAME}.plist\nSAMPLE_CONFIG_FILE_NAME=${CONFIG_FILE_BASE_NAME}-Sample.plist\n\nCONFIG_FILE_PATH=$SRCROOT/Demo/$CONFIG_FILE_NAME\nSAMPLE_CONFIG_FILE_PATH=$SRCROOT/Demo/$SAMPLE_CONFIG_FILE_NAME\n\nif [ -f \"$CONFIG_FILE_PATH\" ]; then\n  echo \"$CONFIG_FILE_PATH exists.\"\nelse\n  echo \"$CONFIG_FILE_PATH does not exist, copying sample\"\n  cp -v \"${SAMPLE_CONFIG_FILE_PATH}\" \"${CONFIG_FILE_PATH}\"\nfi\n";
+			shellScript = "CONFIG_FILE_BASE_NAME=\"AccessKeys\"\n\nCONFIG_FILE_NAME=${CONFIG_FILE_BASE_NAME}.plist\nSAMPLE_CONFIG_FILE_NAME=${CONFIG_FILE_BASE_NAME}-Sample.plist\n\nCONFIG_FILE_PATH=$SRCROOT/Config/$CONFIG_FILE_NAME\nSAMPLE_CONFIG_FILE_PATH=$SRCROOT/Config/$SAMPLE_CONFIG_FILE_NAME\n\nif [ -f \"$CONFIG_FILE_PATH\" ]; then\n  echo \"$CONFIG_FILE_PATH exists.\"\nelse\n  echo \"$CONFIG_FILE_PATH does not exist, copying sample\"\n  cp -v \"${SAMPLE_CONFIG_FILE_PATH}\" \"${CONFIG_FILE_PATH}\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -387,56 +195,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2BC6AEC62DC2A4EF000BF3D9 /* SidebarView.swift in Sources */,
-				2BC6AEC72DC2A4EF000BF3D9 /* ColorExtensions.swift in Sources */,
-				2BC6AEC92DC2A4EF000BF3D9 /* TimelineView.swift in Sources */,
-				2BC6AECA2DC2A4EF000BF3D9 /* ContentView.swift in Sources */,
-				2BC6AECC2DC2A4EF000BF3D9 /* WeatherLayersModel.swift in Sources */,
-				2BC6AECD2DC2A4EF000BF3D9 /* FontExtensions.swift in Sources */,
-				2BC6AECF2DC2A4EF000BF3D9 /* LocationFinder.swift in Sources */,
-				2BC6AED02EF87A3A000BF3D9 /* DemoMapProvider.swift in Sources */,
-				2BC6AED42DC2A4EF000BF3D9 /* AccessKeys.swift in Sources */,
-				2BC6AED52DC2A4EF000BF3D9 /* DemoApp.swift in Sources */,
-				2BC6AED62DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift in Sources */,
-				2BC6AED72DC2A4EF000BF3D9 /* CircularIconButton.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A69E7F572C3F3D5D00A06B81 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2BC6AEEB2DC2A4EF000BF3D9 /* ColorExtensions.swift in Sources */,
-				2BC6AEEC2DC2A4EF000BF3D9 /* SceneDelegate.swift in Sources */,
-				2BC6AEEF2DC2A4EF000BF3D9 /* MapViewController.swift in Sources */,
-				2B18B4EE2DC42A710056B9B5 /* TimelineView.swift in Sources */,
-				2BC6AEF02DC2A4EF000BF3D9 /* WeatherLayersModel.swift in Sources */,
-				2BC6AEF12DC2A4EF000BF3D9 /* FontExtensions.swift in Sources */,
-				2BC6AEF22DC2A4EF000BF3D9 /* AppDelegate.swift in Sources */,
-				2BC6AEF32DC2A4EF000BF3D9 /* LocationFinder.swift in Sources */,
-				2BC6AEF42EF87A3A000BF3D9 /* DemoMapProvider.swift in Sources */,
-				2B18B4FC2DC43D6E0056B9B5 /* SidebarGroupHeaderTableViewCell.swift in Sources */,
-				2B18B4FE2DC43ECE0056B9B5 /* SidebarItemTableViewCell.swift in Sources */,
-				2B18B4F02DC42AAE0056B9B5 /* TimelineSettingsViewController.swift in Sources */,
-				2BC6AEF52DC2A4EF000BF3D9 /* SidebarViewController.swift in Sources */,
-				2BC6AEF62DC2A4EF000BF3D9 /* CircleIconButtonView.swift in Sources */,
-				2BC6AEF82DC2A4EF000BF3D9 /* AccessKeys.swift in Sources */,
-				2BC6AEFA2DC2A4EF000BF3D9 /* CLLocationCoordinate2DExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		2BC6AEB42DC2A4EF000BF3D9 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2BC6AEB32DC2A4EF000BF3D9 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		A62509392B74553D00E2D3AB /* Debug */ = {
@@ -474,7 +236,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -494,7 +256,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.7.1;
+				MARKETING_VERSION = 1.8.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -540,7 +302,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -554,7 +316,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.7.1;
+				MARKETING_VERSION = 1.8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SUPPORTED_PLATFORMS = "xrsimulator xros macosx iphonesimulator iphoneos";
@@ -568,15 +330,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Config/Demo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_ASSET_PATHS = "\"Demo/Preview Content\"";
 				DEVELOPMENT_TEAM = 93U64PEERG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/SwiftUI/Info.plist;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MapsGL Demo";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to move the map to your rough location in the world when tapping the Current Location button.";
@@ -594,8 +356,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.3;
-				MARKETING_VERSION = 1.7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xweather.${DEVELOPMENT_TEAM}.MapsGLDemo-SwiftUI";
+				MARKETING_VERSION = 1.8.0;
+				OTHER_SWIFT_FLAGS = "-cxx-interoperability-mode=default -Xcc -std=c++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xweather.${DEVELOPMENT_TEAM}.MapsGLDemo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -615,15 +378,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Config/Demo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_ASSET_PATHS = "\"Demo/Preview Content\"";
 				DEVELOPMENT_TEAM = 93U64PEERG;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/SwiftUI/Info.plist;
+				INFOPLIST_FILE = Config/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "MapsGL Demo";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to move the map to your rough location in the world when tapping the Current Location button.";
@@ -641,90 +404,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.3;
-				MARKETING_VERSION = 1.7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xweather.${DEVELOPMENT_TEAM}.MapsGLDemo-SwiftUI";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				VERSIONING_SYSTEM = "apple-generic";
-				XROS_DEPLOYMENT_TARGET = 1.0;
-			};
-			name = Release;
-		};
-		A69E7F682C3F3D5D00A06B81 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
-				DEVELOPMENT_ASSET_PATHS = "\"Demo/Preview Content\"";
-				DEVELOPMENT_TEAM = 93U64PEERG;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/UIKit/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "MapsGL Demo";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to move the map to your rough location in the world when tapping the Current Location button.";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.3;
-				MARKETING_VERSION = 1.7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xweather.${DEVELOPMENT_TEAM}.MapsGLDemo-UIKit";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				VERSIONING_SYSTEM = "apple-generic";
-				XROS_DEPLOYMENT_TARGET = 1.0;
-			};
-			name = Debug;
-		};
-		A69E7F692C3F3D5D00A06B81 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = Demo/Demo.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
-				DEVELOPMENT_ASSET_PATHS = "\"Demo/Preview Content\"";
-				DEVELOPMENT_TEAM = 93U64PEERG;
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Demo/UIKit/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "MapsGL Demo";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to move the map to your rough location in the world when tapping the Current Location button.";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 14.3;
-				MARKETING_VERSION = 1.7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.xweather.${DEVELOPMENT_TEAM}.MapsGLDemo-UIKit";
+				MARKETING_VERSION = 1.8.0;
+				OTHER_SWIFT_FLAGS = "-cxx-interoperability-mode=default -Xcc -std=c++20";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.xweather.${DEVELOPMENT_TEAM}.MapsGLDemo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator xros xrsimulator";
@@ -751,20 +433,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A625093B2B74553D00E2D3AB /* Build configuration list for PBXNativeTarget "Demo - SwiftUI" */ = {
+		A625093B2B74553D00E2D3AB /* Build configuration list for PBXNativeTarget "Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A625093C2B74553D00E2D3AB /* Debug */,
 				A625093D2B74553D00E2D3AB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A69E7F672C3F3D5D00A06B81 /* Build configuration list for PBXNativeTarget "Demo - UIKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A69E7F682C3F3D5D00A06B81 /* Debug */,
-				A69E7F692C3F3D5D00A06B81 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -779,7 +452,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vaisala-xweather/mapsgl-apple-sdk";
 			requirement = {
-				branch = release/1.7.1;
+				branch = release/1.8.0;
 				kind = branch;
 			};
 		};
