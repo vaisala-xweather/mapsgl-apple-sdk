@@ -31,15 +31,41 @@ enum DemoMapProvider {
         )
     }
 
-    static func makeUIKitMapView(traitCollection: UITraitCollection, initialZoom: Double) -> DemoUIKitMapView {
+    static func makeUIKitMapView(
+        traitCollection: UITraitCollection,
+        initialCenter: CLLocationCoordinate2D = .geographicCenterOfContiguousUSA,
+        initialZoom: Double
+    ) -> DemoUIKitMapView {
         let mapView = MLNMapView(frame: .zero)
         mapView.styleURL = (traitCollection.userInterfaceStyle == .dark) ? defaultDarkStyleURL : defaultLightStyleURL
-        mapView.setCenter(.geographicCenterOfContiguousUSA, zoomLevel: initialZoom, animated: false)
+        mapView.setCenter(initialCenter, zoomLevel: initialZoom, animated: false)
         return mapView
     }
 
     static func fly(mapView: DemoUIKitMapView, to coordinate: CLLocationCoordinate2D, zoom: Double) {
         mapView.setCenter(coordinate, zoomLevel: zoom, animated: true)
+    }
+
+    /// Layer id that a weather layer for `layerCode` should be inserted below, or `nil` to insert it above every existing layer.
+    ///
+    /// Data-query text layers are inserted at the top of the stack so their values draw over the base style's own
+    /// vector content (roads, boundaries, labels) rather than underneath it.
+    static func weatherLayerInsertBeforeId(
+        for mapController: DemoMapController,
+        layerCode: WeatherService.LayerCode
+    ) -> String? {
+        layerCode.isDataQueryTextLayer ? nil : defaultWeatherLayerInsertBeforeId(for: mapController)
+    }
+
+    /// Shows or hides the base style's place-name/POI label layers, i.e. the symbol layers that carry a text field.
+    static func setPlaceLabelLayersVisible(_ visible: Bool, for mapController: DemoMapController) {
+        guard let style = mapController.map.style else {
+            return
+        }
+
+        for case let layer as MLNSymbolStyleLayer in style.layers where layer.text != nil {
+            layer.isVisible = visible
+        }
     }
 
     static func defaultWeatherLayerInsertBeforeId(for mapController: DemoMapController) -> String? {
@@ -77,23 +103,71 @@ enum DemoMapProvider {
     }
 }
 
+/// Extra clearance for the mapping library's own scale bar, logo and attribution, so
+/// the demo's floating chrome doesn't cover them.
+///
+/// Attribution has to stay legible — both Mapbox and MapLibre's data sources require
+/// it — so the ornaments move rather than the controls.
+struct DemoMapOrnamentInsets {
+    var top: CGFloat = 0
+    var bottom: CGFloat = 0
+
+    static let zero = DemoMapOrnamentInsets()
+}
+
+/// One map's worth of setup, held across a ``DemoSwiftUIMapView``'s body
+/// evaluations.
+///
+/// `onAppear` runs again every time the map comes back on screen, so this latch keeps
+/// the controller to one per map.
+private final class DemoMapSession: ObservableObject {
+    var didCreateController = false
+}
+
 struct DemoSwiftUIMapView: View {
+    /// Default distance of an ornament from the map's edge.
+    private static let ornamentEdgeInset: CGFloat = 8
+
+    @StateObject private var session = DemoMapSession()
+
     let colorScheme: ColorScheme
+    let initialCenter: CLLocationCoordinate2D
     let initialZoom: Double
+    let ornamentInsets: DemoMapOrnamentInsets
     let onMapReady: (DemoMapController, @escaping (CLLocationCoordinate2D, Double) -> Void) -> Void
+
+    init(
+        colorScheme: ColorScheme,
+        initialCenter: CLLocationCoordinate2D = .geographicCenterOfContiguousUSA,
+        initialZoom: Double,
+        ornamentInsets: DemoMapOrnamentInsets = .zero,
+        onMapReady: @escaping (DemoMapController, @escaping (CLLocationCoordinate2D, Double) -> Void) -> Void
+    ) {
+        self.colorScheme = colorScheme
+        self.initialCenter = initialCenter
+        self.initialZoom = initialZoom
+        self.ornamentInsets = ornamentInsets
+        self.onMapReady = onMapReady
+    }
 
     var body: some View {
         DemoMapLibreRepresentable(
             colorScheme: colorScheme,
+            initialCenter: initialCenter,
             initialZoom: initialZoom,
+            ornamentInsets: ornamentInsets,
             onMapReady: onMapReady
         )
     }
 }
 
 private struct DemoMapLibreRepresentable: UIViewRepresentable {
+    private static let ornamentEdgeInset: CGFloat = 8
+
     let colorScheme: ColorScheme
+    let initialCenter: CLLocationCoordinate2D
     let initialZoom: Double
+    let ornamentInsets: DemoMapOrnamentInsets
     let onMapReady: (DemoMapController, @escaping (CLLocationCoordinate2D, Double) -> Void) -> Void
 
     class Coordinator {
@@ -109,7 +183,9 @@ private struct DemoMapLibreRepresentable: UIViewRepresentable {
         let styleURL = styleURL(for: colorScheme)
         context.coordinator.lastStyleURL = styleURL
         mapView.styleURL = styleURL
-        mapView.setCenter(.geographicCenterOfContiguousUSA, zoomLevel: initialZoom, animated: false)
+        mapView.setCenter(initialCenter, zoomLevel: initialZoom, animated: false)
+
+        applyOrnamentInsets(to: mapView)
 
         let mapController = DemoMapProvider.makeMapController(for: mapView)
         onMapReady(mapController) { coordinate, zoom in
@@ -120,11 +196,20 @@ private struct DemoMapLibreRepresentable: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: MLNMapView, context: Context) {
+        applyOrnamentInsets(to: uiView)
+
         let styleURL = styleURL(for: colorScheme)
         if context.coordinator.lastStyleURL != styleURL {
             context.coordinator.lastStyleURL = styleURL
             uiView.styleURL = styleURL
         }
+    }
+
+    private func applyOrnamentInsets(to mapView: MLNMapView) {
+        let inset = Self.ornamentEdgeInset
+        mapView.scaleBarMargins = CGPoint(x: inset, y: inset + ornamentInsets.top)
+        mapView.logoViewMargins = CGPoint(x: inset, y: inset + ornamentInsets.bottom)
+        mapView.attributionButtonMargins = CGPoint(x: inset, y: inset + ornamentInsets.bottom)
     }
 
     private func styleURL(for colorScheme: ColorScheme) -> URL {

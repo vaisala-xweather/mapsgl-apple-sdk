@@ -33,14 +33,14 @@ extension MapboxMaps.StyleManager {
 	
 	public func layerStyleColorValue(id: String, property: String) -> MapsGLMaps.StyleValue<UIColor>? {
 		guard layerExists(withId: id) else { return nil }
-		
+
 		let propertyValue = layerProperty(for: id, property: property)
-		
+
 		// MBMStylePropertyValueKind: 0=undefined, 1=constant, 2=expression, 3=transition
 		if let rawExpression = propertyValue.value as? [Any], propertyValue.kind == .expression {
 			return StyleValue.expression(Expression(rawExpression))
 		}
-		
+
 		return nil
 	}
 }
